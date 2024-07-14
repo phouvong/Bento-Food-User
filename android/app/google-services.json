@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "299589180044",
+    "project_id": "bento-food",
+    "storage_bucket": "bento-food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299589180044:android:c6ec8218155b9f2e3f79a9",
+        "android_client_info": {
+          "package_name": "com.bento.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTvbdtsOEUde_Z59UpAIff19sOeL3Aa5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "299589180044-fasllil899ap0qcp7h8qlfm46t9uqvc7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bento.ios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299589180044:android:ad99949abd6241513f79a9",
+        "android_client_info": {
+          "package_name": "com.bento.ridera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTvbdtsOEUde_Z59UpAIff19sOeL3Aa5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "299589180044-fasllil899ap0qcp7h8qlfm46t9uqvc7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bento.ios"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299589180044:android:83a677068c3d76023f79a9",
+        "android_client_info": {
+          "package_name": "com.bento.vendora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTvbdtsOEUde_Z59UpAIff19sOeL3Aa5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299589180044-t2mj419bddp64kqp45m6s13g6vnkseea.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "299589180044-fasllil899ap0qcp7h8qlfm46t9uqvc7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bento.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
