@@ -50,10 +50,10 @@ Future<void> main() async {
 
   if(GetPlatform.isWeb) {
     await Firebase.initializeApp(options: const FirebaseOptions(
-      apiKey: 'AIzaSyCeaw_gVN0iQwFHyuF8pQ6PbVDmSVQw8AY',
-      appId: '1:1049699819506:web:a4b5e3bedc729aab89956b',
-      messagingSenderId: '1049699819506',
-      projectId: 'stackfood-bd3ee',
+      apiKey: 'AIzaSyCHZCBLcVJf2NqZYsd37TzUxqzVcDI-2JU',
+      appId: '1:299589180044:web:b575785f8db4c9d93f79a9',
+      messagingSenderId: '299589180044',
+      projectId: 'bento-food',
     ));
     MetaSEO().config();
   }else if(GetPlatform.isAndroid) {
