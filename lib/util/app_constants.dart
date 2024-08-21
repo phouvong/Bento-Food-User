@@ -8,7 +8,7 @@ class AppConstants {
 
   static const String fontFamily = 'Lao';
   static const bool payInWevView = false;
-  static const String webHostedUrl = 'https://food.naplao.com';
+  static const String webHostedUrl = 'https://food.bentodelivery.net';
   static const bool useReactWebsite = true;
 
   static const String baseUrl = 'https://food.naplao.com';
