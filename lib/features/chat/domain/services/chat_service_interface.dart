@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/conversation_model.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/message_model.dart';
@@ -14,6 +15,6 @@ abstract class ChatServiceInterface{
   Future<Response> getMessages(int offset, int? userID, UserType userType, int? conversationID);
   int findOutConversationUnreadIndex(List<Conversation?>? conversations, int? conversationID);
   Future<XFile> compressImage(XFile file);
-  List<MultipartBody> processMultipartBody(List<XFile> chatImage);
-  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, NotificationBodyModel? notificationBody, int? conversationID);
+  List<MultipartBody> processMultipartBody(List<XFile> chatImage, List<XFile> chatFiles, XFile? videoFile);
+  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, NotificationBodyModel? notificationBody, int? conversationID, List<MultipartDocument>? webFile, List<MultipartDocument>? webVideo);
 }

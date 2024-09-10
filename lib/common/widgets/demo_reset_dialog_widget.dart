@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_button_widget.dart';
+import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
@@ -14,6 +17,36 @@ class DemoResetDialogWidget extends StatefulWidget {
 
 class _DemoResetDialogWidgetState extends State<DemoResetDialogWidget> {
   bool _isLoading = false;
+  Timer? _timer;
+  int _seconds = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _startTimer();
+
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _seconds = 30;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _seconds = _seconds - 1;
+      if(_seconds == 0) {
+        timer.cancel();
+        _timer?.cancel();
+        _seconds = 0;
+      }
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +76,21 @@ class _DemoResetDialogWidgetState extends State<DemoResetDialogWidget> {
           const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
           CustomButtonWidget(isLoading: _isLoading, buttonText: 'okay'.tr, onPressed: () {
-            setState(() {
-              _isLoading = true;
-            });
-            Get.find<SplashController>().getConfigData().then((isSuccess) {
-              if(isSuccess) {
-                setState(() {
-                  _isLoading = false;
-                });
-                Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: true));
-              }
-            });
+            if (_seconds == 0) {
+              setState(() {
+                _isLoading = true;
+              });
+              Get.find<SplashController>().getConfigData().then((isSuccess) {
+                if (isSuccess) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: true));
+                }
+              });
+            } else {
+              showCustomSnackBar('${'our_demo_system_is_resetting_please_wait'.tr} $_seconds ${'second'.tr}');
+            }
           }),
         ]),
       ),

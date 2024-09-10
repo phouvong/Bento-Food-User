@@ -79,12 +79,13 @@ class ProfileController extends GetxController implements GetxService {
     Response response = await profileServiceInterface.deleteUser();
     _isLoading = false;
     if (response.statusCode == 200) {
-      showCustomSnackBar('your_account_remove_successfully'.tr, isError: false);
       await Get.find<AuthController>().clearSharedData(removeToken: false);
       await Get.find<CartController>().clearCartList();
       Get.find<FavouriteController>().removeFavourites();
+      setForceFullyUserEmpty();
       //Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
       // await Get.find<AuthController>().guestLogin();
+      showCustomSnackBar('your_account_remove_successfully'.tr, isError: false);
       _isLoading = false;
       Get.find<SplashController>().navigateToLocationScreen('splash', offNamed: true);
     } else {

@@ -67,6 +67,7 @@ class Images {
   static const String processingGif = 'assets/image/processing.gif';
   static const String handoverGif = 'assets/image/handover.gif';
   static const String image = 'assets/image/image.svg';
+  static const String file = 'assets/image/file.svg';
   static const String send = 'assets/image/send.svg';
   static const String chat = 'assets/image/chat.png';
   static const String nearRestaurant = 'assets/image/near_restaurant.png';
@@ -253,4 +254,5 @@ class Images {
   static const String referPersonIcon = 'assets/image/refer_person_icon.svg';
   static const String referEarnIcon = 'assets/image/refer_earn_icon.svg';
   static const String highlightBg = 'assets/image/highlight_bg.svg';
+  static const String fileIcon = 'assets/image/file.png';
 }

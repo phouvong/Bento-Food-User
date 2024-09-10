@@ -18,7 +18,7 @@ class PopularFoodNearbyViewWidget extends StatefulWidget {
 
 class _PopularFoodNearbyViewWidgetState extends State<PopularFoodNearbyViewWidget> {
 
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {

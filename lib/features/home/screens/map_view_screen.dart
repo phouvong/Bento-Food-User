@@ -168,6 +168,36 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   ) : const SizedBox(),
 
                   _showLoading ? const Center(child: CircularProgressIndicator()) : const SizedBox(),
+
+                  Positioned(
+                    bottom: 30,
+                    right: 10,
+                    child: Column(
+                      children: [
+                        FloatingActionButton(
+                          mini: true,
+                          child: const Icon(Icons.add),
+                          onPressed: () async {
+                            var currentZoomLevel = await _controller?.getZoomLevel();
+                            currentZoomLevel = (currentZoomLevel! + 1);
+                            _controller?.animateCamera(CameraUpdate.zoomTo(currentZoomLevel));
+                          },
+                        ),
+                        const SizedBox(height: 10),
+
+                        FloatingActionButton(
+                          mini: true,
+                          child: const Icon(Icons.remove),
+                          onPressed: () async {
+                            var currentZoomLevel = await _controller?.getZoomLevel();
+                            currentZoomLevel = (currentZoomLevel! - 1);
+                            _controller?.animateCamera(CameraUpdate.zoomTo(currentZoomLevel));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
                 ]),
               ),
 

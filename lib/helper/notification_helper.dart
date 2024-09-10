@@ -8,6 +8,7 @@ import 'package:stackfood_multivendor/features/dashboard/screens/dashboard_scree
 import 'package:stackfood_multivendor/features/notification/controllers/notification_controller.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_body_model.dart';
 import 'package:stackfood_multivendor/features/order/controllers/order_controller.dart';
+import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/common/enums/user_type.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,13 +34,17 @@ class NotificationHelper {
           if(payload.notificationType == NotificationType.order) {
             if(Get.find<AuthController>().isGuestLoggedIn()){
               Get.to(()=> const DashboardScreen(pageIndex: 3, fromSplash: false));
-            } else {
-              Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(payload.orderId.toString())));
+            }else {
+              Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(payload.orderId.toString()), fromNotification: true));
             }
-          } else if(payload.notificationType == NotificationType.general) {
+          }else if(payload.notificationType == NotificationType.message) {
+            Get.toNamed(RouteHelper.getChatRoute(notificationBody: payload, conversationID: payload.conversationId, fromNotification: true));
+          }else if(payload.notificationType == NotificationType.block || payload.notificationType == NotificationType.unblock){
+            Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.notification));
+          }else if(payload.notificationType == NotificationType.add_fund || payload.notificationType == NotificationType.referral_earn || payload.notificationType == NotificationType.CashBack){
+            Get.toNamed(RouteHelper.getWalletRoute(fromNotification: true));
+          }else{
             Get.toNamed(RouteHelper.getNotificationRoute(fromNotification: true));
-          } else{
-            Get.toNamed(RouteHelper.getChatRoute(notificationBody: payload, conversationID: payload.conversationId));
           }
         }
       }catch (_) {}
@@ -51,6 +56,8 @@ class NotificationHelper {
 
       if(message.data['type'] == 'demo_reset') {
         Get.dialog(const DemoResetDialogWidget(), barrierDismissible: false);
+      }else if(message.data['type'] == 'maintenance'){
+        Get.find<SplashController>().getConfigData(handleMaintenanceMode: true);
       }
       if(message.data['type'] == 'message' && Get.currentRoute.startsWith(RouteHelper.messages)) {
         if(Get.find<AuthController>().isLoggedIn()) {
@@ -73,6 +80,7 @@ class NotificationHelper {
           Get.find<ChatController>().getConversationList(1, fromTab: false);
         }
         NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin);
+      }else if(message.data['type'] == 'maintenance'){
       }else {
         NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin);
         if(Get.find<AuthController>().isLoggedIn()) {
@@ -88,11 +96,15 @@ class NotificationHelper {
         if(message.data.isNotEmpty) {
           NotificationBodyModel notificationBody = convertNotification(message.data);
           if(notificationBody.notificationType == NotificationType.order) {
-            Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(message.data['order_id'])));
-          } else if(notificationBody.notificationType == NotificationType.general) {
+            Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(message.data['order_id']), fromNotification: true));
+          }else if(notificationBody.notificationType == NotificationType.message) {
+            Get.toNamed(RouteHelper.getChatRoute(notificationBody: notificationBody, conversationID: notificationBody.conversationId, fromNotification: true));
+          }else if(notificationBody.notificationType == NotificationType.block || notificationBody.notificationType == NotificationType.unblock){
+            Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.notification));
+          }else if(notificationBody.notificationType == NotificationType.add_fund || notificationBody.notificationType == NotificationType.referral_earn || notificationBody.notificationType == NotificationType.CashBack){
+            Get.toNamed(RouteHelper.getWalletRoute(fromNotification: true));
+          }else{
             Get.toNamed(RouteHelper.getNotificationRoute(fromNotification: true));
-          } else{
-            Get.toNamed(RouteHelper.getChatRoute(notificationBody: notificationBody, conversationID: notificationBody.conversationId));
           }
         }
       }catch (_) {}
@@ -180,11 +192,11 @@ class NotificationHelper {
   }
 
   static NotificationBodyModel convertNotification(Map<String, dynamic> data){
-    if(data['type'] == 'general' || data['type'] == 'referral_code' || data['type'] == 'referral_earn' || data['type'] == 'CashBack') {
+    if(data['type'] == 'referral_code') {
       return NotificationBodyModel(notificationType: NotificationType.general);
     }else if(data['type'] == 'order_status') {
       return NotificationBodyModel(notificationType: NotificationType.order, orderId: int.parse(data['order_id']));
-    }else {
+    }else if(data['type'] == 'message') {
       return NotificationBodyModel(
         notificationType: NotificationType.message,
         deliverymanId: data['sender_type'] == 'delivery_man' ? 0 : null,
@@ -192,6 +204,18 @@ class NotificationHelper {
         restaurantId: data['sender_type'] == 'vendor' ? 0 : null,
         conversationId: data['conversation_id'] != '' ? int.parse(data['conversation_id'].toString()) : 0,
       );
+    }else if(data['type'] == 'referral_earn'){
+      return NotificationBodyModel(notificationType: NotificationType.referral_earn);
+    }else if(data['type'] == 'CashBack'){
+      return NotificationBodyModel(notificationType: NotificationType.CashBack);
+    }else if(data['type'] == 'block'){
+      return NotificationBodyModel(notificationType: NotificationType.block);
+    }else if(data['type'] == 'unblock'){
+      return NotificationBodyModel(notificationType: NotificationType.unblock);
+    }else if(data['type'] == 'add_fund'){
+      return NotificationBodyModel(notificationType: NotificationType.add_fund);
+    }else {
+      return NotificationBodyModel(notificationType: NotificationType.general);
     }
   }
 
@@ -201,13 +225,4 @@ class NotificationHelper {
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   debugPrint("onBackground: ${message.data}");
-  // var androidInitialize = const AndroidInitializationSettings('notification_icon');
-  // var iOSInitialize = const DarwinInitializationSettings();
-  // var initializationsSettings = InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  // flutterLocalNotificationsPlugin.initialize(initializationsSettings);
-  // NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, false);
-  // if(message.notification?.title == 'demo_reset') {
-  //   Get.dialog(const DemoResetDialogWidget(), barrierDismissible: false);
-  // }
 }

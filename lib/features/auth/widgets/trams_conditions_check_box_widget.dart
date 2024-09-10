@@ -31,7 +31,7 @@ class TramsConditionsCheckBoxWidget extends StatelessWidget {
       Flexible(
         child: RichText(
           text: TextSpan(children: [
-            TextSpan(text: fromDmRegistration ? 'by_singing_up_i_agree_with_all_the'.tr : 'by_login_i_agree_with_all_the'.tr, style: robotoRegular.copyWith(fontSize: fromDialog ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).hintColor)),
+            TextSpan(text: 'i_agree_with_all_the'.tr, style: robotoRegular.copyWith(fontSize: fromDialog ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).hintColor)),
             const TextSpan(text: ' '),
             TextSpan(
               recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(RouteHelper.getHtmlRoute('terms-and-condition')),

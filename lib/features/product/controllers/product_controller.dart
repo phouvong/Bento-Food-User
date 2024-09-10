@@ -221,6 +221,7 @@ class ProductController extends GetxController implements GetxService {
           onYesPressed: () {
             Get.find<CartController>().clearCartOnline().then((success) async {
               if (success) {
+                Get.back();
                 await Get.find<CartController>().addToCartOnline(onlineCart, fromDirectlyAdd: true);
               }
             });

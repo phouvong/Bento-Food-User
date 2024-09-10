@@ -26,7 +26,8 @@ class OrderDetailsScreen extends StatefulWidget {
   final bool fromOfflinePayment;
   final String? contactNumber;
   final bool fromGuestTrack;
-  const OrderDetailsScreen({super.key, required this.orderModel, required this.orderId, this.contactNumber, this.fromOfflinePayment = false, this.fromGuestTrack = false});
+  final bool fromNotification;
+  const OrderDetailsScreen({super.key, required this.orderModel, required this.orderId, this.contactNumber, this.fromOfflinePayment = false, this.fromGuestTrack = false, this.fromNotification = false});
 
   @override
   OrderDetailsScreenState createState() => OrderDetailsScreenState();
@@ -36,10 +37,10 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
 
   final ScrollController scrollController = ScrollController();
 
-  void _loadData(BuildContext context) async {
+  void _loadData() async {
     await Get.find<OrderController>().trackOrder(widget.orderId.toString(), widget.orderModel, false, contactNumber: widget.contactNumber).then((value) {
       if(widget.fromOfflinePayment) {
-        Future.delayed(const Duration(seconds: 2), () => showAnimatedDialog(context, OfflineSuccessDialog(orderId: widget.orderId)));
+        Future.delayed(const Duration(seconds: 2), () => showAnimatedDialog(Get.context!, OfflineSuccessDialog(orderId: widget.orderId)));
       }
     });
     if(widget.orderModel == null) {
@@ -57,7 +58,7 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _loadData(context);
+    _loadData();
   }
 
   @override
@@ -82,7 +83,7 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
     return PopScope(
       canPop: Navigator.canPop(context),
       onPopInvoked: (val) async {
-        if ((widget.orderModel == null || widget.fromOfflinePayment) && !widget.fromGuestTrack) {
+        if (((widget.orderModel == null || widget.fromOfflinePayment) && !widget.fromGuestTrack) || widget.fromNotification) {
           Get.offAllNamed(RouteHelper.getInitialRoute());
         } else if(widget.fromGuestTrack){
           return;
@@ -182,7 +183,7 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
               backgroundColor: Theme.of(context).cardColor,
               elevation: 0,
             ) : CustomAppBarWidget(title: subscription ? 'subscription_details'.tr : 'order_details'.tr, onBackPressed: () {
-              if((widget.orderModel == null || widget.fromOfflinePayment) && !widget.fromGuestTrack) {
+              if(((widget.orderModel == null || widget.fromOfflinePayment) && !widget.fromGuestTrack) || widget.fromNotification) {
                 Get.offAllNamed(RouteHelper.getInitialRoute());
               } else if(widget.fromGuestTrack){
                 Get.back();

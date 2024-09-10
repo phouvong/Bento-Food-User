@@ -75,6 +75,7 @@ import 'package:stackfood_multivendor/features/verification/screens/new_pass_scr
 import 'package:stackfood_multivendor/features/verification/screens/verification_screen.dart';
 import 'package:stackfood_multivendor/features/wallet/screens/wallet_screen.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
+import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -187,8 +188,8 @@ class RouteHelper {
     }
     return '$restaurant?id=$id';
   }
-  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false}) {
-    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack';
+  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false, bool fromNotification = false}) {
+    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack&from_notification=$fromNotification';
   }
   static String getProfileRoute() => profile;
   static String getUpdateProfileRoute() => updateProfile;
@@ -241,7 +242,7 @@ class RouteHelper {
     return '$restaurantReview?id=$restaurantID&restaurantName=$restaurantName&restaurant=$data';
   }
   static String getAllRestaurantRoute(String page) => '$allRestaurants?page=$page';
-  static String getWalletRoute({String? fundStatus, bool? fromMenuPage}) => '$wallet?payment_status=$fundStatus&from_menu_page=$fromMenuPage';
+  static String getWalletRoute({String? fundStatus, bool? fromMenuPage, bool fromNotification = false}) => '$wallet?payment_status=$fundStatus&from_menu_page=$fromMenuPage&from_notification=$fromNotification';
   static String getLoyaltyRoute() => loyalty;
   static String getSearchRestaurantProductRoute(int? productID) => '$searchRestaurantItem?id=$productID';
   static String getItemImagesRoute(Product product) {
@@ -249,7 +250,7 @@ class RouteHelper {
     return '$productImages?item=$data';
   }
   static String getReferAndEarnRoute() => referAndEarn;
-  static String getChatRoute({required NotificationBodyModel? notificationBody, User? user, int? conversationID, int? index}) {
+  static String getChatRoute({required NotificationBodyModel? notificationBody, User? user, int? conversationID, int? index, bool fromNotification = false}) {
     String notificationBody0 = 'null';
     if(notificationBody != null) {
       notificationBody0 = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
@@ -258,7 +259,7 @@ class RouteHelper {
     if(user != null) {
       user0 = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index';
+    return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index&fromNotification=${fromNotification.toString()}';
   }
   static String getConversationRoute() => conversation;
   static String getMapViewRoute() => mapView;
@@ -352,6 +353,7 @@ class RouteHelper {
         orderModel: null, fromOfflinePayment: Get.parameters['from_offline'] == 'true',
         contactNumber: Get.parameters['contact'],
         fromGuestTrack: Get.parameters['from_guest_track'] == 'true',
+        fromNotification: Get.parameters['from_notification'] == 'true',
 
       ));
     }),
@@ -454,7 +456,7 @@ class RouteHelper {
         ),
     )),
     GetPage(name: wallet, page: () {
-      return getRoute(WalletScreen(fundStatus: Get.parameters['flag'] ?? Get.parameters['payment_status'], fromMenuPage: Get.parameters['from_menu_page'] == 'true'));
+      return getRoute(WalletScreen(fundStatus: Get.parameters['flag'] ?? Get.parameters['payment_status'], fromMenuPage: Get.parameters['from_menu_page'] == 'true', fromNotification: Get.parameters['from_notification'] == 'true'));
     }),
     GetPage(name: loyalty, page: () => getRoute(const LoyaltyScreen())),
     GetPage(name: searchRestaurantItem, page: () => getRoute(RestaurantProductSearchScreen(storeID: Get.parameters['id']))),
@@ -474,6 +476,7 @@ class RouteHelper {
       return getRoute(ChatScreen(
         notificationBody: notificationBody, user: user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']!) : null,
         conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']!) : null,
+        fromNotification: Get.parameters['fromNotification'] == 'true',
       ));
     }),
     GetPage(name: conversation, page: () => const ConversationScreen()),
@@ -514,7 +517,7 @@ class RouteHelper {
       minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionIos;
     }
     return AppConstants.appVersion < minimumVersion! ? const UpdateScreen(isUpdate: true)
-        : Get.find<SplashController>().configModel!.maintenanceMode! ? const UpdateScreen(isUpdate: false)
+        : MaintenanceHelper.isMaintenanceEnable() ? const UpdateScreen(isUpdate: false)
         : (AddressHelper.getAddressFromSharedPref() == null && !byPuss)
         ? AccessLocationScreen(fromSignUp: false, fromHome: false, route: Get.currentRoute) : navigateTo;
   }

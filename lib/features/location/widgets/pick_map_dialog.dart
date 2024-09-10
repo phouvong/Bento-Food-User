@@ -94,21 +94,14 @@ class _PickMapDialogState extends State<PickMapDialog> {
                       borderRadius:BorderRadius.circular(Dimensions.radiusDefault),
                       child: GoogleMap(
                         initialCameraPosition: CameraPosition(
-                          target: widget.fromAddAddress ? LatLng(locationController.position.latitude, locationController.position.longitude)
-                              : _initialPosition,
+                          target: widget.fromAddAddress ? LatLng(locationController.position.latitude, locationController.position.longitude) : _initialPosition,
                           zoom: 16,
                         ),
                         minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                         myLocationButtonEnabled: false,
                         onMapCreated: (GoogleMapController mapController) {
                           _mapController = mapController;
-                          // if(!widget.fromAddAddress) {
-                          //   Get.find<LocationController>().getCurrentLocation(false, mapController: mapController).then((value) {
-                          //     if(widget.canTakeCurrentLocation) {
-                          //       _onPickAddressButtonPressed(locationController);
-                          //     }
-                          //   });
-                          // }
+                          _mapController!.moveCamera(CameraUpdate.newLatLng(_initialPosition));
                         },
                         scrollGesturesEnabled: !Get.isDialogOpen!,
                         zoomControlsEnabled: false,
@@ -149,49 +142,6 @@ class _PickMapDialogState extends State<PickMapDialog> {
                   isLoading: locationController.isLoading,
                   onPressed: locationController.isLoading ? (){} : (locationController.buttonDisabled || locationController.loading) ? null : () {
                     _onPickAddressButtonPressed(locationController);
-                    // if(locationController.pickPosition.latitude != 0 && locationController.pickAddress!.isNotEmpty) {
-                    //   if(widget.onPicked != null) {
-                    //     AddressModel address = AddressModel(
-                    //       latitude: locationController.pickPosition.latitude.toString(),
-                    //       longitude: locationController.pickPosition.longitude.toString(),
-                    //       addressType: 'others', address: locationController.pickAddress,
-                    //       contactPersonName: AddressHelper.getAddressFromSharedPref()!.contactPersonName,
-                    //       contactPersonNumber: AddressHelper.getAddressFromSharedPref()!.contactPersonNumber,
-                    //     );
-                    //     widget.onPicked!(address);
-                    //     Get.back();
-                    //   }else if(widget.fromAddAddress) {
-                    //     if(widget.googleMapController != null) {
-                    //       widget.googleMapController!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-                    //         locationController.pickPosition.latitude, locationController.pickPosition.longitude,
-                    //       ), zoom: 16)));
-                    //       locationController.addAddressData();
-                    //     }
-                    //     Get.back();
-                    //   }else {
-                    //     AddressModel address = AddressModel(
-                    //       latitude: locationController.pickPosition.latitude.toString(),
-                    //       longitude: locationController.pickPosition.longitude.toString(),
-                    //       addressType: 'others', address: locationController.pickAddress,
-                    //     );
-                    //     if(!Get.find<AuthController>().isGuestLoggedIn() || !Get.find<AuthController>().isLoggedIn()) {
-                    //       Get.find<AuthController>().guestLogin().then((response) {
-                    //         if(response.isSuccess) {
-                    //           Get.find<ProfileController>().setForceFullyUserEmpty();
-                    //           locationController.saveAddressAndNavigate(
-                    //             address, widget.fromSignUp, widget.route, widget.canRoute, ResponsiveHelper.isDesktop(context),
-                    //           );
-                    //         }
-                    //       });
-                    //     } else {
-                    //       locationController.saveAddressAndNavigate(
-                    //         address, widget.fromSignUp, widget.route, widget.canRoute, ResponsiveHelper.isDesktop(context),
-                    //       );
-                    //     }
-                    //   }
-                    // }else {
-                    //   showCustomSnackBar('pick_an_address'.tr);
-                    // }
                   },
                 ),
 
@@ -294,7 +244,7 @@ class _PickMapDialogState extends State<PickMapDialog> {
             if(response.isSuccess) {
               Get.find<ProfileController>().setForceFullyUserEmpty();
               locationController.saveAddressAndNavigate(
-                address, widget.fromSignUp, widget.route, widget.canRoute, ResponsiveHelper.isDesktop(context),
+                address, widget.fromSignUp, widget.route, widget.canRoute, ResponsiveHelper.isDesktop(Get.context),
               );
             }
           });

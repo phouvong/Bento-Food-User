@@ -524,6 +524,8 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                                 inputAction: TextInputAction.done,
                                 labelText: 'identity_number'.tr,
                                 required: true,
+                                isEnabled: deliverymanController.identityTypeIndex != 0,
+                                fromDeliveryRegistration: true,
                                 validator: (value) => ValidateCheck.validateEmptyText(value, "identity_number_field_is_required".tr),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeOverLarge),

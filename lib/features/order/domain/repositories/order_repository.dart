@@ -185,7 +185,7 @@ class OrderRepository implements OrderRepositoryInterface {
 
   Future<PaginatedOrderModel?> _getRunningSubscriptionOrderList(int offset) async {
     PaginatedOrderModel? paginateOrderModel;
-    Response response = await apiClient.getData('${AppConstants.runningSubscriptionOrderListUri}?offset=$offset&limit=${100}');
+    Response response = await apiClient.getData('${AppConstants.runningSubscriptionOrderListUri}?offset=$offset&limit=${10}');
     if (response.statusCode == 200) {
       paginateOrderModel = PaginatedOrderModel.fromJson(response.body);
     }

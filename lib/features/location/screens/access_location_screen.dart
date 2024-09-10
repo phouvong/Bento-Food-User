@@ -63,7 +63,7 @@ class _AccessLocationScreenState extends State<AccessLocationScreen> {
           ),
         );
       });
-    } else {
+    } else if(!widget.fromHome){
       _getCurrentLocationAndRoute();
     }
   }

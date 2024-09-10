@@ -13,9 +13,9 @@ class ValidateCheck{
     final kEmailValid = RegExp(pattern);
     bool isValid = kEmailValid.hasMatch(value.toString());
     if (value!.isEmpty) {
-      return '\u26A0 ${'email_field_is_required'.tr}';
+      return 'please_enter_email'.tr;
     } else if (isValid == false) {
-      return '\u26A0 ${"enter_valid_email_address".tr}';
+      return "enter_valid_email_address".tr;
     }
     return null;
   }
@@ -50,7 +50,7 @@ class ValidateCheck{
 
   static String? validateConfirmPassword(String? value, String? password) {
     if (value == null || value.isEmpty) {
-      return 'confirm_password_field_is_required'.tr;
+      return 'please_enter_confirm_password'.tr;
     }else if(value != password){
       return 'confirm_password_does_not_matched'.tr;
     }

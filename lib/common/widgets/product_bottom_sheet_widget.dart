@@ -69,7 +69,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
 
     String? warning = Get.find<ProductController>().checkOutOfStockVariationSelected(product?.variations);
     if(warning != null) {
-      showCustomSnackBar(warning, showToaster: true);
+      showCustomSnackBar(warning);
     }
     if(product != null && product!.variations!.isEmpty) {
       Get.find<ProductController>().setExistInCart(product!);
@@ -723,14 +723,14 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
       for(int index=0; index<product!.variations!.length; index++) {
         if(!product!.variations![index].multiSelect! && product!.variations![index].required!
             && !productController.selectedVariations[index].contains(true)) {
-          showCustomSnackBar('${'choose_a_variation_from'.tr} ${product!.variations![index].name}', showToaster: true);
+          showCustomSnackBar('${'choose_a_variation_from'.tr} ${product!.variations![index].name}');
           productController.changeCanAddToCartProduct(false);
           return;
         }else if(product!.variations![index].multiSelect! && (product!.variations![index].required!
             || productController.selectedVariations[index].contains(true)) && product!.variations![index].min!
             > productController.selectedVariationLength(productController.selectedVariations, index)) {
           showCustomSnackBar('${'you_need_to_select_minimum'.tr} ${product!.variations![index].min} '
-              '${'to_maximum'.tr} ${product!.variations![index].max} ${'options_from'.tr} ${product!.variations![index].name} ${'variation'.tr}', showToaster: true);
+              '${'to_maximum'.tr} ${product!.variations![index].max} ${'options_from'.tr} ${product!.variations![index].name} ${'variation'.tr}');
           productController.changeCanAddToCartProduct(false);
           return;
         } else {
@@ -738,7 +738,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
         }
       }
     } else if( !widget.isCampaign && product!.variations!.isEmpty && product!.stockType != 'unlimited' && product!.itemStock! <= 0) {
-      showCustomSnackBar('product_is_out_of_stock'.tr, showToaster: true);
+      showCustomSnackBar('product_is_out_of_stock'.tr);
       productController.changeCanAddToCartProduct(false);
       return;
     }

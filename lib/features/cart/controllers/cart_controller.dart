@@ -204,7 +204,7 @@ class CartController extends GetxController implements GetxService {
       }
       showCartSnackBarWidget();
     } else if(response.statusCode == 403 && response.body['errors'][0]['code'] == 'stock_out') {
-      showCustomSnackBar(response.body['errors'][0]['message'], showToaster: true);
+      showCustomSnackBar(response.body['errors'][0]['message']);
       Get.find<ProductController>().getProductDetails(onlineCart.itemId!, existCartData);
     } else {
       ApiChecker.checkApi(response);
@@ -243,7 +243,7 @@ class CartController extends GetxController implements GetxService {
       Get.back();
       showCartSnackBarWidget();
     } else if(response.statusCode == 403 && response.body['errors'][0]['code'] == 'stock_out') {
-      showCustomSnackBar(response.body['errors'][0]['message'], showToaster: true);
+      showCustomSnackBar(response.body['errors'][0]['message']);
       Get.find<ProductController>().getProductDetails(onlineCart.itemId!, existCartData);
     } else {
       ApiChecker.checkApi(response);

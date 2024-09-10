@@ -29,7 +29,7 @@ class HighlightWidgetView extends StatefulWidget {
 
 class _HighlightWidgetViewState extends State<HighlightWidgetView> {
 
-  final CarouselController _carouselController = CarouselController();
+  final CarouselSliderController _carouselController = CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {

@@ -72,7 +72,7 @@ class AccountDeletionBottomSheet extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: isRunningOrderAvailable ? 70 : 50, right: isRunningOrderAvailable ? 70 : 50, bottom: 20),
           child: isRunningOrderAvailable ? CustomButtonWidget(
-            buttonText: 'order_request'.tr,
+            buttonText: 'view_orders'.tr,
             height: 40,
             color: Theme.of(context).primaryColor,
             fontSize: Dimensions.fontSizeDefault,

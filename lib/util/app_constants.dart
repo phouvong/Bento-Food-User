@@ -3,13 +3,13 @@ import 'package:stackfood_multivendor/util/images.dart';
 import 'package:get/get.dart';
 
 class AppConstants {
-  static const String appName = 'bento';
-  static const double appVersion = 7.7;
+  static const String appName = 'bentofood';
+  static const double appVersion = 7.8;
 
   static const String fontFamily = 'Lao';
   static const bool payInWevView = false;
-  static const String webHostedUrl = 'https://food.bentodelivery.net';
-  static const bool useReactWebsite = true;
+  static const String webHostedUrl = 'https://bentodelivery.net';
+  static const bool useReactWebsite = false;
 
   static const String baseUrl = 'https://food.naplao.com';
   static const String categoryUri = '/api/v1/categories';
@@ -164,7 +164,7 @@ class AppConstants {
   static const String dmRegisterSuccess = 'stackfood_dm_registration_success';
   static const String isRestaurantRegister = 'stackfood_restaurant_registration';
   static const String referBottomSheet = 'stackfood_reffer_bottomsheet_show';
-
+  static const String maintenanceModeTopic = 'maintenance_mode_user_app';
 
 
   ///Refer & Earn work flow list..
@@ -247,4 +247,11 @@ class AppConstants {
       'value' : 'CashBack'
     },
   ];
+
+  static const double maxLimitOfFileSentINConversation = 25;
+  static const double maxLimitOfTotalFileSent = 5;
+  static const double maxSizeOfASingleFile = 10;
+  static const double maxImageSend = 10;
+
+  static const double limitOfPickedVideoSizeInMB = 50;
 }

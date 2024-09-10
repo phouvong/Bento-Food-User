@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stackfood_multivendor/common/widgets/validate_check.dart';
 import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
@@ -32,7 +33,26 @@ class ForgetPassScreen extends StatefulWidget {
 class _ForgetPassScreenState extends State<ForgetPassScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _numberController = TextEditingController();
+  final FocusNode _numberFocusNode = FocusNode();
   String? _countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).requestFocus(_numberFocusNode);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _numberController.dispose();
+    _numberFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +94,9 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                       ),
 
                       CustomTextFieldWidget(
-                        titleText: 'enter_phone_number'.tr,
+                        titleText: 'xxx-xxx-xxxxx'.tr,
                         controller: _numberController,
+                        focusNode: _numberFocusNode,
                         inputType: TextInputType.phone,
                         inputAction: TextInputAction.done,
                         isPhone: true,

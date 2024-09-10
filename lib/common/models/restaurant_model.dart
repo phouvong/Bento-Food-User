@@ -495,8 +495,12 @@ class Refund {
     id = json['id'];
     orderId = json['order_id'];
     if (json['image_full_url'] != null) {
-      imageFullUrl = [];
-      jsonDecode(json['image_full_url']).forEach((v) => imageFullUrl!.add(v));
+      imageFullUrl = <String>[];
+      json['image_full_url'].forEach((v) {
+        if(v != null) {
+          imageFullUrl!.add(v);
+        }
+      });
     }
     customerReason = json['customer_reason'];
     customerNote = json['customer_note'];

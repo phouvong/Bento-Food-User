@@ -91,7 +91,7 @@ class ApiClient extends GetxService {
     }
   }
 
-  Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, List<MultipartDocument> otherFile, {Map<String, String>? headers, bool handleError = true}) async {
+  Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, List<MultipartDocument> otherFile, {Map<String, String>? headers, bool handleError = true, bool fromChat = false}) async {
     try {
       debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       debugPrint('====> API Body: $body with ${multipartBody.length} and multipart ${otherFile.length}');
@@ -119,7 +119,20 @@ class ApiClient extends GetxService {
         for(MultipartDocument file in otherFile){
 
           if(foundation.kIsWeb) {
-            request.files.add(http.MultipartFile(file.key, file.file!.files.first.readStream!, file.file!.files.first.size, filename: basename(file.file!.files.first.name)));
+
+            if(fromChat) {
+              PlatformFile platformFile = file.file!.files.first;
+              request.files.add(
+                http.MultipartFile.fromBytes(
+                  'image[]',
+                  platformFile.bytes!, // File bytes
+                  filename: platformFile.name,
+                ),
+              );
+            } else {
+              request.files.add(http.MultipartFile(file.key, file.file!.files.first.readStream!, file.file!.files.first.size,
+                  filename: basename(file.file!.files.first.name)));
+            }
           } else {
             File other = File(file.file!.files.single.path!);
             Uint8List list0 = await other.readAsBytes();
