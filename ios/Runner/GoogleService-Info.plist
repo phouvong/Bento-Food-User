@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>62740247193-q9nqhlhrqr3e0lgisjb1l6dhnn65vukm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.62740247193-q9nqhlhrqr3e0lgisjb1l6dhnn65vukm</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>62740247193-9tuko45g4jbbd7k2leegsdlokesvqfaa.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD7VvOEvolP-fq_g8SoThWi5utjW9aWF0k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>62740247193</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.sixamtech.stackfoodUserApp</string>
+	<key>PROJECT_ID</key>
+	<string>stackfoodtest-30553</string>
+	<key>STORAGE_BUCKET</key>
+	<string>stackfoodtest-30553.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:62740247193:ios:f8f312832d68f5339a7e08</string>
+</dict>
+</plist>
