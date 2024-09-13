@@ -23,8 +23,7 @@ class WalletScreen extends StatefulWidget {
   final String? fundStatus;
   final String? token;
   final bool fromMenuPage;
-  final bool fromNotification;
-  const WalletScreen({super.key, this.fundStatus, this.token, this.fromMenuPage = false, this.fromNotification = false});
+  const WalletScreen({super.key, this.fundStatus, this.token, this.fromMenuPage = false});
 
   @override
   State<WalletScreen> createState() => _WalletScreenState();
@@ -100,15 +99,21 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget build(BuildContext context) {
     bool isLoggedIn = Get.find<AuthController>().isLoggedIn();
     return PopScope(
-      canPop: widget.fromNotification ? Navigator.canPop(context) : false,
+      canPop: false,
       onPopInvoked: (didPop) {
-        if(widget.fromNotification) {
-          if(widget.fromNotification) {
+        if(widget.fromMenuPage){
+          Future.delayed(const Duration(milliseconds: 10), () {
+            Get.back();
+          });
+        }else{
+          Future.delayed(const Duration(milliseconds: 10), () {
             Get.offAllNamed(RouteHelper.getInitialRoute());
-          }else {
-            return;
-          }
-        }else {
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).cardColor,
+        appBar: CustomAppBarWidget(title: 'wallet'.tr, isBackButtonExist: true, onBackPressed: (){
           if(widget.fromMenuPage){
             Future.delayed(const Duration(milliseconds: 10), () {
               Get.back();
@@ -117,28 +122,6 @@ class _WalletScreenState extends State<WalletScreen> {
             Future.delayed(const Duration(milliseconds: 10), () {
               Get.offAllNamed(RouteHelper.getInitialRoute());
             });
-          }
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).cardColor,
-        appBar: CustomAppBarWidget(title: 'wallet'.tr, isBackButtonExist: true, onBackPressed: (){
-          if(widget.fromNotification) {
-            if(widget.fromNotification) {
-              Get.offAllNamed(RouteHelper.getInitialRoute());
-            }else {
-              Get.back();
-            }
-          }else {
-            if(widget.fromMenuPage){
-              Future.delayed(const Duration(milliseconds: 10), () {
-                Get.back();
-              });
-            }else{
-              Future.delayed(const Duration(milliseconds: 10), () {
-                Get.offAllNamed(RouteHelper.getInitialRoute());
-              });
-            }
           }
         }),
         endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,

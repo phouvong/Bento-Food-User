@@ -137,13 +137,12 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                     children: [
                                       SizedBox(height: characteristics == '' ? Dimensions.paddingSizeSmall : 0),
 
-                                      Text(restaurantList[index].name!, overflow: TextOverflow.ellipsis, maxLines: 1, style: robotoBold),
+                                      Text(restaurantList[index].name!,
+                                          overflow: TextOverflow.ellipsis, maxLines: 1, style: robotoBold),
 
-                                      Text(
-                                        characteristics,
-                                        overflow: TextOverflow.ellipsis, maxLines: 1,
-                                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                                      ),
+                                      Text(characteristics,
+                                          overflow: TextOverflow.ellipsis, maxLines: 1,
+                                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
                                     ],
                                   ),
                                 ),
@@ -154,13 +153,12 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-
-                                      restaurantList[index].ratingCount! > 0 ? IconWithTextRowWidget(
+                                      IconWithTextRowWidget(
                                         icon: Icons.star,
                                         text: restaurantList[index].avgRating!.toStringAsFixed(1),
                                         style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
-                                      ) : const SizedBox(),
-                                      SizedBox(width: restaurantList[index].ratingCount! > 0 ? Dimensions.paddingSizeDefault : 0),
+                                      ),
+                                      const SizedBox(width: Dimensions.paddingSizeDefault),
 
                                       restaurantList[index].freeDelivery! ? ImageWithTextRowWidget(
                                         widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),

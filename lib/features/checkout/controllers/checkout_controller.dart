@@ -324,7 +324,7 @@ class CheckoutController extends GetxController implements GetxService {
     if(!instanceOrder) {
       if(index == 0) {
         if(notify) {
-          showCustomSnackBar('instance_order_is_not_active'.tr);
+          showCustomSnackBar('instance_order_is_not_active'.tr, showToaster: true);
         }
       } else {
         _selectedTimeSlot = index;

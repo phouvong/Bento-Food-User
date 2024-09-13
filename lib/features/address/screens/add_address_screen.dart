@@ -322,6 +322,29 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     child: Text('search'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
                   ),
                 ),
+                /*child: InkWell(
+                  onTap: () async {
+                    var p = await Get.dialog(LocationSearchDialog(mapController: locationController.mapController));
+                    Position? position = p;
+                    if (position != null) {
+                      _cameraPosition = CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16);
+                      locationController.mapController!.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition!));
+                      locationController.updatePosition(_cameraPosition, true);
+                    }
+                  },
+                  child: Container(
+                    height: 30,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                      color: Theme.of(context).cardColor,
+                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
+                    ),
+                    padding: const EdgeInsets.only(left: 10),
+                    alignment: Alignment.centerLeft,
+                    child: Text('search'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
+                  ),
+                ),*/
               ),
             ]),
           ),
@@ -382,7 +405,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         SizedBox(height: _otherSelect ? Dimensions.paddingSizeOverLarge : 0),
         
         _otherSelect ? CustomTextFieldWidget(
-          hintText: 'ex_02'.tr,
+          hintText: '${'level_name'.tr} (${'optional'.tr})',
           labelText: 'level_name'.tr,
           inputType: TextInputType.text,
           controller: _levelController,
@@ -421,8 +444,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
         CustomTextFieldWidget(
-          hintText: 'ex_doe'.tr,
-          labelText: 'name'.tr,
+          hintText: 'contact_person_name'.tr,
+          labelText: 'contact_person_name'.tr,
           required: true,
           inputType: TextInputType.name,
           controller: _contactPersonNameController,
@@ -434,8 +457,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         const SizedBox(height: Dimensions.paddingSizeOverLarge),
         
         CustomTextFieldWidget(
-          hintText: 'xxx-xxx-xxxxx',
-          labelText: 'phone'.tr,
+          hintText: 'contact_person_number'.tr,
+          labelText: 'contact_person_number'.tr,
           required: true,
           controller: _contactPersonNumberController,
           focusNode: _numberNode,
@@ -450,7 +473,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         const SizedBox(height: Dimensions.paddingSizeOverLarge),
         
         widget.forGuest ? CustomTextFieldWidget(
-          hintText: 'enter_email'.tr,
+          hintText: '${'email'.tr} (${'optional'.tr})',
           labelText: 'email'.tr,
           controller: _emailController,
           focusNode: _emailFocus,
@@ -460,7 +483,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         SizedBox(height: widget.forGuest ? Dimensions.paddingSizeOverLarge : 0),
         
         CustomTextFieldWidget(
-          hintText: "ex_02".tr,
+          hintText: '${'street_number'.tr} (${'optional'.tr})',
           labelText: 'street_number'.tr,
           inputType: TextInputType.streetAddress,
           focusNode: _streetNode,
@@ -472,7 +495,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         Row(children: [
           Expanded(
             child: CustomTextFieldWidget(
-              hintText: 'ex_1005/2'.tr,
+              hintText: '${'house'.tr} (${'optional'.tr})',
               labelText: 'house'.tr,
               inputType: TextInputType.text,
               focusNode: _houseNode,
@@ -484,7 +507,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           
           Expanded(
             child: CustomTextFieldWidget(
-              hintText: 'ex_02'.tr,
+              hintText: '${'floor'.tr} (${'optional'.tr})',
               labelText: 'floor'.tr,
               inputType: TextInputType.text,
               focusNode: _floorNode,
@@ -577,7 +600,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       if (response.isSuccess) {
         Get.back(result: addressModel);
         //Get.offAllNamed(RouteHelper.getAddressRoute());
-        showCustomSnackBar(response.message, isError: false);
+        showCustomSnackBar('new_address_added_successfully'.tr, isError: false);
       } else {
         showCustomSnackBar(response.message);
       }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
-import 'package:stackfood_multivendor/common/widgets/custom_app_bar_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/validate_check.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
@@ -75,7 +74,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     bool isLoggedIn = Get.find<AuthController>().isLoggedIn();
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
-      appBar: CustomAppBarWidget(title: 'update_profile'.tr),
+      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : AppBar(
+        title: Text('update_profile'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).textTheme.bodyLarge!.color),
+        ),
+        elevation: 0, backgroundColor: Theme.of(context).cardColor, actions: const [SizedBox()],),
       endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,
       body: Column(
         children: [
@@ -112,7 +118,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               const SizedBox(height: 70),
 
                               CustomTextFieldWidget(
-                                titleText: 'enter_first_name'.tr,
+                                titleText: 'write_first_name'.tr,
                                 controller: _firstNameController,
                                 capitalization: TextCapitalization.words,
                                 inputType: TextInputType.name,
@@ -121,12 +127,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 prefixIcon: CupertinoIcons.person_alt_circle_fill,
                                 labelText: 'first_name'.tr,
                                 required: true,
-                                validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_first_name".tr),
+                                validator: (value) => ValidateCheck.validateEmptyText(value, "first_name_field_is_required".tr),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
                               CustomTextFieldWidget(
-                                titleText: 'enter_last_name'.tr,
+                                titleText: 'write_last_name'.tr,
                                 controller: _lastNameController,
                                 capitalization: TextCapitalization.words,
                                 inputType: TextInputType.name,
@@ -135,7 +141,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 prefixIcon: CupertinoIcons.person_alt_circle_fill,
                                 labelText: 'last_name'.tr,
                                 required: true,
-                                validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_last_name".tr),
+                                validator: (value) => ValidateCheck.validateEmptyText(value, "last_name_field_is_required".tr),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
@@ -146,14 +152,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 inputType: TextInputType.phone,
                                 prefixIcon: CupertinoIcons.lock_fill,
                                 isEnabled: false,
-                                fromUpdateProfile: true,
                                 labelText: 'phone'.tr,
                                 required: true,
                               ),
                               const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
                               CustomTextFieldWidget(
-                                titleText: 'enter_email'.tr,
+                                titleText: 'write_email'.tr,
                                 controller: _emailController,
                                 focusNode: _emailFocus,
                                 inputType: TextInputType.emailAddress,

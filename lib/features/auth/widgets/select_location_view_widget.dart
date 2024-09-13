@@ -333,7 +333,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
     Future.delayed( const Duration(milliseconds: 500),(){
       _mapController?.animateCamera(CameraUpdate.newLatLngBounds(
         boundsFromLatLngList(zoneLatLongList),
-        ResponsiveHelper.isDesktop(Get.context) ? 30 : 100.5,
+        ResponsiveHelper.isDesktop(context) ? 30 : 100.5,
       ));
     });
 

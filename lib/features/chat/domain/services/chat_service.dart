@@ -1,6 +1,3 @@
-import 'package:file_picker/file_picker.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/conversation_model.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/message_model.dart';
@@ -8,9 +5,9 @@ import 'package:stackfood_multivendor/features/chat/domain/repositories/chat_rep
 import 'package:stackfood_multivendor/features/chat/domain/services/chat_service_interface.dart';
 import 'package:stackfood_multivendor/features/chat/enums/user_type_enum.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_body_model.dart';
-// import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
-// import 'package:image_compression_flutter/image_compression_flutter.dart';
+import 'package:image_compression_flutter/image_compression_flutter.dart';
 
 class ChatService implements ChatServiceInterface {
   final ChatRepositoryInterface chatRepositoryInterface;
@@ -72,49 +69,39 @@ class ChatService implements ChatServiceInterface {
 
   @override
   Future<XFile> compressImage(XFile file) async {
-    // final ImageFile input = ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
-    // final Configuration config = Configuration(
-    //   outputType: ImageOutputType.webpThenPng,
-    //   useJpgPngNativeCompressor: false,
-    //   quality: (input.sizeInBytes/1048576) < 2 ? 50 : (input.sizeInBytes/1048576) < 5
-    //       ? 30 : (input.sizeInBytes/1048576) < 10 ? 2 : 1,
-    // );
-    // final ImageFile output = await compressor.compress(ImageFileConfiguration(input: input, config: config));
-    // if(kDebugMode) {
-    //   print('Input size : ${input.sizeInBytes / 1048576}');
-    //   print('Output size : ${output.sizeInBytes / 1048576}');
-    // }
-    // return XFile.fromData(output.rawBytes);
-    return file;
+    final ImageFile input = ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
+    final Configuration config = Configuration(
+      outputType: ImageOutputType.webpThenPng,
+      useJpgPngNativeCompressor: false,
+      quality: (input.sizeInBytes/1048576) < 2 ? 50 : (input.sizeInBytes/1048576) < 5
+          ? 30 : (input.sizeInBytes/1048576) < 10 ? 2 : 1,
+    );
+    final ImageFile output = await compressor.compress(ImageFileConfiguration(input: input, config: config));
+    if(kDebugMode) {
+      print('Input size : ${input.sizeInBytes / 1048576}');
+      print('Output size : ${output.sizeInBytes / 1048576}');
+    }
+    return XFile.fromData(output.rawBytes);
   }
 
   @override
-  List<MultipartBody> processMultipartBody(List<XFile> chatImage, List<XFile> chatFiles, XFile? videoFile) {
+  List<MultipartBody> processMultipartBody(List<XFile> chatImage) {
     List<MultipartBody> multipartImages = [];
-
-      for (var image in chatImage) {
-        multipartImages.add(MultipartBody('image[]', image));
-      }
-    if(!GetPlatform.isWeb) {
-      for (var file in chatFiles) {
-        multipartImages.add(MultipartBody('image[]', file));
-      }
-      if (videoFile != null) {
-        multipartImages.add(MultipartBody('image[]', videoFile));
-      }
+    for (var image in chatImage) {
+      multipartImages.add(MultipartBody('image[]', image));
     }
     return multipartImages;
   }
 
   @override
-  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, NotificationBodyModel? notificationBody, int? conversationID, List<MultipartDocument>? webFile, List<MultipartDocument>? webVideo) async {
+  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, NotificationBodyModel? notificationBody, int? conversationID) async {
     MessageModel? messageModel;
     if(notificationBody == null || notificationBody.adminId != null) {
-      messageModel = await chatRepositoryInterface.sendMessage(message, images, 0, UserType.admin, null, webFile, webVideo);
+      messageModel = await chatRepositoryInterface.sendMessage(message, images, 0, UserType.admin, null);
     } else if(notificationBody.restaurantId != null) {
-      messageModel = await chatRepositoryInterface.sendMessage(message, images, notificationBody.restaurantId, UserType.vendor, conversationID, webFile, webVideo);
+      messageModel = await chatRepositoryInterface.sendMessage(message, images, notificationBody.restaurantId, UserType.vendor, conversationID);
     } else if(notificationBody.deliverymanId != null) {
-      messageModel = await chatRepositoryInterface.sendMessage(message, images, notificationBody.deliverymanId, UserType.delivery_man, conversationID, webFile, webVideo);
+      messageModel = await chatRepositoryInterface.sendMessage(message, images, notificationBody.deliverymanId, UserType.delivery_man, conversationID);
     }
     return messageModel;
   }

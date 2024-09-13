@@ -8,7 +8,6 @@ import 'package:stackfood_multivendor/features/notification/domain/models/notifi
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/deep_link_body.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
-import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
@@ -27,28 +26,29 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-  StreamSubscription<List<ConnectivityResult>>? _onConnectivityChanged;
+  late StreamSubscription<ConnectivityResult> _onConnectivityChanged;
 
   @override
   void initState() {
     super.initState();
 
     bool firstTime = true;
-    _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
-      bool isConnected = result.contains(ConnectivityResult.wifi) || result.contains(ConnectivityResult.mobile);
-
+    _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if(!firstTime) {
-        ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
-        ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-          backgroundColor: isConnected ? Colors.green : Colors.red,
-          duration: Duration(seconds: isConnected ? 3 : 6000),
-          content: Text(isConnected ? 'connected'.tr : 'no_connection'.tr, textAlign: TextAlign.center),
+        bool isNotConnected = result != ConnectivityResult.wifi && result != ConnectivityResult.mobile;
+        isNotConnected ? const SizedBox() : ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: isNotConnected ? Colors.red : Colors.green,
+          duration: Duration(seconds: isNotConnected ? 6000 : 3),
+          content: Text(
+            isNotConnected ? 'no_connection'.tr : 'connected'.tr,
+            textAlign: TextAlign.center,
+          ),
         ));
-        if(isConnected) {
+        if(!isNotConnected) {
           _route();
         }
       }
-
       firstTime = false;
     });
 
@@ -68,63 +68,53 @@ class SplashScreenState extends State<SplashScreen> {
   void dispose() {
     super.dispose();
 
-    _onConnectivityChanged?.cancel();
+    _onConnectivityChanged.cancel();
   }
 
   void _route() {
-    Get.find<SplashController>().getConfigData(handleMaintenanceMode: false).then((isSuccess) {
-      if (isSuccess) {
+    Get.find<SplashController>().getConfigData().then((isSuccess) {
+      if(isSuccess) {
         Timer(const Duration(seconds: 1), () async {
-          double? minimumVersion = _getMinimumVersion();
-          bool needsUpdate = AppConstants.appVersion < minimumVersion;
-
-          bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
-          if (needsUpdate || isInMaintenance) {
-            Get.offNamed(RouteHelper.getUpdateRoute(needsUpdate));
-          } else {
-            _handleNavigation();
+          double? minimumVersion = 0;
+          if(GetPlatform.isAndroid) {
+            minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionAndroid;
+          }else if(GetPlatform.isIOS) {
+            minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionIos;
+          }
+          if(AppConstants.appVersion < minimumVersion! || Get.find<SplashController>().configModel!.maintenanceMode!) {
+            Get.offNamed(RouteHelper.getUpdateRoute(AppConstants.appVersion < minimumVersion));
+          }else {
+            if(widget.notificationBody != null && widget.linkBody == null) {
+              _forNotificationRouteProcess();
+            }else {
+              if (Get.find<AuthController>().isLoggedIn()) {
+                _forLoggedInUserRouteProcess();
+              } else {
+                if (Get.find<SplashController>().showIntro()!) {
+                  _newlyRegisteredRouteProcess();
+                } else {
+                  if(Get.find<AuthController>().isGuestLoggedIn()) {
+                    _forGuestUserRouteProcess();
+                  } else {
+                    await Get.find<AuthController>().guestLogin();
+                    _forGuestUserRouteProcess();
+                  }
+                }
+              }
+            }
           }
         });
       }
     });
   }
 
-  double _getMinimumVersion() {
-    if (GetPlatform.isAndroid) {
-      return Get.find<SplashController>().configModel!.appMinimumVersionAndroid!;
-    } else if (GetPlatform.isIOS) {
-      return Get.find<SplashController>().configModel!.appMinimumVersionIos!;
-    } else {
-      return 0;
-    }
-  }
-
-  void _handleNavigation() async {
-    if (widget.notificationBody != null && widget.linkBody == null) {
-      _forNotificationRouteProcess();
-    } else if (Get.find<AuthController>().isLoggedIn()) {
-      _forLoggedInUserRouteProcess();
-    } else if (Get.find<SplashController>().showIntro()!) {
-      _newlyRegisteredRouteProcess();
-    } else if (Get.find<AuthController>().isGuestLoggedIn()) {
-      _forGuestUserRouteProcess();
-    } else {
-      await Get.find<AuthController>().guestLogin();
-      _forGuestUserRouteProcess();
-    }
-  }
-
   void _forNotificationRouteProcess() {
-    if(widget.notificationBody!.notificationType == NotificationType.order) {
-      Get.toNamed(RouteHelper.getOrderDetailsRoute(widget.notificationBody!.orderId, fromNotification: true));
-    }else if(widget.notificationBody!.notificationType == NotificationType.message) {
-      Get.toNamed(RouteHelper.getChatRoute(notificationBody: widget.notificationBody, conversationID: widget.notificationBody!.conversationId, fromNotification: true));
-    }else if(widget.notificationBody!.notificationType == NotificationType.block || widget.notificationBody!.notificationType == NotificationType.unblock){
-      Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.notification));
-    }else if(widget.notificationBody!.notificationType == NotificationType.add_fund || widget.notificationBody!.notificationType == NotificationType.referral_earn || widget.notificationBody!.notificationType == NotificationType.CashBack){
-      Get.toNamed(RouteHelper.getWalletRoute(fromNotification: true));
-    }else{
-      Get.toNamed(RouteHelper.getNotificationRoute(fromNotification: true));
+    if (widget.notificationBody!.notificationType == NotificationType.order) {
+      Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.notificationBody!.orderId));
+    }else if(widget.notificationBody!.notificationType == NotificationType.general){
+      Get.offNamed(RouteHelper.getNotificationRoute(fromNotification: true));
+    }else {
+      Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.notificationBody, conversationID: widget.notificationBody!.conversationId));
     }
   }
 
@@ -132,7 +122,7 @@ class SplashScreenState extends State<SplashScreen> {
     Get.find<AuthController>().updateToken();
     await Get.find<FavouriteController>().getFavouriteList();
     if (AddressHelper.getAddressFromSharedPref() != null) {
-      Get.offNamed(RouteHelper.getInitialRoute(fromSplash: true ));
+      Get.offNamed(RouteHelper.getInitialRoute( fromSplash: true ));
     } else {
       Get.offNamed(RouteHelper.getAccessLocationRoute('splash'));
     }
@@ -165,8 +155,10 @@ class SplashScreenState extends State<SplashScreen> {
             children: [
               Image.asset(Images.logo, width: 100),
               const SizedBox(height: Dimensions.paddingSizeLarge),
-
               Image.asset(Images.logoName, width: 150),
+
+              /*SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),*/
             ],
           ) : NoInternetScreen(child: SplashScreen(notificationBody: widget.notificationBody, linkBody: widget.linkBody)),
         );

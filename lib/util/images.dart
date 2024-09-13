@@ -7,8 +7,7 @@ class Images {
   static const String bengali = 'assets/image/bangla.png';
   static const String call = 'assets/image/call.png';
   static const String checked = 'assets/image/checked.png';
-  static const String lao = 'assets/image/lao.png';
-  static const String english = 'assets/image/eng.png';
+  static const String english = 'assets/image/english.png';
   static const String locationMarker = 'assets/image/location_marker.png';
   static const String lock = 'assets/image/lock.png';
   static const String mail = 'assets/image/mail.png';
@@ -67,7 +66,6 @@ class Images {
   static const String processingGif = 'assets/image/processing.gif';
   static const String handoverGif = 'assets/image/handover.gif';
   static const String image = 'assets/image/image.svg';
-  static const String file = 'assets/image/file.svg';
   static const String send = 'assets/image/send.svg';
   static const String chat = 'assets/image/chat.png';
   static const String nearRestaurant = 'assets/image/near_restaurant.png';
@@ -254,5 +252,4 @@ class Images {
   static const String referPersonIcon = 'assets/image/refer_person_icon.svg';
   static const String referEarnIcon = 'assets/image/refer_earn_icon.svg';
   static const String highlightBg = 'assets/image/highlight_bg.svg';
-  static const String fileIcon = 'assets/image/file.png';
 }

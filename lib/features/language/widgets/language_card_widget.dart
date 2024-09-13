@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stackfood_multivendor/common/widgets/custom_ink_well_widget.dart';
 import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/language/domain/models/language_model.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
@@ -16,7 +15,7 @@ class LanguageCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomInkWellWidget(
+    return InkWell(
       onTap: () {
         if(fromBottomSheet){
           localizationController.setLanguage(Locale(
@@ -26,7 +25,6 @@ class LanguageCardWidget extends StatelessWidget {
         }
         localizationController.setSelectLanguageIndex(index);
       },
-      radius: Dimensions.radiusLarge,
       child: Container(
         height: 70,
         padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),

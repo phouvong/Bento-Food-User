@@ -11,7 +11,6 @@ import 'package:stackfood_multivendor/features/location/widgets/pick_map_dialog.
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
 import 'package:stackfood_multivendor/features/splash/domain/services/splash_service_interface.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
-import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class SplashController extends GetxController implements GetxService {
 
   DateTime get currentTime => DateTime.now();
 
-  Future<bool> getConfigData({bool handleMaintenanceMode = false}) async {
+  Future<bool> getConfigData() async {
     _hasConnection = true;
     _savedCookiesData = getCookiesData();
     Response response = await splashServiceInterface.getConfigData();
@@ -53,17 +52,6 @@ class SplashController extends GetxController implements GetxService {
     if(response.statusCode == 200) {
       _configModel = splashServiceInterface.prepareConfigData(response);
       if(_configModel != null) {
-        if(!GetPlatform.isWeb){
-          bool isMaintenanceMode = _configModel!.maintenanceMode!;
-          bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
-
-          if (isInMaintenance && handleMaintenanceMode) {
-            Get.offNamed(RouteHelper.getUpdateRoute(false));
-          } else if (handleMaintenanceMode && ((Get.currentRoute.contains(RouteHelper.update) && !isMaintenanceMode) || !isInMaintenance)) {
-            Get.offNamed(RouteHelper.getInitialRoute());
-          }
-        }
-
         isSuccess = true;
       }
     }else {

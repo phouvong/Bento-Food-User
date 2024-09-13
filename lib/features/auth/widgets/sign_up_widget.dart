@@ -81,8 +81,8 @@ class SignUpWidgetState extends State<SignUpWidget> {
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
                   prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                  levelTextSize: Dimensions.fontSizeDefault,
-                  validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_first_name".tr),
+                  levelTextSize: Dimensions.paddingSizeDefault,
+                  validator: (value) => ValidateCheck.validateEmptyText(value, "first_name_field_is_required".tr),
                 ),
               ),
               const SizedBox(width: Dimensions.paddingSizeSmall),
@@ -100,8 +100,8 @@ class SignUpWidgetState extends State<SignUpWidget> {
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
                   prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                  levelTextSize: Dimensions.fontSizeDefault,
-                  validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_last_name".tr),
+                  levelTextSize: Dimensions.paddingSizeDefault,
+                  validator: (value) => ValidateCheck.validateEmptyText(value, "last_name_field_is_required".tr),
                 ),
               )
             ]),
@@ -126,7 +126,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
 
               Expanded(
                 child: CustomTextFieldWidget(
-                  hintText: 'xxx-xxx-xxxxx'.tr,
+                  hintText: 'enter_phone_number'.tr,
                   labelText: 'phone'.tr,
                   showLabelText: true,
                   required: true,
@@ -140,7 +140,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                   },
                   countryDialCode: _countryDialCode != null ? CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).code
                       : Get.find<LocalizationController>().locale.countryCode,
-                  validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_phone_number".tr),
+                  validator: (value) => ValidateCheck.validateEmptyText(value, "phone_number_field_is_required".tr),
                 ),
               ),
 
@@ -176,7 +176,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     inputType: TextInputType.visiblePassword,
                     prefixIcon: Icons.lock,
                     isPassword: true,
-                    validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_password".tr),
+                    validator: (value) => ValidateCheck.validateEmptyText(value, "password_field_is_required".tr),
                   ),
                 ]),
               ),

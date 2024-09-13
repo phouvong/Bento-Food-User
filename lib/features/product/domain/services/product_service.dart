@@ -123,7 +123,7 @@ class ProductService implements ProductServiceInterface {
     int qty = addOnQty;
     if (isIncrement) {
       if(stockType != 'unlimited' && addonStock != null && qty >= addonStock) {
-        showCustomSnackBar('${'maximum_addon_limit'.tr} $addonStock');
+        showCustomSnackBar('${'maximum_addon_limit'.tr} $addonStock', showToaster: true);
       } else {
         qty = qty + 1;
       }
@@ -152,11 +152,11 @@ class ProductService implements ProductServiceInterface {
     }
 
     if(stockType != 'unlimited' && itemStock != null && qty >= itemStock && !isCampaign) {
-      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock');
+      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock', showToaster: true, forVariation: true);
     } else if(minimumStock != null && qty >= minimumStock) {
-      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock');
+      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock', showToaster: true, forVariation: true);
     } else if(cartQuantityLimit != null && qty >= cartQuantityLimit && cartQuantityLimit != 0) {
-      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit');
+      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit', showToaster: true, forVariation: true);
     } else {
       qty = qty + 1;
     }
@@ -234,7 +234,7 @@ class ProductService implements ProductServiceInterface {
       }
     } else {
       if(!resultVariations[index][i]! && selectedVariationLength(resultVariations, index) >= variations![index].max!) {
-        showCustomSnackBar('${'maximum_variation_for'.tr} ${variations[index].name} ${'is'.tr} ${variations[index].max}');
+        showCustomSnackBar('${'maximum_variation_for'.tr} ${variations[index].name} ${'is'.tr} ${variations[index].max}', showToaster: true);
       }else {
         if(variations![index].variationValues![i].stockType != null) {
           if(variations[index].variationValues![i].stockType == 'unlimited') {

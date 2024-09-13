@@ -165,7 +165,7 @@ class ProductWidget extends StatelessWidget {
                         maxLines: 1, overflow: TextOverflow.ellipsis,
                       ) : const SizedBox(),
 
-                      isRestaurant && restaurant!.ratingCount! > 0 ? Row(children: [
+                      isRestaurant ? Row(children: [
                         Icon(Icons.star, size: 16, color: Theme.of(context).primaryColor),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
@@ -183,7 +183,7 @@ class ProductWidget extends StatelessWidget {
                       //   rating: isRestaurant ? restaurant!.avgRating : product!.avgRating, size: desktop ? 15 : 12,
                       //   ratingCount: isRestaurant ? restaurant!.ratingCount : product!.ratingCount,
                       // ) : const SizedBox(),
-                      !isRestaurant && product!.ratingCount! > 0 ? Row(children: [
+                      !isRestaurant ? Row(children: [
                         Icon(Icons.star, size: 16, color: Theme.of(context).primaryColor),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 

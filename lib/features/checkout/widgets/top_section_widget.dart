@@ -201,7 +201,7 @@ class TopSectionWidget extends StatelessWidget {
                 : charge != -1 ? PriceConverter.convertPrice(checkoutController.orderType == 'delivery' ? charge : deliveryCharge)
                 : 'calculating'.tr}', textDirection: TextDirection.ltr)) : const SizedBox(),*/
 
-            const SizedBox(height: Dimensions.paddingSizeSmall),
+            SizedBox(height: !ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeDefault : 0),
 
             /// Time Slot
             TimeSlotSection(fromCart: fromCart, checkoutController: checkoutController, tomorrowClosed: tomorrowClosed, todayClosed: todayClosed, tooltipController2: tooltipController2),

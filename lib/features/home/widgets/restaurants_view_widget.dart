@@ -186,19 +186,20 @@ class RestaurantView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
-                      restaurant.ratingCount! > 0 ? IconWithTextRowWidget(
+                      IconWithTextRowWidget(
                         icon: Icons.star, text: restaurant.avgRating!.toStringAsFixed(1),
                         style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
-                      ) : const SizedBox(),
-                      SizedBox(width: restaurant.ratingCount! > 0 ? Dimensions.paddingSizeDefault : 0),
+                      ),
 
-                      restaurant.freeDelivery! ? ImageWithTextRowWidget(
-                        widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),
-                        text: 'free'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
+                      restaurant.freeDelivery! ? Padding(
+                        padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault),
+                        child: ImageWithTextRowWidget(
+                          widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),
+                          text: 'free'.tr,
+                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
+                        ),
                       ) : const SizedBox(),
-                      SizedBox(width: restaurant.freeDelivery! ? Dimensions.paddingSizeDefault : 0),
+                      const SizedBox(width: Dimensions.paddingSizeDefault),
 
                       IconWithTextRowWidget(
                         icon: Icons.access_time_outlined, text: '${restaurant.deliveryTime}',

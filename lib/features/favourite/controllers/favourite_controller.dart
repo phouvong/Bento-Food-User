@@ -32,12 +32,11 @@ class FavouriteController extends GetxController implements GetxService {
       if(isRestaurant) {
         _wishRestIdList.add(restaurantId);
         _wishRestList!.add(Restaurant());
-        _isDisable = false;
       }else {
         _wishProductList!.add(product);
         _wishProductIdList.add(product!.id);
       }
-      showCustomSnackBar(response.body['message'], isError: false);
+      showCustomSnackBar(response.body['message'], isError: false, showToaster: true);
     }
     _isDisable = false;
     update();
@@ -58,7 +57,7 @@ class FavouriteController extends GetxController implements GetxService {
         _wishProductIdList.removeAt(idIndex);
         _wishProductList?.removeAt(idIndex);
       }
-      showCustomSnackBar(response.body['message'], isError: true);
+      showCustomSnackBar(response.body['message'], isError: false, showToaster: true);
     }
     _isDisable = false;
     update();

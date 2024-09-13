@@ -75,8 +75,6 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                 type = widget.conversation?.conversations![index]!.senderType;
               }
 
-              String? lastMessage = _lastMessage(widget.conversation?.conversations![index]);
-
               return Column(
                 children: [
 
@@ -151,7 +149,7 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               widget.conversation!.conversations![index]!.lastMessage != null ? Text(
-                                lastMessage ?? 'start_conversation'.tr,
+                                widget.conversation!.conversations![index]!.lastMessage!.message ?? '',
                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                               ) : const SizedBox(),
                             ])),
@@ -202,18 +200,6 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
         Text('no_conversation_found'.tr),
         const SizedBox(height: 100),
       ]) : const ConversationShimmer();
-  }
-
-  String? _lastMessage(Conversation? conversation) {
-    if(conversation != null && conversation.lastMessage != null) {
-      if(conversation.lastMessage!.message != null) {
-        return conversation.lastMessage!.message;
-      }
-      else if(conversation.lastMessage!.filesFullUrl!.isNotEmpty) {
-        return '${conversation.lastMessage!.filesFullUrl!.length} ${'attachment'.tr}';
-      }
-    }
-    return null;
   }
 }
 

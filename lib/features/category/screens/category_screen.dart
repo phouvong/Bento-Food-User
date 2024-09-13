@@ -1,4 +1,3 @@
-import 'package:stackfood_multivendor/common/widgets/custom_ink_well_widget.dart';
 import 'package:stackfood_multivendor/features/category/controllers/category_controller.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
@@ -57,17 +56,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                     itemCount: catController.categoryList!.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
-                        ),
-                        child: CustomInkWellWidget(
-                          onTap: () => Get.toNamed(RouteHelper.getCategoryProductRoute(
-                            catController.categoryList![index].id, catController.categoryList![index].name!,
-                          )),
-                          radius: Dimensions.radiusDefault,
+                      return InkWell(
+                        onTap: () => Get.toNamed(RouteHelper.getCategoryProductRoute(
+                          catController.categoryList![index].id, catController.categoryList![index].name!,
+                        )),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
+                          ),
+                          alignment: Alignment.center,
                           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
                             ClipRRect(

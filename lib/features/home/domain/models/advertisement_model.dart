@@ -14,12 +14,12 @@ class AdvertisementModel {
   int? isRatingActive;
   int? isReviewActive;
   int? isPaid;
-  // int? createdById;
+  int? createdById;
   String? createdByType;
   String? status;
   String? createdAt;
   String? updatedAt;
-  // int? isUpdated;
+  int? isUpdated;
   String? cancellationNote;
   String? coverImageFullUrl;
   String? profileImageFullUrl;
@@ -44,12 +44,12 @@ class AdvertisementModel {
     this.isRatingActive,
     this.isReviewActive,
     this.isPaid,
-    // this.createdById,
+    this.createdById,
     this.createdByType,
     this.status,
     this.createdAt,
     this.updatedAt,
-    // this.isUpdated,
+    this.isUpdated,
     this.cancellationNote,
     this.coverImageFullUrl,
     this.profileImageFullUrl,
@@ -75,12 +75,12 @@ class AdvertisementModel {
     isRatingActive = json['is_rating_active'];
     isReviewActive = json['is_review_active'];
     isPaid = json['is_paid'];
-    // createdById = json['created_by_id'] != null ? int.parse(json['created_by_id'].toString()) : null;
+    createdById = json['created_by_id'];
     createdByType = json['created_by_type'];
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    // isUpdated = json['is_updated'] != null ? int.parse(json['is_updated'].toString()) : null;
+    isUpdated = json['is_updated'];
     cancellationNote = json['cancellation_note'];
     coverImageFullUrl = json['cover_image_full_url'];
     profileImageFullUrl = json['profile_image_full_url'];
@@ -112,12 +112,12 @@ class AdvertisementModel {
     data['is_rating_active'] = isRatingActive;
     data['is_review_active'] = isReviewActive;
     data['is_paid'] = isPaid;
-    // data['created_by_id'] = createdById;
+    data['created_by_id'] = createdById;
     data['created_by_type'] = createdByType;
     data['status'] = status;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
-    // data['is_updated'] = isUpdated;
+    data['is_updated'] = isUpdated;
     data['cancellation_note'] = cancellationNote;
     data['cover_image_full_url'] = coverImageFullUrl;
     data['profile_image_full_url'] = profileImageFullUrl;

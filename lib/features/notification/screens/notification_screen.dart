@@ -4,7 +4,6 @@ import 'package:stackfood_multivendor/features/notification/controllers/notifica
 import 'package:stackfood_multivendor/features/notification/widgets/notification_bottom_sheet.dart';
 import 'package:stackfood_multivendor/features/notification/widgets/notification_dialog_widget.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
-import 'package:stackfood_multivendor/helper/auth_helper.dart';
 import 'package:stackfood_multivendor/helper/date_converter.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';

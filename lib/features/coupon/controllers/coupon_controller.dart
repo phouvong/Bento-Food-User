@@ -85,13 +85,13 @@ class CouponController extends GetxController implements GetxService {
       } else {
         showCustomSnackBar('${'the_minimum_item_purchase_amount_for_this_coupon_is'.tr} '
             '${PriceConverter.convertPrice(_coupon!.minPurchase)} '
-            '${'but_you_have'.tr} ${PriceConverter.convertPrice(order)}',
+            '${'but_you_have'.tr} ${PriceConverter.convertPrice(order)}', showToaster: true,
         );
         _coupon = null;
         _discount = 0;
       }
     } else {
-      showCustomSnackBar('invalid_code_or'.tr);
+      showCustomSnackBar('invalid_code_or'.tr, showToaster: true);
     }
   }
 
@@ -114,7 +114,7 @@ class CouponController extends GetxController implements GetxService {
       _discount = 0.0;
       showCustomSnackBar('${'the_minimum_item_purchase_amount_for_this_coupon_is'.tr} '
           '${PriceConverter.convertPrice(_coupon!.minPurchase)} '
-          '${'but_you_have'.tr} ${PriceConverter.convertPrice(order)}',
+          '${'but_you_have'.tr} ${PriceConverter.convertPrice(order)}', showToaster: true,
       );
     }
   }

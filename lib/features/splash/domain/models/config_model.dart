@@ -88,7 +88,6 @@ class ConfigModel {
   String? favIconFullUrl;
   bool? extraPackagingChargeStatus;
   bool? countryPickerStatus;
-  MaintenanceModeData? maintenanceModeData;
 
   ConfigModel({
     this.businessName,
@@ -180,7 +179,6 @@ class ConfigModel {
     this.favIconFullUrl,
     this.extraPackagingChargeStatus,
     this.countryPickerStatus,
-    this.maintenanceModeData,
   });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -298,7 +296,6 @@ class ConfigModel {
     favIconFullUrl = json['fav_icon_full_url'];
     extraPackagingChargeStatus = json['extra_packaging_charge'];
     countryPickerStatus = json['country_picker_status'] == 1;
-    maintenanceModeData = json['maintenance_mode_data'] != null ? MaintenanceModeData.fromJson(json['maintenance_mode_data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -400,9 +397,6 @@ class ConfigModel {
     data['fav_icon_full_url'] = favIconFullUrl;
     data['extra_packaging_charge'] = extraPackagingChargeStatus;
     data['country_picker_status'] = countryPickerStatus;
-    if (maintenanceModeData != null) {
-      data['maintenance_mode_data'] = maintenanceModeData!.toJson();
-    }
     return data;
   }
 }
@@ -719,87 +713,6 @@ class MediaData {
     data['image'] = image;
     data['pdf'] = pdf;
     data['docs'] = docs;
-    return data;
-  }
-}
-
-class MaintenanceModeData {
-  List<String>? maintenanceSystemSetup;
-  MaintenanceDurationSetup? maintenanceDurationSetup;
-  MaintenanceMessageSetup? maintenanceMessageSetup;
-
-  MaintenanceModeData({
-    this.maintenanceSystemSetup,
-    this.maintenanceDurationSetup,
-    this.maintenanceMessageSetup,
-  });
-
-  MaintenanceModeData.fromJson(Map<String, dynamic> json) {
-    maintenanceSystemSetup = json['maintenance_system_setup'].cast<String>();
-    maintenanceDurationSetup = json['maintenance_duration_setup'] != null ? MaintenanceDurationSetup.fromJson(json['maintenance_duration_setup']) : null;
-    maintenanceMessageSetup = json['maintenance_message_setup'] != null ? MaintenanceMessageSetup.fromJson(json['maintenance_message_setup']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['maintenance_system_setup'] = maintenanceSystemSetup;
-    if (maintenanceDurationSetup != null) {
-      data['maintenance_duration_setup'] = maintenanceDurationSetup!.toJson();
-    }
-    if (maintenanceMessageSetup != null) {
-      data['maintenance_message_setup'] = maintenanceMessageSetup!.toJson();
-    }
-    return data;
-  }
-}
-
-class MaintenanceDurationSetup {
-  String? maintenanceDuration;
-  String? startDate;
-  String? endDate;
-
-  MaintenanceDurationSetup({
-    this.maintenanceDuration,
-    this.startDate,
-    this.endDate,
-  });
-
-  MaintenanceDurationSetup.fromJson(Map<String, dynamic> json) {
-    maintenanceDuration = json['maintenance_duration'];
-    startDate = json['start_date'];
-    endDate = json['end_date'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['maintenance_duration'] = maintenanceDuration;
-    data['start_date'] = startDate;
-    data['end_date'] = endDate;
-    return data;
-  }
-}
-
-class MaintenanceMessageSetup {
-  int? businessNumber;
-  int? businessEmail;
-  String? maintenanceMessage;
-  String? messageBody;
-
-  MaintenanceMessageSetup({this.businessNumber, this.businessEmail, this.maintenanceMessage, this.messageBody});
-
-  MaintenanceMessageSetup.fromJson(Map<String, dynamic> json) {
-    businessNumber = json['business_number'];
-    businessEmail = json['business_email'];
-    maintenanceMessage = json['maintenance_message'];
-    messageBody = json['message_body'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['business_number'] = businessNumber;
-    data['business_email'] = businessEmail;
-    data['maintenance_message'] = maintenanceMessage;
-    data['message_body'] = messageBody;
     return data;
   }
 }

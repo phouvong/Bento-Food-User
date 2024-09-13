@@ -38,7 +38,7 @@ class ChatRepository implements ChatRepositoryInterface {
   }
 
   @override
-  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, int? userID, UserType userType, int? conversationID, List<MultipartDocument>? webFile, List<MultipartDocument>? webVideo) async {
+  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, int? userID, UserType userType, int? conversationID) async {
     MessageModel? messageModel;
     Map<String, String> fields = {};
     fields.addAll({'message': message, 'receiver_type': userType.name, 'offset': '1', 'limit': '10'});
@@ -47,7 +47,7 @@ class ChatRepository implements ChatRepositoryInterface {
     } else {
       fields.addAll({'receiver_id': userID.toString()});
     }
-    Response response = await apiClient.postMultipartData(AppConstants.sendMessageUri, fields, images, webFile ?? [], fromChat: true);
+    Response response = await apiClient.postMultipartData(AppConstants.sendMessageUri, fields, images, []);
     if(response.statusCode == 200) {
       messageModel = MessageModel.fromJson(response.body);
     }

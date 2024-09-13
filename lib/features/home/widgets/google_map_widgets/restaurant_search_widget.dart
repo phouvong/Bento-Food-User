@@ -116,10 +116,6 @@ class _RestaurantSearchWidgetState extends State<RestaurantSearchWidget> {
           },);
         });
 
-        if(_lastOptions.isEmpty) {
-          return [ListTile(title: Text('no_restaurant_found'.tr, textAlign: TextAlign.center))];
-        }
-
         return _lastOptions;
       });
 

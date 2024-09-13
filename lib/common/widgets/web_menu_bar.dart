@@ -50,7 +50,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                           const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
                           Text(
-                            AuthHelper.isLoggedIn() ? '${AddressHelper.getAddressFromSharedPref()!.addressType!.tr}: ' : '${'your_location'.tr}: ',
+                            '${AddressHelper.getAddressFromSharedPref()!.addressType!.tr}: ',
                             style: robotoMedium.copyWith(
                               color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraSmall,
                             ),

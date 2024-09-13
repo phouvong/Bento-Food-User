@@ -69,10 +69,10 @@ class CouponCardWidget extends StatelessWidget {
                 const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                 couponList![index].restaurant == null ?  Flexible(child: Text(
-                  couponList![index].couponType == 'restaurant_wise' ?
+                  couponList![index].couponType == 'store_wise' ?
                   '${'on'.tr} ${couponList![index].data}' : 'on_all_store'.tr,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
-                  maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
                 )) : Flexible(child: Text(
                   couponList![index].couponType == 'default' ?
                   '${couponList![index].restaurant!.name}' : '',

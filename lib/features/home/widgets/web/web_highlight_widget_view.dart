@@ -17,7 +17,7 @@ class WebHighlightWidgetView extends StatefulWidget {
 
 class _WebHighlightWidgetViewState extends State<WebHighlightWidgetView> {
 
-  final CarouselSliderController _carouselController = CarouselSliderController();
+  final CarouselController _carouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {

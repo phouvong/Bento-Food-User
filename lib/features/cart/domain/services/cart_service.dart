@@ -99,11 +99,11 @@ class CartService implements CartServiceInterface {
     }
 
     if(stockType != 'unlimited' && itemStock != null && qty >= itemStock) {
-      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock');
+      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock', showToaster: true, forVariation: true);
     } else if(minimumStock != null && qty >= minimumStock) {
-      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock');
+      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock', showToaster: true, forVariation: true);
     } else if(cartQuantityLimit != null && qty >= cartQuantityLimit && cartQuantityLimit != 0) {
-      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit');
+      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit', showToaster: true, forVariation: true);
     } else {
       qty = qty + 1;
     }

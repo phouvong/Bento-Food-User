@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/common/widgets/validate_check.dart';
-import 'package:stackfood_multivendor/features/favourite/controllers/favourite_controller.dart';
 import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
@@ -47,12 +45,6 @@ class SignInWidgetState extends State<SignInWidget> {
         : CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
     _phoneController.text =  Get.find<AuthController>().getUserNumber();
     _passwordController.text = Get.find<AuthController>().getUserPassword();
-
-    if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FocusScope.of(context).requestFocus(_phoneFocus);
-      });
-    }
   }
 
   @override
@@ -68,7 +60,7 @@ class SignInWidgetState extends State<SignInWidget> {
             SizedBox(height: isDesktop ? 30 : 0),
 
             CustomTextFieldWidget(
-              hintText: 'xxx-xxx-xxxxx'.tr,
+              hintText: 'enter_phone_number'.tr,
               controller: _phoneController,
               focusNode: _phoneFocus,
               nextFocus: _passwordFocus,
@@ -80,12 +72,12 @@ class SignInWidgetState extends State<SignInWidget> {
               countryDialCode: _countryDialCode ?? Get.find<LocalizationController>().locale.countryCode,
               labelText: 'phone'.tr,
               required: true,
-              validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_phone_number".tr),
+              validator: (value) => ValidateCheck.validateEmptyText(value, "phone_number_field_is_required".tr),
             ),
             const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
             CustomTextFieldWidget(
-              hintText: '8_character'.tr,
+              hintText: 'enter_your_password'.tr,
               controller: _passwordController,
               focusNode: _passwordFocus,
               inputAction: TextInputAction.done,
@@ -95,34 +87,34 @@ class SignInWidgetState extends State<SignInWidget> {
               onSubmit: (text) => (GetPlatform.isWeb) ? _login(authController, _countryDialCode!) : null,
               labelText: 'password'.tr,
               required: true,
-              validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_password".tr),
+              validator: (value) => ValidateCheck.validateEmptyText(value, "password_field_is_required".tr),
             ),
             SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeDefault : Dimensions.paddingSizeExtraSmall),
 
 
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              InkWell(
-                onTap: () => authController.toggleRememberMe(),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 24, width: 24,
-                      child: Checkbox(
-                        side: BorderSide(color: Theme.of(context).hintColor),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        activeColor: Theme.of(context).primaryColor,
-                        value: authController.isActiveRememberMe,
-                        onChanged: (bool? isChecked) => authController.toggleRememberMe(),
-                      ),
+            Row(children: [
+              Expanded(
+                child: ListTile(
+                  onTap: () => authController.toggleRememberMe(),
+                  leading: SizedBox(
+                    height: 24, width: 24,
+                    child: Checkbox(
+                      side: BorderSide(color: Theme.of(context).hintColor),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      activeColor: Theme.of(context).primaryColor,
+                      value: authController.isActiveRememberMe,
+                      onChanged: (bool? isChecked) => authController.toggleRememberMe(),
                     ),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                    Text('remember_me'.tr, style: robotoRegular),
-                  ],
+                  ),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+                    child: Text('remember_me'.tr, style: robotoRegular),
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  horizontalTitleGap: 0,
                 ),
               ),
-
               TextButton(
                 style: TextButton.styleFrom(padding: EdgeInsets.zero),
                 onPressed: () {
@@ -133,7 +125,7 @@ class SignInWidgetState extends State<SignInWidget> {
                     Get.toNamed(RouteHelper.getForgotPassRoute(false, null));
                   }
                 },
-                child: Text('${'forgot_password'.tr}?', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
+                child: Text('${'forgot_password'.tr}?', style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
               ),
             ]),
             const SizedBox(height: Dimensions.paddingSizeLarge),
@@ -211,14 +203,11 @@ class SignInWidgetState extends State<SignInWidget> {
     }
   }
 
-  Future<void> _processSuccessSetup(AuthController authController, String phone, String password, String countryDialCode, ResponseModel status, String numberWithCountryCode) async {
+  void _processSuccessSetup(AuthController authController, String phone, String password, String countryDialCode, ResponseModel status, String numberWithCountryCode) {
     if (authController.isActiveRememberMe) {
       authController.saveUserNumberAndPassword(phone, password, countryDialCode);
     } else {
       authController.clearUserNumberAndPassword();
-    }
-    if(GetPlatform.isWeb){
-      await Get.find<FavouriteController>().getFavouriteList();
     }
     String token = status.message!.substring(1, status.message!.length);
     if(Get.find<SplashController>().configModel!.customerVerification! && int.parse(status.message![0]) == 0) {
@@ -227,7 +216,7 @@ class SignInWidgetState extends State<SignInWidget> {
       Get.toNamed(RouteHelper.getVerificationRoute(numberWithCountryCode, token, RouteHelper.signUp, data));
     }else {
       if(widget.backFromThis) {
-        if(ResponsiveHelper.isDesktop(Get.context)){
+        if(ResponsiveHelper.isDesktop(context)){
           Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: false));
         } else {
           Get.back();

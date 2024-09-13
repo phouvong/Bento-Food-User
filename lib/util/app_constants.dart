@@ -3,15 +3,15 @@ import 'package:stackfood_multivendor/util/images.dart';
 import 'package:get/get.dart';
 
 class AppConstants {
-  static const String appName = 'bentofood';
-  static const double appVersion = 7.8;
+  static const String appName = 'StackFood';
+  static const double appVersion = 7.7;
 
-  static const String fontFamily = 'Lao';
+  static const String fontFamily = 'Roboto';
   static const bool payInWevView = false;
-  static const String webHostedUrl = 'https://bentodelivery.net';
+  static const String webHostedUrl = 'https://stackfood-web.6amtech.com';
   static const bool useReactWebsite = false;
 
-  static const String baseUrl = 'https://food.naplao.com';
+  static const String baseUrl = 'https://stackfood-admin.6amtech.com';
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
   static const String restaurantProductUri = '/api/v1/products/latest';
@@ -164,7 +164,7 @@ class AppConstants {
   static const String dmRegisterSuccess = 'stackfood_dm_registration_success';
   static const String isRestaurantRegister = 'stackfood_restaurant_registration';
   static const String referBottomSheet = 'stackfood_reffer_bottomsheet_show';
-  static const String maintenanceModeTopic = 'maintenance_mode_user_app';
+
 
 
   ///Refer & Earn work flow list..
@@ -207,9 +207,11 @@ class AppConstants {
 
   /// Languages
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.lao, languageName: 'ພາສາລາວ', countryCode: 'LA', languageCode: 'lo'),
     LanguageModel(imageUrl: Images.english, languageName: 'English', countryCode: 'US', languageCode: 'en'),
-      ];
+    LanguageModel(imageUrl: Images.arabic, languageName: 'عربى', countryCode: 'SA', languageCode: 'ar'),
+    LanguageModel(imageUrl: Images.spanish, languageName: 'Spanish', countryCode: 'ES', languageCode: 'es'),
+    LanguageModel(imageUrl: Images.bengali, languageName: 'Bengali', countryCode: 'BN', languageCode: 'bn'),
+  ];
 
   static List<String> joinDropdown = [
     'join_us',
@@ -244,11 +246,4 @@ class AppConstants {
       'value' : 'CashBack'
     },
   ];
-
-  static const double maxLimitOfFileSentINConversation = 25;
-  static const double maxLimitOfTotalFileSent = 5;
-  static const double maxSizeOfASingleFile = 10;
-  static const double maxImageSend = 10;
-
-  static const double limitOfPickedVideoSizeInMB = 50;
 }

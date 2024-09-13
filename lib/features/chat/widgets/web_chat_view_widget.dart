@@ -372,17 +372,15 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                             reverse: true,
                             totalSize: widget.chatController.messageModel?.totalSize,
                             offset: widget.chatController.messageModel?.offset,
-                            onPaginate: (int? offset) async {
-                              await widget.chatController.getMessages(
-                                offset!, NotificationBodyModel(
-                                type: widget.chatController.notificationBody!.type,
-                                notificationType: NotificationType.message,
-                                adminId: widget.chatController.notificationBody!.type == UserType.admin.name ? 0 : null,
-                                restaurantId: widget.chatController.notificationBody!.type == UserType.vendor.name ? widget.chatController.notificationBody!.restaurantId : null,
-                                deliverymanId: widget.chatController.notificationBody!.type == UserType.delivery_man.name ? widget.chatController.notificationBody!.deliverymanId : null,
-                              ), user, widget.chatController.notificationBody!.conversationId,
-                              );
-                            },
+                            onPaginate: (int? offset) async => await widget.chatController.getMessages(
+                              offset!, NotificationBodyModel(
+                              type: widget.chatController.notificationBody!.type,
+                              notificationType: NotificationType.message,
+                              adminId: widget.chatController.notificationBody!.type == UserType.admin.name ? 0 : null,
+                              restaurantId: widget.chatController.notificationBody!.type == UserType.vendor.name ? user?.id : null,
+                              deliverymanId: widget.chatController.notificationBody!.type == UserType.delivery_man.name ? user?.id : null,
+                            ), user, widget.chatController.notificationBody!.conversationId,
+                            ),
                             productView: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -459,147 +457,44 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                                       ),
 
                                       GetBuilder<ChatController>(builder: (chatController) {
-                                        if(chatController.pickedWebVideoFile != null) {
-                                          return Container(
-                                            width: 250,
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).cardColor,
-                                              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                            margin: const EdgeInsets.only(top: 10),
-                                            child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
+                                        return chatController.chatImage.isNotEmpty ? SizedBox(height: 100,
+                                          child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: chatController.chatImage.length,
+                                              itemBuilder: (BuildContext context, index){
+                                                return  chatController.chatImage.isNotEmpty ? Padding(
+                                                  padding: const EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
+                                                  child: Stack(children: [
 
-                                              const Icon(Icons.video_collection, size: 30),
-                                              const SizedBox(width: Dimensions.paddingSizeExtraSmall,),
-
-                                              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                                                Text(chatController.pickedWebVideoFile!.files.first.name,
-                                                  maxLines: 2, overflow: TextOverflow.ellipsis,
-                                                  style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
-                                                ),
-
-                                                // Text(fileSize, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                                                //   color: Theme.of(context).hintColor,
-                                                // )),
-                                              ])),
-
-
-                                              InkWell(
-                                                onTap: () {
-                                                  chatController.pickVideoFile(true);
-                                                },
-                                                child: Padding(padding: const EdgeInsets.only(top: 5),
-                                                  child: Align(alignment: Alignment.topRight,
-                                                    child: Icon(Icons.close,
-                                                      size: Dimensions.paddingSizeLarge,
-                                                      color: Theme.of(context).hintColor,
+                                                    Container(width: 100, height: 100,
+                                                      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                      child: ClipRRect(
+                                                        borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault)),
+                                                        child: Image.memory(
+                                                          chatController.chatRawImage[index], width: 100, height: 100, fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
+
+                                                    Positioned(top:0, right:0,
+                                                      child: InkWell(
+                                                        onTap : () => chatController.removeImage(index, _inputMessageController.text.trim()),
+                                                        child: Container(
+                                                          decoration: const BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius: BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault))
+                                                          ),
+                                                          child: const Padding(
+                                                            padding: EdgeInsets.all(4.0),
+                                                            child: Icon(Icons.clear, color: Colors.red, size: 15),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )],
                                                   ),
-                                                ),
-                                              )
-
-                                            ]),
-                                          );
-                                        }
-                                        if(chatController.objWebFile.isNotEmpty){
-                                          return SizedBox(
-                                            height: 70,
-                                            child: ListView.separated(
-                                              shrinkWrap: true, scrollDirection: Axis.horizontal,
-                                              padding: const EdgeInsets.only(bottom: 0, top: 5),
-                                              separatorBuilder: (context, index) => const SizedBox(width: Dimensions.paddingSizeDefault),
-                                              itemCount: chatController.objWebFile.length,
-                                              itemBuilder: (context, index){
-                                                // String fileSize = ImageSize.getImageSizeFromXFile(chatController.objFile![index]);
-                                                return Container(
-                                                  width: 180,
-                                                  decoration: BoxDecoration(
-                                                    color: Theme.of(context).cardColor,
-                                                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                                  ),
-                                                  padding: const EdgeInsets.only(left: 10, right: 5),
-                                                  child: Row(crossAxisAlignment: CrossAxisAlignment.center,children: [
-
-                                                    Image.asset(Images.fileIcon,height: 30, width: 30),
-                                                    const SizedBox(width: Dimensions.paddingSizeExtraSmall,),
-
-                                                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                                                      Text(chatController.objWebFile[index].names.first??'attachment'.tr,
-                                                        maxLines: 1, overflow: TextOverflow.ellipsis,
-                                                        style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
-                                                      ),
-
-                                                      // Text(fileSize, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
-                                                      //   color: Theme.of(context).hintColor,
-                                                      // )),
-                                                    ])),
-
-
-                                                    InkWell(
-                                                      onTap: () {
-                                                        chatController.pickFile(true, index: index);
-                                                      },
-                                                      child: Padding(padding: const EdgeInsets.only(top: 5),
-                                                        child: Align(alignment: Alignment.topRight,
-                                                          child: Icon(Icons.close,
-                                                            size: Dimensions.paddingSizeLarge,
-                                                            color: Theme.of(context).hintColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-
-                                                  ]),
-                                                );
-                                              },
-                                            ),
-                                          );
-                                        }
-                                        if(chatController.chatImage.isNotEmpty && !chatController.isLoading) {
-                                          return chatController.chatImage.isNotEmpty ? SizedBox(height: 100,
-                                            child: ListView.builder(
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: chatController.chatImage.length,
-                                                itemBuilder: (BuildContext context, index){
-                                                  return  chatController.chatImage.isNotEmpty ? Padding(
-                                                    padding: const EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
-                                                    child: Stack(children: [
-
-                                                      Container(width: 100, height: 100,
-                                                        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                        child: ClipRRect(
-                                                          borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault)),
-                                                          child: Image.memory(
-                                                            chatController.chatRawImage[index], width: 100, height: 100, fit: BoxFit.cover,
-                                                          ),
-                                                          // child: Container(height: 20, width: 20, color: Colors.green,),
-                                                        ),
-                                                      ),
-
-                                                      Positioned(top:0, right:0,
-                                                        child: InkWell(
-                                                          onTap : () => chatController.removeImage(index, _inputMessageController.text.trim()),
-                                                          child: Container(
-                                                            decoration: const BoxDecoration(
-                                                                color: Colors.white,
-                                                                borderRadius: BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault))
-                                                            ),
-                                                            child: const Padding(
-                                                              padding: EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.clear, color: Colors.red, size: 15),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )],
-                                                    ),
-                                                  ) : const SizedBox();
-                                                }),
-                                          ) : const SizedBox();
-                                        }
-                                        return const SizedBox();
+                                                ) : const SizedBox();
+                                              }),
+                                        ) : const SizedBox();
                                       }),
 
                                     ],
@@ -616,44 +511,6 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                                   child: CustomAssetImageWidget(
                                     Images.image, width: 25, height: 25, color: widget.chatController.chatImage.isNotEmpty ? Theme.of(context).primaryColor : Theme.of(context).hintColor,
                                   ),
-                                ),
-                              ),
-
-                              MenuAnchor(
-                                builder: (BuildContext context, MenuController controller, Widget? child) {
-                                  return InkWell(
-                                    onTap: () async {
-                                      // _inputMessageFocus.unfocus();
-
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
-                                      child: CustomAssetImageWidget(Images.file, width: 25, height: 25, color: Theme.of(context).hintColor),
-                                    ),
-                                  );
-                                },
-                                menuChildren: List<MenuItemButton>.generate(2, (int index) => MenuItemButton(
-                                  onPressed: () {
-                                    if(index == 0) {
-                                      Get.find<ChatController>().pickFile(false);
-                                    } else {
-                                      Get.find<ChatController>().pickVideoFile(false);
-                                    }
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Icon(index == 0 ? Icons.file_copy_outlined : Icons.video_collection_outlined, size: 18, color: Theme.of(context).primaryColor),
-                                      const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                                      Text(index == 0 ? 'pick_files'.tr : 'pick_video'.tr, style: robotoMedium),
-                                    ],
-                                  ),
-                                ),
                                 ),
                               ),
 

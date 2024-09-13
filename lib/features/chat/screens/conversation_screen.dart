@@ -1,6 +1,7 @@
 import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.dart';
 import 'package:stackfood_multivendor/features/chat/widgets/chat_serach_field_widget.dart';
 import 'package:stackfood_multivendor/features/chat/widgets/message_card_widget.dart';
+import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_body_model.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
@@ -55,8 +56,7 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
   void _initCall(){
     if(Get.find<AuthController>().isLoggedIn()) {
       Get.find<ProfileController>().getUserInfo();
-      Get.find<ChatController>().setType('vendor', willUpdate: false);
-      Get.find<ChatController>().getConversationList(1, type: Get.find<ChatController>().type);
+      Get.find<ChatController>().getConversationList(1, type: 'vendor');
     }
   }
 
@@ -134,8 +134,7 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
               if(chatController.searchConversationModel != null) {
                 _searchController.text = '';
                 chatController.removeSearchMode();
-                chatController.getConversationList(1, type: chatController.type);
-              } else {
+              }else {
                 if(_searchController.text.trim().isNotEmpty) {
                   chatController.searchConversation(_searchController.text.trim());
                 }else {
@@ -276,24 +275,21 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
             String? lastMessage = _lastMessage(conversation.conversations![index]);
 
             bool unSeen =  (Get.find<ProfileController>().userInfoModel != null && Get.find<ProfileController>().userInfoModel!.userInfo != null
-                && conversation.conversations![index]!.lastMessage!.senderId != Get.find<ProfileController>().userInfoModel!.userInfo?.id
+                && conversation.conversations![index]!.lastMessage!.senderId != Get.find<ProfileController>().userInfoModel!.userInfo!.id
                 && conversation.conversations![index]!.unreadMessageCount! > 0);
-
-            // String? hasFile = conversation.conversations![index]!.lastMessage != null && conversation.conversations![index]!.lastMessage!.filesFullUrl != null
-            //     ? '${conversation.conversations![index]!.lastMessage?.filesFullUrl?.length} ${'attachment'.tr}' : null;
 
             return (type == UserType.admin.name) ? const SizedBox() : (type == chatController.type) ? Container(
               margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
               decoration: BoxDecoration(
                 color: unSeen ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall + 3),
-                boxShadow: [BoxShadow(color: unSeen ? Theme.of(context).cardColor : Colors.black12, blurRadius: 5, spreadRadius: 0)],
+                boxShadow: [BoxShadow(color: unSeen ? Theme.of(context).hintColor.withOpacity(0.05) : Colors.black12, blurRadius: 5, spreadRadius: 0)],
               ),
               child: CustomInkWellWidget(
-                onTap: () async {
+                onTap: () {
                   if(user != null) {
 
-                    await Get.toNamed(RouteHelper.getChatRoute(
+                    Get.toNamed(RouteHelper.getChatRoute(
                       notificationBody: NotificationBodyModel(
                         type: conversation.conversations![index]!.senderType,
                         notificationType: NotificationType.message,
@@ -304,9 +300,8 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
                       conversationID: conversation.conversations![index]!.id,
                       index: index,
                     ));
-                    Get.find<ChatController>().getConversationList(1, type: Get.find<ChatController>().type);
 
-                  } else {
+                  }else {
                     showCustomSnackBar('${type!.tr} ${'not_found'.tr}');
                   }
                 },
@@ -314,50 +309,56 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
                 radius: Dimensions.radiusSmall,
                 child: Padding(
                   padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  child: Row(children: [
-                    ClipOval(child: CustomImageWidget(
-                      height: 50, width: 50,
-                      image: '${user != null ? user.imageFullUrl : ''}',
-                    )),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
+                  child: Stack(children: [
+                    Row(children: [
+                      ClipOval(child: CustomImageWidget(
+                        height: 50, width: 50,
+                        image: '${user != null ? user.imageFullUrl : ''}',
+                      )),
+                      const SizedBox(width: Dimensions.paddingSizeSmall),
 
-                    Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                      Row(children: [
+                        Row(children: [
+                          user != null ? Text(
+                            '${user.fName} ${user.lName}', style: robotoMedium,
+                          ) : Text('${type!.tr} ${'deleted'.tr}', style: robotoMedium),
+
+                          GetBuilder<ProfileController>(builder: (profileController) {
+                            return (profileController.userInfoModel != null && profileController.userInfoModel!.userInfo != null
+                            && conversation.conversations![index]!.lastMessage!.senderId != profileController.userInfoModel!.userInfo!.id
+                            && conversation.conversations![index]!.unreadMessageCount! > 0) ? Positioned(
+                              right: Get.find<LocalizationController>().isLtr ? 5 : null, top: 5, left: Get.find<LocalizationController>().isLtr ? null : 5,
+                              child: Container(
+                                padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                                decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+                                child: Text(
+                                  conversation.conversations![index]!.unreadMessageCount.toString(),
+                                  style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeExtraSmall),
+                                ),
+                              ),
+                            ) : const SizedBox();
+                          }),
+                        ]),
+                        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+
                         user != null ? Text(
-                          '${user.fName} ${user.lName}', style: robotoMedium,
-                        ) : Text('${type!.tr} ${'deleted'.tr}', style: robotoMedium),
+                          lastMessage ?? 'start_conversation'.tr,
+                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                          maxLines: 1, overflow: TextOverflow.ellipsis,
+                        ) : const SizedBox(),
 
-                        GetBuilder<ProfileController>(builder: (profileController) {
-                          return (profileController.userInfoModel != null && profileController.userInfoModel!.userInfo != null
-                          && conversation.conversations![index]!.lastMessage!.senderId != profileController.userInfoModel!.userInfo!.id
-                          && conversation.conversations![index]!.unreadMessageCount! > 0) ? Container(
-                            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                            decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
-                            child: Text(
-                              conversation.conversations![index]!.unreadMessageCount.toString(),
-                              style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeExtraSmall),
-                            ),
-                          ) : const SizedBox();
-                        }),
-                      ]),
-                      const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                      user != null ? Text(
-                        lastMessage ?? 'start_conversation'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                        maxLines: 1, overflow: TextOverflow.ellipsis,
-                      ) : const SizedBox(),
-
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(
-                              conversation.conversations![index]!.lastMessageTime!)),
-                          style: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeExtraSmall),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(
+                                conversation.conversations![index]!.lastMessageTime!)),
+                            style: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeExtraSmall),
+                          ),
                         ),
-                      ),
-                    ])),
+                      ])),
+                    ]),
+
                   ]),
                 ),
               ),
@@ -377,7 +378,7 @@ class _ConversationScreenState extends State<ConversationScreen>  with TickerPro
         return conversation.lastMessage!.message;
       }
       else if(conversation.lastMessage!.filesFullUrl!.isNotEmpty) {
-        return '${conversation.lastMessage!.filesFullUrl!.length} ${'attachment'.tr}';
+        return '${conversation.lastMessage!.filesFullUrl!.length} ${'images_send'.tr}';
       }
     }
     return null;

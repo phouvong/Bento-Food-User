@@ -1,3 +1,4 @@
+
 enum NotificationType{
   message,
   order,
@@ -8,10 +9,6 @@ enum NotificationType{
   referral_earn,
   //ignore: constant_identifier_names
   CashBack,
-  block,
-  unblock,
-  // ignore: constant_identifier_names
-  add_fund,
 }
 
 class NotificationBodyModel {
@@ -84,12 +81,6 @@ class NotificationBodyModel {
       return NotificationType.referral_earn;
     }else if(enumString == NotificationType.CashBack.toString()) {
       return NotificationType.CashBack;
-    }else if(enumString == NotificationType.block.toString()) {
-      return NotificationType.block;
-    }else if(enumString == NotificationType.unblock.toString()) {
-      return NotificationType.unblock;
-    }else if(enumString == NotificationType.add_fund.toString()) {
-      return NotificationType.add_fund;
     }
     return NotificationType.general;
   }

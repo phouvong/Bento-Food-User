@@ -45,8 +45,7 @@ class NotificationStatusChangeBottomSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
             child: Text(
-              authController.notification ? 'if_you_disable_this_option_you_will_not_receive_system_notifications'.tr
-                  : 'when_you_enable_this_option_you_will_be_notified_with_the_system_notifications'.tr,
+              !authController.notification ? 'you_want_to_enable_notification'.tr : 'you_want_to_disable_notification'.tr,
               style: robotoRegular.copyWith(color: Theme.of(context).hintColor), textAlign: TextAlign.center,
             ),
           ),
