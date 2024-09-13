@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>299589180044-fasllil899ap0qcp7h8qlfm46t9uqvc7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.299589180044-fasllil899ap0qcp7h8qlfm46t9uqvc7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCyxxMA4QP0YvlZQ3NsqPZisJqMziWTzo0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>299589180044</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bento.ios</string>
+	<key>PROJECT_ID</key>
+	<string>bento-food</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bento-food.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:299589180044:ios:ffebd57795b2dffa3f79a9</string>
+</dict>
+</plist>
