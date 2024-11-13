@@ -2,7 +2,6 @@ import 'package:stackfood_multivendor/features/dashboard/controllers/dashboard_c
 import 'package:stackfood_multivendor/features/order/domain/models/order_model.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/business/domain/models/business_plan_body.dart';
-import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
 import 'package:stackfood_multivendor/features/business/domain/reposotories/business_repo_interface.dart';
 import 'package:stackfood_multivendor/features/business/widgets/business_payment_method_bottom_sheet_widget.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
@@ -18,68 +17,59 @@ class BusinessService implements BusinessServiceInterface{
   BusinessService({required this.businessRepoInterface});
 
   @override
-  Future<PackageModel?> getPackageList() async {
-    return await businessRepoInterface.getList();
-  }
+  Future<String> processesBusinessPlan(String businessPlanStatus, int paymentIndex, int restaurantId, String? digitalPaymentName, int? selectedPackageId) async {
+  
+    String businessPlan = 'subscription';
+    int? packageId = selectedPackageId;
+    String? payment = paymentIndex == 0 ? 'free_trial' : digitalPaymentName;
+    String? hostname = html.window.location.hostname;
+    String protocol = html.window.location.protocol;
 
-  @override
-  Future<String> processesBusinessPlan(String businessPlanStatus, int paymentIndex, int restaurantId, PackageModel? packageModel, String? digitalPaymentName, int activeSubscriptionIndex) async {
-    if (businessPlanStatus == 'payment' && packageModel!.packages!.isNotEmpty) {
-
-      String businessPlan = 'subscription';
-      int? packageId = packageModel.packages![activeSubscriptionIndex].id;
-      String payment = paymentIndex == 0 ? 'free_trial' : 'paying_now';
-
-      if(paymentIndex == 1 && digitalPaymentName == null) {
-        if(ResponsiveHelper.isDesktop(Get.context)) {
-          Get.dialog(const Dialog(backgroundColor: Colors.transparent, child: BusinessPaymentMethodBottomSheetWidget()));
-        } else {
-          showCustomSnackBar('please_select_payment_method'.tr);
-        }
+    if(paymentIndex == 1 && digitalPaymentName == null) {
+      if(ResponsiveHelper.isDesktop(Get.context)) {
+        Get.dialog(const Dialog(backgroundColor: Colors.transparent, child: BusinessPaymentMethodBottomSheetWidget()));
       } else {
-        businessPlanStatus = await setUpBusinessPlan(BusinessPlanBody(businessPlan: businessPlan,
-            packageId: packageId.toString(),
-            restaurantId: restaurantId.toString(),
-            payment: payment),
-          digitalPaymentName, businessPlanStatus, restaurantId,
-        );
+        showCustomSnackBar('please_select_payment_method'.tr);
       }
-
-    } else if(packageModel!.packages!.isEmpty && packageModel.packages!.isEmpty){
-      showCustomSnackBar('no_package_found'.tr);
     } else {
-      showCustomSnackBar('please Select Any Process');
+      businessPlanStatus = await setUpBusinessPlan(
+        BusinessPlanBody(
+          businessPlan: businessPlan,
+          packageId: packageId.toString(),
+          restaurantId: restaurantId.toString(),
+          payment: payment,
+          paymentGateway: payment,
+          callBack: paymentIndex == 0 ? '' : ResponsiveHelper.isDesktop(Get.context) ? '$protocol//$hostname${RouteHelper.subscriptionSuccess}' : RouteHelper.subscriptionSuccess,
+          paymentPlatform: GetPlatform.isWeb ? 'web' : 'app',
+          type: 'new_join',
+        ),
+        digitalPaymentName, businessPlanStatus, restaurantId, packageId,
+      );
     }
     return businessPlanStatus;
   }
 
   @override
-  Future<String> setUpBusinessPlan(BusinessPlanBody businessPlanBody, String? digitalPaymentName, String businessPlanStatus, int restaurantId) async {
+  Future<String> setUpBusinessPlan(BusinessPlanBody businessPlanBody, String? digitalPaymentName, String businessPlanStatus, int restaurantId, int? packageId) async {
     Response response = await businessRepoInterface.setUpBusinessPlan(businessPlanBody);
     if (response.statusCode == 200) {
-      if(response.body['id'] != null) {
-        _subscriptionPayment(response.body['id'], digitalPaymentName, restaurantId);
-      }else {
+      if(response.body['redirect_link'] != null) {
+        _subscriptionPayment(response.body['redirect_link'], digitalPaymentName, restaurantId, packageId);
+      } else {
         businessPlanStatus = 'complete';
         Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(true);
         Get.find<DashboardController>().saveIsRestaurantRegistrationSharedPref(true);
-        //Future.delayed(const Duration(seconds: 2),()=> Get.offAllNamed(RouteHelper.getInitialRoute()));
-        Get.offAllNamed(RouteHelper.getSubscriptionSuccessRoute('success', false, restaurantId));
+        Get.offAllNamed(RouteHelper.getSubscriptionSuccessRoute(status: 'success', fromSubscription: true, restaurantId: restaurantId, packageId: packageId));
       }
     }
     return businessPlanStatus;
   }
 
-  Future<void> _subscriptionPayment(String id, String? digitalPaymentName, int restaurantId) async {
-    Response response = await businessRepoInterface.subscriptionPayment(id, digitalPaymentName);
-    if (response.statusCode == 200) {
-      String redirectUrl = response.body['redirect_link'];
-      Get.back();
-      if(GetPlatform.isWeb) {
-        html.window.open(redirectUrl,"_self");
-      } else{
-        Get.toNamed(RouteHelper.getPaymentRoute(OrderModel(), digitalPaymentName, subscriptionUrl: redirectUrl, guestId: Get.find<AuthController>().getGuestId(), restaurantId: restaurantId));
-      }
+  Future<void> _subscriptionPayment(String redirectUrl, String? digitalPaymentName, int restaurantId, int? packageId) async {
+    if(GetPlatform.isWeb) {
+      html.window.open(redirectUrl,"_self");
+    } else{
+      Get.toNamed(RouteHelper.getPaymentRoute(OrderModel(), digitalPaymentName, subscriptionUrl: redirectUrl, guestId: Get.find<AuthController>().getGuestId(), restaurantId: restaurantId, packageId: packageId));
     }
   }
 

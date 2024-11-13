@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/widgets/custom_app_bar_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_button_widget.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/order/controllers/order_controller.dart';
@@ -20,7 +21,6 @@ import 'package:stackfood_multivendor/util/styles.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_image_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/footer_view_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/menu_drawer_widget.dart';
-import 'package:stackfood_multivendor/common/widgets/web_menu_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -58,15 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         || Get.find<SplashController>().configModel!.loyaltyPointStatus == 1;
 
     return Scaffold(
-      appBar: isDesktop ? const WebMenuBar() : AppBar(
-        leading: isDesktop ? const SizedBox() : IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text('profile'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).cardColor,
-      ),
+      appBar: CustomAppBarWidget(title: 'profile'.tr),
       endDrawer: isDesktop ? const MenuDrawerWidget() : null,
       endDrawerEnableOpenDragGesture: false,
       backgroundColor: isDesktop ? Theme.of(context).colorScheme.surface : Theme.of(context).cardColor,
@@ -81,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 minHeight: isLoggedIn ?  isDesktop ? 0.4 : 0.6 : 0.35,
                 child: (isLoggedIn && isDesktop) ? WebProfileWidget(profileController: profileController, orderController: orderController) : isLoggedIn ? Container(
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
-                  width: Dimensions.webMaxWidth, height: context.height - 87,
+                  width: Dimensions.webMaxWidth, height: context.height - 80,
                   child: Center(
                     child: Column(children: [
 
@@ -99,13 +91,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Expanded(
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                               Text(
-                                isLoggedIn ? '${profileController.userInfoModel!.fName} ${profileController.userInfoModel!.lName}' : 'guest_user'.tr,
+                                isLoggedIn ? '${profileController.userInfoModel?.fName ?? ''} ${profileController.userInfoModel?.lName ?? ''}' : 'guest_user'.tr,
                                 style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               isLoggedIn ? Text(
-                                '${'joined'.tr} ${DateConverter.containTAndZToUTCFormat(profileController.userInfoModel!.createdAt!)}',
+                                profileController.userInfoModel?.createdAt != null ?'${'joined'.tr} ${DateConverter.containTAndZToUTCFormat(profileController.userInfoModel!.createdAt!)}' : '',
                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
                               ) : InkWell(
                                 onTap: () async {
@@ -176,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               Get.find<SplashController>().configModel!.loyaltyPointStatus == 1 ? Expanded(child: ProfileCardWidget(
                                 image: Images.loyaltyIcon,
-                                data: profileController.userInfoModel!.loyaltyPoint != null ? profileController.userInfoModel!.loyaltyPoint.toString() : '0',
+                                data: profileController.userInfoModel?.loyaltyPoint != null ? profileController.userInfoModel!.loyaltyPoint.toString() : '0',
                                 title: 'loyalty_points'.tr,
                               )) : const SizedBox(),
 
@@ -184,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               isLoggedIn ?  Expanded(child: ProfileCardWidget(
                                 image: Images.shoppingBagIcon,
-                                data: profileController.userInfoModel!.orderCount.toString(),
+                                data: profileController.userInfoModel?.orderCount != null ? profileController.userInfoModel!.orderCount.toString() : '0',
                                 title: 'total_order'.tr,
                               )) : const SizedBox(),
 
@@ -192,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               Get.find<SplashController>().configModel!.customerWalletStatus == 1 ? Expanded(child: ProfileCardWidget(
                                 image: Images.walletProfile,
-                                data: PriceConverter.convertPrice(profileController.userInfoModel!.walletBalance),
+                                data: PriceConverter.convertPrice(profileController.userInfoModel?.walletBalance != null ? profileController.userInfoModel!.walletBalance : 0),
                                 title: 'wallet_balance'.tr,
                               )) : const SizedBox(),
 
@@ -210,10 +202,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }) : const SizedBox(),
                             SizedBox(height: isLoggedIn ? Dimensions.paddingSizeSmall : 0),
 
-                            isLoggedIn ? profileController.userInfoModel!.socialId == null ? ProfileButtonWidget(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
+                            isLoggedIn ? ProfileButtonWidget(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
                               Get.toNamed(RouteHelper.getResetPasswordRoute('', '', 'password-change'));
-                            }) : const SizedBox() : const SizedBox(),
-                            SizedBox(height: isLoggedIn ? profileController.userInfoModel!.socialId == null ? Dimensions.paddingSizeSmall : 0 : 0),
+                            }) : const SizedBox(),
+                            SizedBox(height: isLoggedIn ? Dimensions.paddingSizeSmall : 0),
 
                             isLoggedIn ? ProfileButtonWidget(
                               icon: Icons.delete,

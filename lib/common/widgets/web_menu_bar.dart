@@ -50,7 +50,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                           const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
                           Text(
-                            '${AddressHelper.getAddressFromSharedPref()!.addressType!.tr}: ',
+                            AuthHelper.isLoggedIn() ? '${AddressHelper.getAddressFromSharedPref()!.addressType!.tr}: ' : '${'your_location'.tr}: ',
                             style: robotoMedium.copyWith(
                               color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraSmall,
                             ),
@@ -293,7 +293,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                   if (authController.isLoggedIn()) {
                     Get.toNamed(RouteHelper.getProfileRoute());
                   }else{
-                    Get.dialog(const Center(child: AuthDialogWidget(exitFromApp: false, backFromThis: false)), barrierDismissible: false);
+                    Get.dialog(const Center(child: AuthDialogWidget(exitFromApp: false, backFromThis: false)), barrierDismissible: false,);
                   }
                 },
                 child: Container(

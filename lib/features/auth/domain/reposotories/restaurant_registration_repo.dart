@@ -1,5 +1,6 @@
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/auth/domain/reposotories/restaurant_registration_repo_interface.dart';
+import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +28,16 @@ class RestaurantRegistrationRepo implements RestaurantRegistrationRepoInterface 
   }
 
   @override
+  Future<PackageModel?> getList({int? offset}) async {
+    PackageModel? packageModel;
+    Response response = await apiClient.getData(AppConstants.restaurantPackagesUri);
+    if(response.statusCode == 200) {
+      packageModel = PackageModel.fromJson(response.body);
+    }
+    return packageModel;
+  }
+
+  @override
   Future add(value) {
     throw UnimplementedError();
   }
@@ -38,11 +49,6 @@ class RestaurantRegistrationRepo implements RestaurantRegistrationRepoInterface 
 
   @override
   Future get(String? id) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future getList({int? offset}) {
     throw UnimplementedError();
   }
 

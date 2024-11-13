@@ -120,7 +120,7 @@ class MenuDrawerWidgetState extends State<MenuDrawerWidget> with SingleTickerPro
       }else {
         Get.find<FavouriteController>().removeFavourites();
         if(ResponsiveHelper.isDesktop(context)){
-          Get.dialog(const AuthDialogWidget(exitFromApp: false, backFromThis: false));
+          Get.dialog(const Center(child: AuthDialogWidget(exitFromApp: false, backFromThis: false)), barrierDismissible: false,);
         }else{
           Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.main));
         }

@@ -43,9 +43,10 @@ class _BadWeatherWidgetState extends State<BadWeatherWidget> {
     }else{
       _showAlert = false;
     }
-    setState(() {
-
+    Future.delayed(const Duration(microseconds: 600), () {
+      setState(() {});
     });
+
   }
 
   @override

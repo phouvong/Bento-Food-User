@@ -10,5 +10,5 @@ abstract class ChatRepositoryInterface extends RepositoryInterface {
   Future<ConversationsModel> searchConversationList(String name);
   @override
   Future<Response> get(String? id, {int? offset, UserType? userType, int? conversationID});
-  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, int? userID, UserType userType, int? conversationID);
+  Future<MessageModel?> sendMessage(String message, List<MultipartBody> images, int? userID, UserType userType, int? conversationID, List<MultipartDocument>? webFile, List<MultipartDocument>? webVideo);
 }

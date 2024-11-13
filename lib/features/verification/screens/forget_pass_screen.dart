@@ -1,10 +1,11 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stackfood_multivendor/common/widgets/validate_check.dart';
 import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
-import 'package:stackfood_multivendor/features/auth/domain/models/social_log_in_body_model.dart';
 import 'package:stackfood_multivendor/features/verification/controllers/verification_controller.dart';
+import 'package:stackfood_multivendor/features/verification/screens/verification_screen.dart';
 import 'package:stackfood_multivendor/helper/custom_validator.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
@@ -20,10 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ForgetPassScreen extends StatefulWidget {
-  final bool fromSocialLogin;
-  final SocialLogInBodyModel? socialLogInModel;
   final bool fromDialog;
-  const ForgetPassScreen({super.key, required this.fromSocialLogin, required this.socialLogInModel, this.fromDialog = false});
+  const ForgetPassScreen({super.key, this.fromDialog = false});
 
   @override
   State<ForgetPassScreen> createState() => _ForgetPassScreenState();
@@ -32,13 +31,34 @@ class ForgetPassScreen extends StatefulWidget {
 class _ForgetPassScreenState extends State<ForgetPassScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _numberController = TextEditingController();
+  final FocusNode _numberFocusNode = FocusNode();
   String? _countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
+  GlobalKey<FormState>? _formKeyLogin;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _formKeyLogin = GlobalKey<FormState>();
+    if (!kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).requestFocus(_numberFocusNode);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _numberController.dispose();
+    _numberFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ResponsiveHelper.isDesktop(context) ? Colors.transparent : Theme.of(context).cardColor,
-      appBar: CustomAppBarWidget(title: widget.fromSocialLogin ? 'phone'.tr : 'forgot_password'.tr),
+      appBar: ResponsiveHelper.isDesktop(context) ? null : CustomAppBarWidget(title: 'forgot_password'.tr),
       body: Center(child: SingleChildScrollView(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
@@ -73,20 +93,23 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                         child: Text('please_enter_mobile'.tr, style: robotoRegular.copyWith(fontSize: widget.fromDialog ? Dimensions.fontSizeSmall : null), textAlign: TextAlign.center),
                       ),
 
-                      CustomTextFieldWidget(
-                        titleText: 'enter_phone_number'.tr,
-                        controller: _numberController,
-                        inputType: TextInputType.phone,
-                        inputAction: TextInputAction.done,
-                        isPhone: true,
-                        showTitle: ResponsiveHelper.isDesktop(context),
-                        onCountryChanged: (CountryCode countryCode) {
-                          _countryDialCode = countryCode.dialCode;
-                        },
-                        countryDialCode: _countryDialCode ?? Get.find<LocalizationController>().locale.countryCode,
-                        onSubmit: (text) => GetPlatform.isWeb ? _onPressedForgetPass(_countryDialCode!) : null,
-                        labelText: 'phone'.tr,
-                        validator: (value) => ValidateCheck.validateEmptyText(value, null),
+                      Form(
+                        key: _formKeyLogin,
+                        child: CustomTextFieldWidget(
+                          titleText: 'xxx-xxx-xxxxx'.tr,
+                          controller: _numberController,
+                          focusNode: _numberFocusNode,
+                          inputType: TextInputType.phone,
+                          inputAction: TextInputAction.done,
+                          isPhone: true,
+                          onCountryChanged: (CountryCode countryCode) {
+                            _countryDialCode = countryCode.dialCode;
+                          },
+                          countryDialCode: _countryDialCode ?? Get.find<LocalizationController>().locale.countryCode,
+                          onSubmit: (text) => GetPlatform.isWeb ? _onPressedForgetPass(_countryDialCode!) : null,
+                          labelText: 'phone'.tr,
+                          validator: (value) => ValidateCheck.validateEmptyText(value, null),
+                        ),
                       ),
 
                       const SizedBox(height: Dimensions.paddingSizeLarge),
@@ -96,7 +119,7 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                           return CustomButtonWidget(
                             radius: Dimensions.radiusDefault,
                             buttonText: widget.fromDialog ? 'verify'.tr : 'next'.tr,
-                            isLoading: widget.fromSocialLogin ? authController.isLoading : verificationController.isLoading,
+                            isLoading: verificationController.isLoading || authController.isLoading,
                             onPressed: () => _onPressedForgetPass(_countryDialCode!),
                           );
                         });
@@ -128,23 +151,30 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
 
   void _onPressedForgetPass(String countryCode) async {
     String phone = _numberController.text.trim();
+    String email = '';
 
     String numberWithCountryCode = countryCode+phone;
     PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
     numberWithCountryCode = phoneValid.phone;
 
-    if (phone.isEmpty) {
-      showCustomSnackBar('enter_phone_number'.tr);
-    }else if (!phoneValid.isValid) {
-      showCustomSnackBar('invalid_phone_number'.tr);
-    }else {
-      if(widget.fromSocialLogin) {
-        widget.socialLogInModel!.phone = numberWithCountryCode;
-        Get.find<AuthController>().registerWithSocialMedia(widget.socialLogInModel!);
-      }else {
+    if(_formKeyLogin!.currentState!.validate()) {
+      if (!phoneValid.isValid) {
+        showCustomSnackBar('invalid_phone_number'.tr);
+      } else {
         Get.find<VerificationController>().forgetPassword(numberWithCountryCode).then((status) async {
           if (status.isSuccess) {
-            Get.toNamed(RouteHelper.getVerificationRoute(numberWithCountryCode, '', RouteHelper.forgotPassword, ''));
+            if(Get.find<SplashController>().configModel!.firebaseOtpVerification!) {
+              Get.find<AuthController>().firebaseVerifyPhoneNumber(numberWithCountryCode, status.message, '', fromSignUp: false);
+            } else {
+              if(ResponsiveHelper.isDesktop(Get.context)) {
+                Get.dialog(VerificationScreen(
+                  number: numberWithCountryCode, email: email, token: '', fromSignUp: false,
+                  fromForgetPassword: true, loginType: '', password: '',
+                ));
+              } else {
+                Get.toNamed(RouteHelper.getVerificationRoute(numberWithCountryCode, email, '', RouteHelper.forgotPassword, '', ''));
+              }
+            }
           }else {
             showCustomSnackBar(status.message);
           }

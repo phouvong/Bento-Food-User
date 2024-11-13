@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
+import 'package:stackfood_multivendor/features/home/screens/home_screen.dart';
 import 'package:stackfood_multivendor/features/order/domain/models/order_model.dart';
 import 'package:stackfood_multivendor/features/address/controllers/address_controller.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -324,7 +325,7 @@ class CheckoutController extends GetxController implements GetxService {
     if(!instanceOrder) {
       if(index == 0) {
         if(notify) {
-          showCustomSnackBar('instance_order_is_not_active'.tr, showToaster: true);
+          showCustomSnackBar('instance_order_is_not_active'.tr);
         }
       } else {
         _selectedTimeSlot = index;
@@ -554,9 +555,16 @@ class CheckoutController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       String? message = response.body['message'];
       orderID = response.body['order_id'].toString();
-      checkoutServiceInterface.sendNotificationRequest(orderID, Get.find<AuthController>().isLoggedIn() ? null : Get.find<AuthController>().getGuestId());
+
+      Response notificationResponse = await checkoutServiceInterface.sendNotificationRequest(orderID, Get.find<AuthController>().isLoggedIn() ? null : Get.find<AuthController>().getGuestId());
+      bool reloadHome = notificationResponse.body['reload_home'];
+
+      if(reloadHome) {
+        await HomeScreen.loadData(true);
+      }
+
       if(!isOfflinePay) {
-        _callback(true, message, orderID, zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber!);
+        _callback(true, message, orderID, zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber);
       } else {
         Get.find<CartController>().getCartDataOnline();
       }
@@ -565,7 +573,7 @@ class CheckoutController extends GetxController implements GetxService {
       }
     } else {
       if(!isOfflinePay){
-        _callback(false, response.statusText, '-1', zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber!);
+        _callback(false, response.statusText, '-1', zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber);
       }else{
         showCustomSnackBar(response.statusText);
       }

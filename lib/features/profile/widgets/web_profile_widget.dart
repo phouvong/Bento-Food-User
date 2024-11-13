@@ -7,6 +7,7 @@ import 'package:stackfood_multivendor/features/profile/widgets/profile_button_wi
 import 'package:stackfood_multivendor/features/profile/widgets/profile_card_widget.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
+import 'package:stackfood_multivendor/features/verification/screens/new_pass_screen.dart';
 import 'package:stackfood_multivendor/helper/date_converter.dart';
 import 'package:stackfood_multivendor/helper/price_converter.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
@@ -182,9 +183,10 @@ class WebProfileWidget extends StatelessWidget {
                 );
               }) : const SizedBox(),
 
-              isLoggedIn ? profileController.userInfoModel!.socialId == null ? ProfileButtonWidget(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
-                Get.toNamed(RouteHelper.getResetPasswordRoute('', '', 'password-change'));
-              }) : const SizedBox() : const SizedBox(),
+              isLoggedIn ? ProfileButtonWidget(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
+                // Get.toNamed(RouteHelper.getResetPasswordRoute('', '', 'password-change'));
+                Get.dialog(NewPassScreen(fromPasswordChange: true, fromDialog: true, resetToken: '', number: ''));
+              }) : const SizedBox(),
 
               isLoggedIn ? ProfileButtonWidget(icon: Icons.edit, title: 'edit_profile'.tr, onTap: () {
                 Get.toNamed(RouteHelper.getUpdateProfileRoute());

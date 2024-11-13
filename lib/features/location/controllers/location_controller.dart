@@ -99,8 +99,10 @@ class LocationController extends GetxController implements GetxService {
       _isLoading = true;
     }
     if(!updateInAddress){
-      Future.delayed(const Duration(milliseconds: 10));
-      update();
+      Future.delayed(Duration(seconds: 10), () {
+        update();
+      });
+
     }
     ZoneResponseModel responseModel = await locationServiceInterface.getZone(lat, long);
     _inZone = responseModel.isSuccess;

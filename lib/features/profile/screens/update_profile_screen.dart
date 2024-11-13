@@ -1,11 +1,15 @@
 import 'dart:io';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
+import 'package:stackfood_multivendor/common/widgets/custom_app_bar_widget.dart';
+import 'package:stackfood_multivendor/common/widgets/custom_loader_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/validate_check.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
+import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
-import 'package:stackfood_multivendor/features/profile/domain/models/userinfo_model.dart';
-import 'package:stackfood_multivendor/common/models/response_model.dart';
+import 'package:stackfood_multivendor/features/profile/domain/models/update_user_model.dart';
+import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/helper/custom_validator.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
@@ -18,7 +22,6 @@ import 'package:stackfood_multivendor/common/widgets/custom_text_field_widget.da
 import 'package:stackfood_multivendor/common/widgets/footer_view_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/menu_drawer_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/not_logged_in_screen.dart';
-import 'package:stackfood_multivendor/common/widgets/web_menu_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,16 +33,18 @@ class UpdateProfileScreen extends StatefulWidget {
 }
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
-  final FocusNode _firstNameFocus = FocusNode();
-  final FocusNode _lastNameFocus = FocusNode();
+  final FocusNode _nameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   JustTheController toolController = JustTheController();
   final ScrollController scrollController = ScrollController();
+  bool isPhoneVerified = false;
+  bool isEmailVerified = false;
+  String? _countryDialCode;
+  bool _isPhoneLoading = true;
 
   @override
   void initState() {
@@ -48,25 +53,36 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void _initCall(){
+    AuthController authController  = Get.find<AuthController>();
+    _countryDialCode = authController.getUserCountryCode().isNotEmpty ? authController.getUserCountryCode()
+        : CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
+
     if(Get.find<AuthController>().isLoggedIn() && Get.find<ProfileController>().userInfoModel == null) {
       Get.find<ProfileController>().getUserInfo();
     }
+    Get.find<ProfileController>().getUserInfo();
     Get.find<ProfileController>().initData();
   }
 
   @override
   void dispose() {
     toolController.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+    _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
 
   void _splitPhoneNumber(String number) async {
-    PhoneValid phoneNumber = await CustomValidator.isPhoneValid(number);
-    _phoneController.text = phoneNumber.phone;
+    _isPhoneLoading = true;
+    try{
+      PhoneValid phoneNumber = await CustomValidator.isPhoneValid(number);
+      _phoneController.text = phoneNumber.phone.replaceFirst('+${phoneNumber.countryCode}', '');
+      _countryDialCode = '+${phoneNumber.countryCode}';
+    }catch(_) {}
+    setState(() {
+      _isPhoneLoading = false;
+    });
   }
 
   @override
@@ -74,23 +90,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     bool isLoggedIn = Get.find<AuthController>().isLoggedIn();
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
-      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : AppBar(
-        title: Text('update_profile'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).textTheme.bodyLarge!.color),
-        ),
-        elevation: 0, backgroundColor: Theme.of(context).cardColor, actions: const [SizedBox()],),
+      appBar: CustomAppBarWidget(title: 'update_profile'.tr),
       endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,
       body: Column(
         children: [
 
           GetBuilder<ProfileController>(builder: (profileController) {
-            if(profileController.userInfoModel != null && _phoneController.text.isEmpty) {
-              _splitPhoneNumber(profileController.userInfoModel!.phone!);
-              _firstNameController.text = profileController.userInfoModel!.fName ?? '';
-              _lastNameController.text = profileController.userInfoModel!.lName ?? '';
+            if(profileController.userInfoModel != null && _phoneController.text.isEmpty && _isPhoneLoading) {
+              _splitPhoneNumber(profileController.userInfoModel!.phone??'');
+              _nameController.text = '${profileController.userInfoModel!.fName} ${profileController.userInfoModel!.lName}';
               _emailController.text = profileController.userInfoModel!.email ?? '';
             }
 
@@ -118,47 +126,55 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               const SizedBox(height: 70),
 
                               CustomTextFieldWidget(
-                                titleText: 'write_first_name'.tr,
-                                controller: _firstNameController,
+                                titleText: 'enter_name'.tr,
+                                controller: _nameController,
                                 capitalization: TextCapitalization.words,
                                 inputType: TextInputType.name,
-                                focusNode: _firstNameFocus,
-                                nextFocus: _lastNameFocus,
-                                prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                                labelText: 'first_name'.tr,
-                                required: true,
-                                validator: (value) => ValidateCheck.validateEmptyText(value, "first_name_field_is_required".tr),
-                              ),
-                              const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
-
-                              CustomTextFieldWidget(
-                                titleText: 'write_last_name'.tr,
-                                controller: _lastNameController,
-                                capitalization: TextCapitalization.words,
-                                inputType: TextInputType.name,
-                                focusNode: _lastNameFocus,
+                                focusNode: _nameFocus,
                                 nextFocus: _emailFocus,
                                 prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                                labelText: 'last_name'.tr,
+                                labelText: 'name'.tr,
                                 required: true,
-                                validator: (value) => ValidateCheck.validateEmptyText(value, "last_name_field_is_required".tr),
+                                validator: (value) => ValidateCheck.validateEmptyText(value, "please_enter_first_name".tr),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
-                              CustomTextFieldWidget(
-                                titleText: ResponsiveHelper.isDesktop(context) ? 'phone'.tr : 'write_phone_number'.tr,
-                                controller: _phoneController,
-                                focusNode: _phoneFocus,
-                                inputType: TextInputType.phone,
-                                prefixIcon: CupertinoIcons.lock_fill,
-                                isEnabled: false,
-                                labelText: 'phone'.tr,
-                                required: true,
-                              ),
+                              !_isPhoneLoading ? Stack(
+                                children: [
+                                  CustomTextFieldWidget(
+                                    titleText: 'write_phone_number'.tr,
+                                    controller: _phoneController,
+                                    focusNode: _phoneFocus,
+                                    inputType: TextInputType.phone,
+                                    prefixIcon: CupertinoIcons.lock_fill,
+                                    isEnabled: !profileController.userInfoModel!.isPhoneVerified! || profileController.userInfoModel!.phone == null,
+                                    fromUpdateProfile: true,
+                                    labelText: 'phone'.tr,
+                                    required: true,
+                                    isPhone: true,
+                                    onCountryChanged: (CountryCode countryCode) => _countryDialCode = countryCode.dialCode,
+                                    countryDialCode: _countryDialCode ?? Get.find<LocalizationController>().locale.countryCode,
+                                    suffixImage: profileController.userInfoModel!.isPhoneVerified! ? Images.verifiedIcon : null,
+                                  ),
+
+                                  Positioned(
+                                    right: 15, top: 15,
+                                    child: !profileController.userInfoModel!.isPhoneVerified! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.phoneVerificationStatus! ? InkWell(
+                                      onTap: () async {
+                                        if(!profileController.userInfoModel!.isPhoneVerified! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.phoneVerificationStatus!) {
+                                          Get.dialog(CustomLoaderWidget());
+                                          await _updateProfile(profileController: profileController, fromButton: false, fromPhone: true);
+                                        }
+                                      },
+                                      child: Image.asset(Images.unVerifiedIcon, height: 20, width: 20, fit: BoxFit.cover),
+                                    ) : const SizedBox(),
+                                  )
+                                ],
+                              ) : Center(child: CircularProgressIndicator()),
                               const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
 
                               CustomTextFieldWidget(
-                                titleText: 'write_email'.tr,
+                                titleText: 'enter_email'.tr,
                                 controller: _emailController,
                                 focusNode: _emailFocus,
                                 inputType: TextInputType.emailAddress,
@@ -166,6 +182,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 labelText: 'email'.tr,
                                 required: true,
                                 validator: (value) => ValidateCheck.validateEmail(value),
+                                suffixImage: profileController.userInfoModel!.isEmailVerified! && profileController.userInfoModel!.email == _emailController.text
+                                    ? Images.verifiedIcon
+                                    : Get.find<SplashController>().configModel!.centralizeLoginSetup!.emailVerificationStatus!
+                                    ? Images.unVerifiedIcon : null,
+                                suffixOnPressed: () async {
+                                  if(!profileController.userInfoModel!.isEmailVerified! || profileController.userInfoModel!.email != _emailController.text) {
+                                    Get.dialog(CustomLoaderWidget());
+                                    await _updateProfile(profileController: profileController, fromButton: false, fromPhone: false);
+                                  }
+                                },
                               ),
 
                             ]))),
@@ -174,7 +200,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           SafeArea(
                             child: CustomButtonWidget(
                               isLoading: profileController.isLoading,
-                              onPressed: () => _updateProfile(profileController),
+                              onPressed: () => _updateProfile(profileController: profileController, fromButton: true, fromPhone: false),
                               margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                               buttonText: 'update'.tr,
                             ),
@@ -316,34 +342,34 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
                           Expanded(
                             child: CustomTextFieldWidget(
-                              titleText: 'write_first_name'.tr,
-                              controller: _firstNameController,
+                              titleText: 'enter_name'.tr,
+                              controller: _nameController,
                               capitalization: TextCapitalization.words,
                               inputType: TextInputType.name,
-                              focusNode: _firstNameFocus,
-                              nextFocus: _lastNameFocus,
+                              focusNode: _nameFocus,
+                              nextFocus: _emailFocus,
                               prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                              labelText: 'first_name'.tr,
+                              labelText: 'name'.tr,
                               required: true,
                               validator: (value) => ValidateCheck.validateEmptyText(value, "first_name_field_is_required".tr),
                             ),
                           ),
-                          const SizedBox(width: Dimensions.paddingSizeLarge),
-
-                          Expanded(
-                            child: CustomTextFieldWidget(
-                              titleText: 'write_last_name'.tr,
-                              controller: _lastNameController,
-                              capitalization: TextCapitalization.words,
-                              inputType: TextInputType.name,
-                              focusNode: _lastNameFocus,
-                              nextFocus: _emailFocus,
-                              prefixIcon: CupertinoIcons.person_alt_circle_fill,
-                              labelText: 'last_name'.tr,
-                              required: true,
-                              validator: (value) => ValidateCheck.validateEmptyText(value, "last_name_field_is_required".tr),
-                            ),
-                          ),
+                          // const SizedBox(width: Dimensions.paddingSizeLarge),
+                          //
+                          // Expanded(
+                          //   child: CustomTextFieldWidget(
+                          //     titleText: 'write_last_name'.tr,
+                          //     controller: _lastNameController,
+                          //     capitalization: TextCapitalization.words,
+                          //     inputType: TextInputType.name,
+                          //     focusNode: _lastNameFocus,
+                          //     nextFocus: _emailFocus,
+                          //     prefixIcon: CupertinoIcons.person_alt_circle_fill,
+                          //     labelText: 'last_name'.tr,
+                          //     required: true,
+                          //     validator: (value) => ValidateCheck.validateEmptyText(value, "last_name_field_is_required".tr),
+                          //   ),
+                          // ),
 
                         ]),
                         const SizedBox(height: Dimensions.paddingSizeExtraOverLarge),
@@ -352,7 +378,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
                           Expanded(
                             child: CustomTextFieldWidget(
-                              titleText: 'write_email'.tr,
+                              titleText: 'enter_email'.tr,
                               controller: _emailController,
                               focusNode: _emailFocus,
                               inputType: TextInputType.emailAddress,
@@ -360,20 +386,50 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               labelText: 'email'.tr,
                               required: true,
                               validator: (value) => ValidateCheck.validateEmail(value),
+                              suffixImage: profileController.userInfoModel!.isEmailVerified! && profileController.userInfoModel!.email == _emailController.text
+                                  ? Images.verifiedIcon
+                                  : Get.find<SplashController>().configModel!.centralizeLoginSetup!.emailVerificationStatus!
+                                  ? Images.unVerifiedIcon : null,
+                              suffixOnPressed: () {
+                                if(!profileController.userInfoModel!.isEmailVerified!) {
+                                  _updateProfile(profileController: profileController, fromButton: false, fromPhone: false);
+                                }
+                              },
                             ),
                           ),
                           const SizedBox(width: Dimensions.paddingSizeLarge),
 
                           Expanded(
-                            child: CustomTextFieldWidget(
-                              titleText: ResponsiveHelper.isDesktop(context) ? 'phone'.tr : 'write_phone_number'.tr,
-                              controller: _phoneController,
-                              focusNode: _phoneFocus,
-                              inputType: TextInputType.phone,
-                              prefixIcon: CupertinoIcons.lock_fill,
-                              isEnabled: false,
-                              labelText: 'phone'.tr,
-                              required: true,
+                            child: Stack(
+                              children: [
+                                !_isPhoneLoading ? CustomTextFieldWidget(
+                                  titleText: 'phone'.tr,
+                                  controller: _phoneController,
+                                  focusNode: _phoneFocus,
+                                  inputType: TextInputType.phone,
+                                  isEnabled: !profileController.userInfoModel!.isPhoneVerified! || profileController.userInfoModel!.phone == null,
+                                  fromUpdateProfile: true,
+                                  labelText: 'phone'.tr,
+                                  required: true,
+                                  isPhone: true,
+                                  onCountryChanged: (CountryCode countryCode) => _countryDialCode = countryCode.dialCode,
+                                  countryDialCode: _countryDialCode ?? Get.find<LocalizationController>().locale.countryCode,
+                                  suffixImage: profileController.userInfoModel!.isPhoneVerified! ? Images.verifiedIcon : null,
+                                ) : Center(child: CircularProgressIndicator()),
+
+                                Positioned(
+                                  right: 10, top: 10,
+                                  child: !profileController.userInfoModel!.isPhoneVerified! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.phoneVerificationStatus! ? InkWell(
+                                    onTap: () {
+                                      if(!profileController.userInfoModel!.isPhoneVerified! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.phoneVerificationStatus!) {
+                                        _updateProfile(profileController: profileController, fromButton: false, fromPhone: true);
+                                      }
+                                    },
+                                    child: Image.asset(Images.unVerifiedIcon, height: 25, width: 25, fit: BoxFit.cover),
+                                  ) : const SizedBox(),
+                                ),
+
+                              ],
                             ),
                           ),
 
@@ -388,7 +444,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             isBold: false,
                             radius: Dimensions.radiusSmall,
                             isLoading: profileController.isLoading,
-                            onPressed: () => _updateProfile(profileController),
+                            onPressed: () => _updateProfile(profileController: profileController, fromButton: true, fromPhone: false),
                           ),
                         ]),
 
@@ -406,20 +462,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
-  void _updateProfile(ProfileController profileController) async {
-    String firstName = _firstNameController.text.trim();
-    String lastName = _lastNameController.text.trim();
+  Future<void> _updateProfile({required ProfileController profileController, required bool fromButton, required bool fromPhone}) async {
+    String name = _nameController.text.trim();
     String email = _emailController.text.trim();
     String phoneNumber = _phoneController.text.trim();
-    String phoneNumberWithCode = phoneNumber;
-    if (profileController.userInfoModel!.fName == firstName &&
-        profileController.userInfoModel!.lName == lastName && profileController.userInfoModel!.phone == phoneNumberWithCode &&
-        profileController.userInfoModel!.email == _emailController.text && profileController.pickedFile == null) {
-      showCustomSnackBar('change_something_to_update'.tr);
-    }else if (firstName.isEmpty) {
-      showCustomSnackBar('enter_your_first_name'.tr);
-    }else if (lastName.isEmpty) {
-      showCustomSnackBar('enter_your_last_name'.tr);
+    String numberWithCountryCode = _countryDialCode! + phoneNumber;
+    PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
+    numberWithCountryCode = phoneValid.phone;
+
+    if (name.isEmpty) {
+      showCustomSnackBar('enter_your_name'.tr);
+    }else if(!phoneValid.isValid) {
+      showCustomSnackBar('invalid_phone_number'.tr);
     }else if (email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
     }else if (!GetUtils.isEmail(email)) {
@@ -429,13 +483,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }else if (phoneNumber.length < 6) {
       showCustomSnackBar('enter_a_valid_phone_number'.tr);
     } else {
-      UserInfoModel updatedUser = UserInfoModel(fName: firstName, lName: lastName, email: email, phone: phoneNumberWithCode);
-      ResponseModel responseModel = await profileController.updateUserInfo(updatedUser, Get.find<AuthController>().getUserToken());
-      if(responseModel.isSuccess) {
-        showCustomSnackBar('profile_updated_successfully'.tr, isError: false);
-      }else {
-        showCustomSnackBar(responseModel.message);
-      }
+      UpdateUserModel updatedUser = UpdateUserModel(name: name, email: email, phone: numberWithCountryCode, buttonType: fromButton ? '' : fromPhone ? 'phone' : 'email');
+      await profileController.updateUserInfo(updatedUser, Get.find<AuthController>().getUserToken(), fromButton: fromButton);
     }
   }
 }

@@ -38,15 +38,15 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
       return GetBuilder<search.SearchController>(builder: (searchController) {
         return PopScope(
           canPop: false,
-          onPopInvoked: (val) async {
-            if(restaurantController.isSearching && !val){
+          onPopInvokedWithResult: (didPop, result) async {
+            if(restaurantController.isSearching && !didPop){
               _searchController.text = '';
               restaurantController.changeSearchStatus();
               restaurantController.initSearchData();
             }else if(_searchController.text.isNotEmpty){
               _searchController.text = '';
               setState(() {});
-            }else if(!val){
+            }else if(!didPop){
               Future.delayed(const Duration(milliseconds: 0), () => Get.back());
             }
           },

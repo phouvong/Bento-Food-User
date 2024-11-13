@@ -2,6 +2,8 @@ import 'package:stackfood_multivendor/features/home/screens/home_screen.dart';
 import 'package:stackfood_multivendor/features/home/widgets/bad_weather_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/enjoy_off_banner_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/filter_view_widget.dart';
+import 'package:stackfood_multivendor/features/home/widgets/highlight_widget_view.dart';
+import 'package:stackfood_multivendor/features/home/widgets/order_again_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/refer_banner_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/theme1/banner_view_widget1.dart';
 import 'package:stackfood_multivendor/features/home/widgets/theme1/best_reviewed_item_widget1.dart';
@@ -143,7 +145,9 @@ class Theme1HomeScreen extends StatelessWidget {
               const BadWeatherWidget(),
               const CategoryWidget1(),
               const ItemCampaignWidget1(),
+              const HighlightWidgetView(),
               isLogin ? const PopularStoreWidget1(isOrderAgainViewed: true, isPopular: false) : const SizedBox(),
+              isLogin ? const OrderAgainViewWidget() : const SizedBox(),
               configModel.mostReviewedFoods == 1 ? const BestReviewedItemWidget1() : const SizedBox(),
               const ReferBannerViewWidget(fromTheme1: true),
               isLogin ? const PopularStoreWidget1(isPopular: false, isRecentlyViewed: true) : const SizedBox(),

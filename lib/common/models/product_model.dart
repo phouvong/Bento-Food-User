@@ -61,6 +61,8 @@ class Product {
   bool? isHalalFood;
   String? stockType;
   int? itemStock;
+  List<String>? nutritionsName;
+  List<String>? allergiesName;
 
   Product({
     this.id,
@@ -91,6 +93,8 @@ class Product {
     this.isHalalFood,
     this.stockType,
     this.itemStock,
+    this.nutritionsName,
+    this.allergiesName,
   });
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -148,6 +152,8 @@ class Product {
     isHalalFood = json['is_halal'] == 1;
     stockType = json['stock_type'];
     itemStock = int.tryParse(json['item_stock'].toString());
+    nutritionsName = json['nutritions_name']?.cast<String>();
+    allergiesName = json['allergies_name']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -188,6 +194,8 @@ class Product {
     data['is_halal'] = isHalalFood;
     data['stock_type'] = stockType;
     data['item_stock'] = itemStock;
+    data['nutritions_name'] = nutritionsName;
+    data['allergies_name'] = allergiesName;
     return data;
   }
 }

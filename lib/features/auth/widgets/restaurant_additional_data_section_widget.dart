@@ -75,8 +75,8 @@ class RestaurantAdditionalDataSectionWidget extends StatelessWidget {
                   style: robotoMedium,
                 )),
 
-                IconButton(
-                  onPressed: () async {
+                InkWell(
+                  onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -88,8 +88,8 @@ class RestaurantAdditionalDataSectionWidget extends StatelessWidget {
                       restaurantRegiController.setAdditionalDate(index, formattedDate);
                     }
                   },
-                  icon: const Icon(Icons.date_range_sharp),
-                )
+                  child: Icon(Icons.calendar_month, size: 22),
+                ),
               ]),
             ) : showCheckBox ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
@@ -174,7 +174,7 @@ class RestaurantAdditionalDataSectionWidget extends StatelessWidget {
                               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                                 Text(fileName, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
-                                SizedBox(height: isDesktop ? 3 : Dimensions.paddingSizeExtraSmall),
+                                SizedBox(height: isDesktop ? 2 : Dimensions.paddingSizeExtraSmall),
 
                                 Text(
                                   '${file.files.single.size / 1000} Kbps',

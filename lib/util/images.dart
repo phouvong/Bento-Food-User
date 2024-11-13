@@ -48,6 +48,7 @@ class Images {
   static const String maintenance = 'assets/image/maintenance.png';
   static const String noInternet = 'assets/image/no_internet.png';
   static const String google = 'assets/image/google.png';
+  static const String otp = 'assets/image/otp.png';
   static const String facebook = 'assets/image/facebook.png';
   static const String restaurantJoin = 'assets/image/restaurant_join.png';
   static const String deliveryManJoin = 'assets/image/delivery_man_join.png';
@@ -67,6 +68,7 @@ class Images {
   static const String processingGif = 'assets/image/processing.gif';
   static const String handoverGif = 'assets/image/handover.gif';
   static const String image = 'assets/image/image.svg';
+  static const String file = 'assets/image/file.svg';
   static const String send = 'assets/image/send.svg';
   static const String chat = 'assets/image/chat.png';
   static const String nearRestaurant = 'assets/image/near_restaurant.png';
@@ -253,4 +255,9 @@ class Images {
   static const String referPersonIcon = 'assets/image/refer_person_icon.svg';
   static const String referEarnIcon = 'assets/image/refer_earn_icon.svg';
   static const String highlightBg = 'assets/image/highlight_bg.svg';
+  static const String fileIcon = 'assets/image/file.png';
+  static const String unVerifiedIcon = 'assets/image/unverified.png';
+  static const String verifiedIcon = 'assets/image/verified.png';
+  static const String otpVerification = 'assets/image/otp_verification.png';
+  static const String emailOrPhone = 'assets/image/email_or_phone.png';
 }

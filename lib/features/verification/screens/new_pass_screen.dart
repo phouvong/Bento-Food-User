@@ -73,7 +73,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
                   Column(children: [
 
                     CustomTextFieldWidget(
-                      hintText: 'new_password'.tr,
+                      hintText: '8+characters'.tr,
                       controller: _newPasswordController,
                       focusNode: _newPasswordFocus,
                       nextFocus: _confirmPasswordFocus,
@@ -82,12 +82,12 @@ class _NewPassScreenState extends State<NewPassScreen> {
                       isPassword: true,
                       divider: false,
                       labelText: 'new_password'.tr,
-                      validator: (value) => ValidateCheck.validateEmptyText(value, null),
+                      validator: (value) => ValidateCheck.validateEmptyText(value, 'please_enter_new_password'.tr),
                     ),
                     const SizedBox(height: Dimensions.paddingSizeLarge),
 
                     CustomTextFieldWidget(
-                      hintText: 'confirm_password'.tr,
+                      hintText: '8+characters'.tr,
                       controller: _confirmPasswordController,
                       focusNode: _confirmPasswordFocus,
                       inputAction: TextInputAction.done,
@@ -96,7 +96,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
                       isPassword: true,
                       onSubmit: (text) => GetPlatform.isWeb ? _onPressedPasswordChange() : null,
                       labelText: 'confirm_password'.tr,
-                      validator: (value) => ValidateCheck.validateEmptyText(value, null),
+                      validator: (value) => ValidateCheck.validateEmptyText(value, 'please_enter_confirm_password'.tr),
                     ),
 
                   ]),
@@ -145,8 +145,8 @@ class _NewPassScreenState extends State<NewPassScreen> {
     user.password = password;
     Get.find<ProfileController>().changePassword(user).then((response) {
       if(response.isSuccess) {
-        showCustomSnackBar('password_updated_successfully'.tr, isError: false);
         Get.back();
+        showCustomSnackBar('password_updated_successfully'.tr, isError: false);
       }else {
         showCustomSnackBar(response.message);
       }
@@ -156,13 +156,14 @@ class _NewPassScreenState extends State<NewPassScreen> {
   void _resetUserPassword(String password, String confirmPassword) {
     Get.find<VerificationController>().resetPassword(widget.resetToken, '${GetPlatform.isWeb ? '' : '+'}${widget.number!.trim()}', password, confirmPassword).then((value) {
       if (value.isSuccess) {
-        if(!ResponsiveHelper.isDesktop(context)) {
-          Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+        if(!ResponsiveHelper.isDesktop(Get.context)) {
+          Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.resetPassword));
         }else{
           Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: false))?.then((value) {
             Get.dialog(const SignInScreen(exitFromApp: true, backFromThis: false));
           });
         }
+        showCustomSnackBar('password_reset_successfully'.tr, isError: false);
       } else {
         showCustomSnackBar(value.message);
       }

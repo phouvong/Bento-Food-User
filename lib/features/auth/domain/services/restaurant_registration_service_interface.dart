@@ -1,4 +1,5 @@
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
@@ -10,4 +11,5 @@ abstract class RestaurantRegistrationServiceInterface{
   List<MultipartDocument> prepareMultipartDocuments(List<String> inputTypeList, List<FilePickerResult> additionalDocuments);
   Future<Response> registerRestaurant(Map<String, String> data, XFile? logo, XFile? cover, List<MultipartDocument> additionalDocument);
   Future<bool> checkInZone(String? lat, String? lng, int zoneId);
+  Future<PackageModel?> getPackageList();
 }

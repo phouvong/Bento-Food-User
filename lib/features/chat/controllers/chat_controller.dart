@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_body_model.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
@@ -7,11 +12,15 @@ import 'package:stackfood_multivendor/features/chat/domain/models/message_model.
 import 'package:stackfood_multivendor/features/chat/domain/services/chat_service_interface.dart';
 import 'package:stackfood_multivendor/features/chat/enums/user_type_enum.dart';
 import 'package:stackfood_multivendor/helper/date_converter.dart';
+import 'package:stackfood_multivendor/helper/image_size_checker.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stackfood_multivendor/util/app_constants.dart';
+import 'package:http/http.dart' as http;
+import 'package:universal_html/html.dart' as html;
 
 class ChatController extends GetxController implements GetxService {
   final ChatServiceInterface chatServiceInterface;
@@ -49,6 +58,9 @@ class ChatController extends GetxController implements GetxService {
 
   List<XFile> _chatImage = [];
   List<XFile> get chatImage => _chatImage;
+
+  // List<FilePickerResult> _chatWebImage = [];
+  // List<FilePickerResult> get chatWebImage => _chatWebImage;
 
   List <Uint8List>_chatRawImage = [];
   List<Uint8List> get chatRawImage => _chatRawImage;
@@ -96,14 +108,28 @@ class ChatController extends GetxController implements GetxService {
   bool _isClickedOnImageOrFile = false;
   bool get isClickedOnImageOrFile => _isClickedOnImageOrFile;
 
+  List<XFile> objFile = [];
+  List<FilePickerResult> objWebFile = [];
+
+  bool _singleFIleCrossMaxLimit = false;
+  bool get singleFIleCrossMaxLimit => _singleFIleCrossMaxLimit;
+
+  XFile? _pickedVideoFile;
+  XFile? get pickedVideoFile => _pickedVideoFile;
+
+  FilePickerResult? _pickedWebVideoFile ;
+  FilePickerResult? get pickedWebVideoFile => _pickedWebVideoFile;
+
   void canShowFloatingButton(bool status) {
     _showFloatingButton = status;
     update();
   }
 
-  void setType(String type) {
+  void setType(String type, {bool willUpdate = true}) {
     _type = type;
-    update();
+    if(willUpdate) {
+      update();
+    }
   }
 
   void setTabSelect() {
@@ -282,16 +308,154 @@ class ChatController extends GetxController implements GetxService {
     if(isRemove) {
       _chatImage = [];
       _chatRawImage = [];
-    }else {
-      List<XFile> imageFiles = await ImagePicker().pickMultiImage(imageQuality: 40);
-      for(XFile xFile in imageFiles) {
-        if(_chatImage.length >= 3) {
-          showCustomSnackBar('can_not_add_more_than_3_image'.tr);
-          break;
-        }else {
-          _chatImage.add(xFile);
-          XFile file = await chatServiceInterface.compressImage(xFile);
-          _chatRawImage.add(await file.readAsBytes());
+      // _chatWebImage = [];
+    } else {
+      // if(GetPlatform.isWeb) {
+      //   FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: true);
+      //
+      //   if(result != null) {
+      //     objFile = [];
+      //     objWebFile = [];
+      //     _pickedVideoFile = null;
+      //     _pickedWebVideoFile = null;
+      //     _chatImage = [];
+      //     _chatWebImage.add(result);
+      //   }
+      //
+      // } else {
+        List<XFile> imageFiles = await ImagePicker().pickMultiImage(imageQuality: 40);
+        for(XFile xFile in imageFiles) {
+          if(_chatImage.length >= AppConstants.maxImageSend) {
+            showCustomSnackBar('can_not_add_more_than_3_image'.tr);
+            break;
+          }else {
+            objFile = [];
+            objWebFile = [];
+            _pickedVideoFile = null;
+            _pickedWebVideoFile = null;
+            _chatImage.add(xFile);
+            // XFile file = await chatServiceInterface.compressImage(xFile);
+            _chatRawImage.add(await xFile.readAsBytes());
+          }
+        }
+      // }
+      _isSendButtonActive = true;
+    }
+    _takeImageLoading = false;
+    update();
+  }
+
+  // Future<XFile?> convertPlatformFileToXFile(PlatformFile platformFile) async {
+  //   if (platformFile.path != null) {
+  //     // **Mobile/Desktop**: Use the file path to create an XFile
+  //     return XFile(platformFile.path!);
+  //   } else if (platformFile.bytes != null) {
+  //     // **Web**: Use the byte data to create an XFile
+  //     return XFile.fromData(
+  //       platformFile.bytes!,
+  //       name: platformFile.name,
+  //       mimeType: platformFile.mimeType,
+  //     );
+  //   } else {
+  //     // Handle cases where neither path nor bytes are available
+  //     return null;
+  //   }
+  // }
+
+  void pickFile(bool isRemove, {int? index}) async {
+    _takeImageLoading = true;
+    update();
+
+    _singleFIleCrossMaxLimit = false;
+
+    if(isRemove) {
+      objFile.removeAt(index!);
+      objWebFile.removeAt(index);
+    } else {
+      if(GetPlatform.isWeb) {
+        FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+        if (result != null) {
+
+          objFile = [];
+          objWebFile = [];
+          _chatImage = [];
+          // _chatWebImage = [];
+          _pickedVideoFile = null;
+          _pickedWebVideoFile = null;
+          objWebFile.add(result);
+        }
+      } else {
+        List<PlatformFile>? platformFile = (await FilePicker.platform.pickFiles(
+          allowMultiple: true,
+          withReadStream: true,
+          type: FileType.custom,
+          allowedExtensions: ['pdf', 'doc'],
+        ))?.files ;
+
+        objFile = [];
+        objWebFile = [];
+        _chatImage = [];
+        // _chatWebImage = [];
+        _pickedVideoFile = null;
+        _pickedWebVideoFile = null;
+
+        platformFile?.forEach((element) async {
+          if(_getFileSizeFromPlatformFileToDouble(element) > AppConstants.maxSizeOfASingleFile) {
+            _singleFIleCrossMaxLimit = true;
+          } else {
+            if(objFile.length < AppConstants.maxLimitOfTotalFileSent){
+              if((await _getMultipleFileSizeFromPlatformFiles(objFile) + _getFileSizeFromPlatformFileToDouble(element)) < AppConstants.maxLimitOfFileSentINConversation){
+                objFile.add(element.xFile);
+              }
+              // objFile.add(element.xFile);
+            }
+
+          }
+        });
+      }
+
+      _isSendButtonActive = true;
+    }
+    _takeImageLoading = false;
+    update();
+  }
+
+  void pickVideoFile(bool isRemove) async {
+    _takeImageLoading = true;
+    update();
+
+    if(isRemove) {
+      _pickedVideoFile = null;
+      _pickedWebVideoFile = null;
+    } else {
+      if(GetPlatform.isWeb) {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.video,
+        );
+
+        if(result != null) {
+          _pickedWebVideoFile = result;
+          _chatImage = [];
+          objFile = [];
+          objWebFile = [];
+        }
+
+      } else {
+        _pickedVideoFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
+        if(_pickedVideoFile != null){
+          double videoSize = await ImageSize.getImageSizeFromXFile(_pickedVideoFile!);
+          if(videoSize > AppConstants.limitOfPickedVideoSizeInMB){
+            _pickedVideoFile = null;
+            showCustomSnackBar('${"video_size_greater_than".tr} ${AppConstants.limitOfPickedVideoSizeInMB}mb');
+            update();
+          }else{
+            _chatImage = [];
+            // _chatWebImage = [];
+            objFile = [];
+            objWebFile = [];
+          }
+
         }
       }
       _isSendButtonActive = true;
@@ -303,6 +467,7 @@ class ChatController extends GetxController implements GetxService {
   void removeImage(int index, String messageText){
     _chatImage.removeAt(index);
     _chatRawImage.removeAt(index);
+    // _chatWebImage.removeAt(index);
     if(_chatImage.isEmpty && messageText.isEmpty) {
       _isSendButtonActive = false;
     }
@@ -314,14 +479,29 @@ class ChatController extends GetxController implements GetxService {
     Response? response;
     _isLoading = true;
     update();
-    List<MultipartBody> chatImages = chatServiceInterface.processMultipartBody(_chatImage);
-    MessageModel? messageModel = await chatServiceInterface.sendMessage(message, chatImages, notificationBody, conversationID);
+    List<MultipartDocument>? webFile;
+    List<MultipartBody> chatImages = chatServiceInterface.processMultipartBody(_chatImage, objFile, _pickedVideoFile);
+    if(objWebFile.isNotEmpty){
+      webFile = [MultipartDocument('image[]', objWebFile[0])];
+    } else if( _pickedWebVideoFile != null) {
+      webFile = [MultipartDocument('image[]', _pickedWebVideoFile)];
+    }/* else if(_chatWebImage.isNotEmpty) {
+      webFile = [];
+      for (FilePickerResult image in _chatWebImage) {
+        webFile.add(MultipartDocument('image[]', image));
+      }
+    }*/
+    MessageModel? messageModel = await chatServiceInterface.sendMessage(message, chatImages, notificationBody, conversationID, webFile, null);
 
     if (messageModel != null) {
       _chatImage = [];
+      objFile = [];
+      objWebFile = [];
+      _pickedVideoFile = null;
+      _pickedWebVideoFile = null;
       _chatRawImage = [];
+      // _chatWebImage = [];
       _isSendButtonActive = false;
-      _isLoading = false;
       _messageModel = messageModel;
       if(index != null && _searchConversationModel != null) {
         _searchConversationModel!.conversations![index]!.lastMessageTime = DateConverter.isoStringToLocalString(_messageModel!.messages![0].createdAt!);
@@ -340,6 +520,7 @@ class ChatController extends GetxController implements GetxService {
         getMessages(1, notificationBody, null, conversationID);
       });
     }
+    _isLoading = false;
     update();
     return response;
   }
@@ -354,7 +535,7 @@ class ChatController extends GetxController implements GetxService {
     if(adminId != null) {
       _messageModel!.conversation!.receiver = User(
         id: 0, fName: Get.find<SplashController>().configModel!.businessName, lName: '',
-        imageFullUrl: Get.find<SplashController>().configModel!.favIconFullUrl,
+        imageFullUrl: Get.find<SplashController>().configModel!.logoFullUrl,
       );
     }
   }
@@ -410,10 +591,6 @@ class ChatController extends GetxController implements GetxService {
       todayConversationDateTime = DateConverter.dateTimeStringToDate(todayChatTimeInUtc);
     }
 
-    if (kDebugMode) {
-      print("Current Message DataTime: $todayConversationDateTime");
-    }
-
     DateTime nextConversationDateTime;
     DateTime currentDate = DateTime.now();
 
@@ -421,12 +598,6 @@ class ChatController extends GetxController implements GetxService {
       return chatTime = DateConverter.isoStringToLocalDateAndTime(todayChatTimeInUtc);
     }else{
       nextConversationDateTime = DateConverter.isoUtcStringToLocalTimeOnly(nextChatTimeInUtc);
-      if (kDebugMode) {
-        print("Next Message DateTime: $nextConversationDateTime");
-        print("The Difference between this two : ${todayConversationDateTime.difference(nextConversationDateTime)}");
-        print("Today message Weekday: ${todayConversationDateTime.weekday}\n Next Message WeekDay: ${nextConversationDateTime.weekday}");
-      }
-
 
       if(todayConversationDateTime.difference(nextConversationDateTime) < const Duration(minutes: 30) &&
           todayConversationDateTime.weekday == nextConversationDateTime.weekday){
@@ -458,9 +629,7 @@ class ChatController extends GetxController implements GetxService {
       return 'Not-Same';
     } else {
       previousConversationDateTime = DateConverter.isoUtcStringToLocalTimeOnly(previousChat!.createdAt!);
-      if(kDebugMode) {
-        print("The Difference is ${previousConversationDateTime.difference(todayConversationDateTime) < const Duration(minutes: 30)}");
-      }
+
       if(previousConversationDateTime.difference(todayConversationDateTime) < const Duration(minutes: 30) &&
           todayConversationDateTime.weekday == previousConversationDateTime.weekday && _isSameUserWithPreviousMessage(currentChat, previousChat)) {
         return '';
@@ -530,6 +699,100 @@ class ChatController extends GetxController implements GetxService {
       _onImageOrFileTimeShowID = onImageOrFileTimeShowID;
     }
     update();
+  }
+
+  double _getFileSizeFromPlatformFileToDouble(PlatformFile platformFile)  {
+    return (platformFile.size / (1024 * 1024));
+  }
+
+  Future<double> _getMultipleFileSizeFromPlatformFiles(List<XFile> platformFiles)  async {
+    double fileSize = 0.0;
+    for (var element in platformFiles) {
+      int sizeInKB =  await element.length();
+      double sizeInMB = sizeInKB / (1024 * 1024);
+      fileSize  = sizeInMB + fileSize;
+    }
+    return fileSize;
+  }
+
+  Future<void> downloadPdf(String url) async {
+
+    try {
+
+      if(GetPlatform.isWeb) {
+        html.window.open(url, '_blank');
+
+      } else {
+
+        var status = await Permission.storage.request();
+
+        if(status.isGranted) {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+
+              Directory directory = await getProjectDirectory(AppConstants.appName);
+              // String fileName = 'chat.pdf'; // Name the file
+              String fileName = generateUniqueFileName('pdf');
+              String filePath = '${directory.path}/$fileName';
+
+              // Write the file to the directory
+              File file = File(filePath);
+              await file.writeAsBytes(response.bodyBytes);
+              showCustomSnackBar('Download complete! File saved at $filePath', isError: false);
+
+          } else {
+            showCustomSnackBar('Download failed: ${response.statusCode}');
+          }
+        } else if(status.isDenied || status.isPermanentlyDenied) {
+          showCustomSnackBar('permission_denied_cannot_download_the_file'.tr);
+        }
+      }
+
+    } catch (e) {
+      showCustomSnackBar('Download failed: $e');
+    }
+  }
+
+  Future<Directory> getProjectDirectory(String pName) async {
+    String projectName = _processProjectName(pName);
+
+    Directory? downloadsDirectory;
+    if (Platform.isAndroid) {
+      downloadsDirectory = Directory('/storage/emulated/0/Download/$projectName');
+    } else if (Platform.isIOS) {
+      final documentsDirectory = await getApplicationDocumentsDirectory();
+      downloadsDirectory = Directory('${documentsDirectory.path}/$projectName');
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+
+    if (!await downloadsDirectory.exists()) {
+      await downloadsDirectory.create(recursive: true);
+    }
+
+    return downloadsDirectory;
+  }
+
+  String _processProjectName(String projectName) {
+    String pName='';
+    bool containsNumber(String input) {
+      RegExp regExp = RegExp(r'\d');
+      return regExp.hasMatch(input);
+    }
+
+    if (containsNumber(projectName)) {
+      pName = 'project';
+    } else {
+      pName = projectName;
+    }
+    return pName;
+  }
+
+  String generateUniqueFileName(String fileExtension) {
+    // Generate a timestamp to ensure the filename is unique
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    return 'file_$timestamp.$fileExtension';
   }
 
 }

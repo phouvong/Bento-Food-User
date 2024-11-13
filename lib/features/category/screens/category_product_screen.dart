@@ -92,7 +92,7 @@ class CategoryProductScreenState extends State<CategoryProductScreen> with Ticke
 
       return PopScope(
         canPop: Navigator.canPop(context),
-        onPopInvoked: (val) async {
+        onPopInvokedWithResult: (didPop, result) async{
           if(catController.isSearching) {
             catController.toggleSearch();
           }else {}

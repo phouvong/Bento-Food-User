@@ -1,4 +1,5 @@
 import 'package:stackfood_multivendor/common/models/response_model.dart';
+import 'package:stackfood_multivendor/features/profile/domain/models/update_user_model.dart';
 import 'package:stackfood_multivendor/features/profile/domain/models/userinfo_model.dart';
 import 'package:stackfood_multivendor/features/profile/domain/repositories/profile_repository_interface.dart';
 import 'package:stackfood_multivendor/features/profile/domain/services/profile_service_interface.dart';
@@ -16,7 +17,7 @@ class ProfileService implements ProfileServiceInterface {
   }
 
   @override
-  Future<ResponseModel> updateProfile(UserInfoModel userInfoModel, XFile? data, String token) async {
+  Future<ResponseModel> updateProfile(UpdateUserModel userInfoModel, XFile? data, String token) async {
     return await profileRepositoryInterface.updateProfile(userInfoModel, data, token);
   }
 
@@ -31,7 +32,7 @@ class ProfileService implements ProfileServiceInterface {
     XFile? pickLogo = await ImagePicker().pickImage(source: ImageSource.gallery);
     if(pickLogo != null) {
       await pickLogo.length().then((value) {
-        if(value > 2000000) {
+        if(value > 1000000) {
           showCustomSnackBar('please_upload_lower_size_file'.tr);
         }else {
           pickedFile = pickLogo;

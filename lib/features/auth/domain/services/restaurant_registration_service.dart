@@ -1,8 +1,8 @@
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
 import 'package:stackfood_multivendor/features/auth/domain/reposotories/restaurant_registration_repo_interface.dart';
 import 'package:stackfood_multivendor/features/auth/domain/services/restaurant_registration_service_interface.dart';
-import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
@@ -84,17 +84,17 @@ class RestaurantRegistrationService implements RestaurantRegistrationServiceInte
 
   @override
   Future<Response> registerRestaurant(Map<String, String> data, XFile? logo, XFile? cover, List<MultipartDocument> additionalDocument) async {
-    Response response = await restaurantRegistrationRepoInterface.registerRestaurant(data, logo, cover, additionalDocument);
-    if(response.statusCode == 200) {
-      int? restaurantId = response.body['restaurant_id'];
-      Get.offAllNamed(RouteHelper.getBusinessPlanRoute(restaurantId));
-    }
-    return response;
+    return await restaurantRegistrationRepoInterface.registerRestaurant(data, logo, cover, additionalDocument);
   }
 
   @override
   Future<bool> checkInZone(String? lat, String? lng, int zoneId) async {
     return await restaurantRegistrationRepoInterface.checkInZone(lat, lng, zoneId);
+  }
+
+  @override
+  Future<PackageModel?> getPackageList() async {
+    return await restaurantRegistrationRepoInterface.getList();
   }
 
 }

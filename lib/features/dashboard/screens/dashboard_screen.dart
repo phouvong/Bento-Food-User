@@ -54,7 +54,7 @@ class DashboardScreenState extends State<DashboardScreen> {
 
     if(_isLogin){
       if(Get.find<SplashController>().configModel!.loyaltyPointStatus == 1 && Get.find<LoyaltyController>().getEarningPint().isNotEmpty && !ResponsiveHelper.isDesktop(Get.context)){
-        Future.delayed(const Duration(seconds: 1), () => showAnimatedDialog(context, const CongratulationDialogue()));
+        Future.delayed(const Duration(seconds: 1), () => showAnimatedDialog(Get.context!, const CongratulationDialogue()));
       }
       _suggestAddressBottomSheet();
       Get.find<OrderController>().getRunningOrders(1, notify: false);
@@ -82,12 +82,12 @@ class DashboardScreenState extends State<DashboardScreen> {
     bool canShowBottomSheet = Get.find<DashboardController>().getRegistrationSuccessfulSharedPref();
     if(canShowBottomSheet) {
       Future.delayed(const Duration(seconds: 1), () {
-        ResponsiveHelper.isDesktop(context) ? Get.dialog(const Dialog(child: RegistrationSuccessBottomSheet())).then((value) {
+        ResponsiveHelper.isDesktop(Get.context) ? Get.dialog(const Dialog(child: RegistrationSuccessBottomSheet())).then((value) {
           Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(false);
           Get.find<DashboardController>().saveIsRestaurantRegistrationSharedPref(false);
           setState(() {});
         }) : showModalBottomSheet(
-          context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
+          context: Get.context!, isScrollControlled: true, backgroundColor: Colors.transparent,
           builder: (con) => const RegistrationSuccessBottomSheet(),
         ).then((value) {
           Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(false);
@@ -103,7 +103,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     if(widget.fromSplash && Get.find<DashboardController>().showLocationSuggestion && active){
       Future.delayed(const Duration(seconds: 1), () {
         showModalBottomSheet(
-          context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
+          context: Get.context!, isScrollControlled: true, backgroundColor: Colors.transparent,
           builder: (con) => const AddressBottomSheet(),
         ).then((value) {
           Get.find<DashboardController>().hideSuggestedLocation();
@@ -118,7 +118,7 @@ class DashboardScreenState extends State<DashboardScreen> {
     bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvoked: (val) {
+      onPopInvokedWithResult: (didPop, result) async{
         debugPrint('$_canExit');
         if (_pageIndex != 0) {
           _setPage(0);

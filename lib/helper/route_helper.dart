@@ -1,8 +1,10 @@
 import 'dart:convert';
-
 import 'package:stackfood_multivendor/common/widgets/image_viewer_screen_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/not_found_widget.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
+import 'package:stackfood_multivendor/features/auth/screens/new_user_setup_screen.dart';
+import 'package:stackfood_multivendor/features/business/screens/subscription_payment_screen.dart';
+import 'package:stackfood_multivendor/features/business/screens/subscription_success_or_failed_screen.dart';
 import 'package:stackfood_multivendor/features/cart/screens/cart_screen.dart';
 import 'package:stackfood_multivendor/features/checkout/domain/models/place_order_body_model.dart';
 import 'package:stackfood_multivendor/features/checkout/domain/models/pricing_view_model.dart';
@@ -27,6 +29,7 @@ import 'package:stackfood_multivendor/features/order/screens/order_details_scree
 import 'package:stackfood_multivendor/features/order/screens/order_screen.dart';
 import 'package:stackfood_multivendor/features/order/screens/order_tracking_screen.dart';
 import 'package:stackfood_multivendor/features/order/screens/refund_request_screen.dart';
+import 'package:stackfood_multivendor/features/profile/domain/models/update_user_model.dart';
 import 'package:stackfood_multivendor/features/profile/screens/profile_screen.dart';
 import 'package:stackfood_multivendor/features/profile/screens/update_profile_screen.dart';
 import 'package:stackfood_multivendor/features/refer%20and%20earn/screens/refer_and_earn_screen.dart';
@@ -46,13 +49,10 @@ import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/address/screens/add_address_screen.dart';
 import 'package:stackfood_multivendor/features/address/screens/address_screen.dart';
-import 'package:stackfood_multivendor/features/auth/domain/models/social_log_in_body_model.dart';
 import 'package:stackfood_multivendor/features/auth/screens/delivery_man_registration_screen.dart';
 import 'package:stackfood_multivendor/features/auth/screens/restaurant_registration_screen.dart';
 import 'package:stackfood_multivendor/features/auth/screens/sign_in_screen.dart';
 import 'package:stackfood_multivendor/features/auth/screens/sign_up_screen.dart';
-import 'package:stackfood_multivendor/features/business/screens/business_plan_screen.dart';
-import 'package:stackfood_multivendor/features/business/screens/subscription_success_screen.dart';
 import 'package:stackfood_multivendor/features/category/screens/category_product_screen.dart';
 import 'package:stackfood_multivendor/features/category/screens/category_screen.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/conversation_model.dart';
@@ -75,6 +75,7 @@ import 'package:stackfood_multivendor/features/verification/screens/new_pass_scr
 import 'package:stackfood_multivendor/features/verification/screens/verification_screen.dart';
 import 'package:stackfood_multivendor/features/wallet/screens/wallet_screen.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
+import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +110,7 @@ class RouteHelper {
   static const String checkout = '/checkout';
   static const String orderTracking = '/track-order';
   static const String basicCampaign = '/basic-campaign';
-  static const String html = '/html';
+  static const String html = '/html-screen';
   static const String categories = '/categories';
   static const String categoryProduct = '/category-product';
   static const String popularFoods = '/popular-foods';
@@ -133,14 +134,15 @@ class RouteHelper {
   static const String restaurantRegistration = '/restaurant-registration';
   static const String deliveryManRegistration = '/delivery-man-registration';
   static const String refund = '/refund';
-  static const String businessPlan = '/business-plan';
   static const String order = '/order';
   static const String cuisine = '/cuisine';
   static const String cuisineRestaurant = '/cuisine-restaurant';
   static const String subscriptionSuccess = '/subscription-success';
+  static const String subscriptionPayment = '/subscription-payment';
   static const String offlinePaymentScreen = '/offline-payment-screen';
   static const String guestTrackOrderScreen = '/guest-track-order-screen';
   static const String favourite = '/favourite-screen';
+  static const String newUserSetupScreen = '/new-user-setup-screen';
 
   static String getInitialRoute({bool fromSplash = false}) => '$initial?from-splash=$fromSplash';
   static String getSplashRoute(NotificationBodyModel? body, DeepLinkBody? linkBody) {
@@ -160,20 +162,23 @@ class RouteHelper {
   static String getOnBoardingRoute() => onBoarding;
   static String getSignInRoute(String page) => '$signIn?page=$page';
   static String getSignUpRoute() => signUp;
-  static String getVerificationRoute(String? number, String? token, String page, String pass) {
-    return '$verification?page=$page&number=$number&token=$token&pass=$pass';
+  static String getVerificationRoute(String? number, String? email, String? token, String page, String? pass, String loginType, {String? session, UpdateUserModel? updateUserModel}) {
+    String? authSession;
+    String? userModel;
+    if(session != null) {
+      authSession = base64Url.encode(utf8.encode(session));
+    }
+    if(updateUserModel != null) {
+      List<int> encoded = utf8.encode(jsonEncode(updateUserModel.toJson()));
+      userModel = base64Encode(encoded);
+    }
+    return '$verification?page=$page&number=$number&email=$email&token=$token&pass=$pass&login_type=$loginType&session=$authSession&user_model=$userModel';
   }
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getPickMapRoute(String? page, bool canRoute) => '$pickMap?page=$page&route=${canRoute.toString()}';
   static String getInterestRoute() => interest;
   static String getMainRoute(String page) => '$main?page=$page';
-  static String getForgotPassRoute(bool fromSocialLogin, SocialLogInBodyModel? socialLogInModel) {
-    String? data;
-    if(fromSocialLogin) {
-      data = base64Encode(utf8.encode(jsonEncode(socialLogInModel!.toJson())));
-    }
-    return '$forgotPassword?page=${fromSocialLogin ? 'social-login' : 'forgot-password'}&data=${fromSocialLogin ? data : 'null'}';
-  }
+  static String getForgotPassRoute() => forgotPassword;
   static String getResetPasswordRoute(String? phone, String token, String page) => '$resetPassword?phone=$phone&token=$token&page=$page';
   static String getSearchRoute() => search;
   static String getRestaurantRoute(int? id) {
@@ -187,8 +192,8 @@ class RouteHelper {
     }
     return '$restaurant?id=$id';
   }
-  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false}) {
-    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack';
+  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false, bool fromNotification = false}) {
+    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack&from_notification=$fromNotification';
   }
   static String getProfileRoute() => profile;
   static String getUpdateProfileRoute() => updateProfile;
@@ -202,9 +207,9 @@ class RouteHelper {
   static String getAddressRoute() => address;
   static String getOrderSuccessRoute(String orderID, String status, double? amount, String? contactNumber
       ) => '$orderSuccess?id=$orderID&status=$status&amount=$amount&contact_number=$contactNumber';
-  static String getPaymentRoute(OrderModel orderModel, String? paymentMethod, {String? addFundUrl, String? subscriptionUrl, required String guestId, String? contactNumber, int? restaurantId}) {
+  static String getPaymentRoute(OrderModel orderModel, String? paymentMethod, {String? addFundUrl, String? subscriptionUrl, required String guestId, String? contactNumber, int? restaurantId, int? packageId}) {
     String data = base64Encode(utf8.encode(jsonEncode(orderModel.toJson())));
-    return '$payment?order=$data&payment-method=$paymentMethod&add-fund-url=$addFundUrl&subscription-url=$subscriptionUrl&guest-id=$guestId&number=$contactNumber&restaurant_id=$restaurantId';
+    return '$payment?order=$data&payment-method=$paymentMethod&add-fund-url=$addFundUrl&subscription-url=$subscriptionUrl&guest-id=$guestId&number=$contactNumber&restaurant_id=$restaurantId&package_id=$packageId';
   }
   static String getCheckoutRoute(String page) => '$checkout?page=$page';
   static String getOrderTrackingRoute(int? id, String? contactNumber) => '$orderTracking?id=$id&contact_number=$contactNumber';
@@ -241,7 +246,7 @@ class RouteHelper {
     return '$restaurantReview?id=$restaurantID&restaurantName=$restaurantName&restaurant=$data';
   }
   static String getAllRestaurantRoute(String page) => '$allRestaurants?page=$page';
-  static String getWalletRoute({String? fundStatus, bool? fromMenuPage}) => '$wallet?payment_status=$fundStatus&from_menu_page=$fromMenuPage';
+  static String getWalletRoute({String? fundStatus, bool? fromMenuPage, bool fromNotification = false}) => '$wallet?payment_status=$fundStatus&from_menu_page=$fromMenuPage&from_notification=$fromNotification';
   static String getLoyaltyRoute() => loyalty;
   static String getSearchRestaurantProductRoute(int? productID) => '$searchRestaurantItem?id=$productID';
   static String getItemImagesRoute(Product product) {
@@ -249,7 +254,7 @@ class RouteHelper {
     return '$productImages?item=$data';
   }
   static String getReferAndEarnRoute() => referAndEarn;
-  static String getChatRoute({required NotificationBodyModel? notificationBody, User? user, int? conversationID, int? index}) {
+  static String getChatRoute({required NotificationBodyModel? notificationBody, User? user, int? conversationID, int? index, bool fromNotification = false}) {
     String notificationBody0 = 'null';
     if(notificationBody != null) {
       notificationBody0 = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
@@ -258,18 +263,18 @@ class RouteHelper {
     if(user != null) {
       user0 = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index';
+    return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index&fromNotification=${fromNotification.toString()}';
   }
   static String getConversationRoute() => conversation;
   static String getMapViewRoute() => mapView;
   static String getRestaurantRegistrationRoute() => restaurantRegistration;
   static String getDeliverymanRegistrationRoute() => deliveryManRegistration;
   static String getRefundRequestRoute(String orderID) => '$refund?id=$orderID';
-  static String getBusinessPlanRoute(int? restaurantId) => '$businessPlan?id=$restaurantId';
   static String getOrderRoute() => order;
   static String getCuisineRoute() => cuisine;
   static String getCuisineRestaurantRoute(int? cuisineId, String? name) => '$cuisineRestaurant?id=$cuisineId&name=$name';
-  static String getSubscriptionSuccessRoute(String? status, bool fromSubscription, int? restaurantId) => '$subscriptionSuccess?flag=$status&from_subscription=$fromSubscription&restaurant_id=$restaurantId';
+  static String getSubscriptionSuccessRoute({String? status, required bool fromSubscription, int? restaurantId, int? packageId}) => '$subscriptionSuccess?flag=$status&from_subscription=$fromSubscription&restaurant_id=$restaurantId&package_id=$packageId';
+  static String getSubscriptionPaymentRoute({required int? restaurantId, required int? packageId}) => '$subscriptionPayment?restaurant-id=$restaurantId&package-id=$packageId';
   static String getOfflinePaymentScreen({
     required PlaceOrderBodyModel placeOrderBody, required int? zoneId, required double total, required double? maxCodOrderAmount, required bool fromCart,
     required bool? isCodActive, required PricingViewModel pricingView}) {
@@ -281,6 +286,9 @@ class RouteHelper {
   }
   static String getGuestTrackOrderScreen(String orderId, String number) => '$guestTrackOrderScreen?order_id=$orderId&number=$number';
   static String getFavouriteScreen() => favourite;
+  static String getNewUserSetupScreen({required String name, required String loginType, required String? phone, required String? email}) {
+    return '$newUserSetupScreen?name=$name&login_type=$loginType&phone=$phone&email=$email';
+  }
 
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0, fromSplash: (Get.parameters['from-splash'] == 'true')))),
@@ -302,14 +310,29 @@ class RouteHelper {
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding,
       backFromThis: Get.parameters['page'] != splash && Get.parameters['page'] != onBoarding,
+      fromResetPassword: Get.parameters['page'] == resetPassword,
     )),
     GetPage(name: signUp, page: () => const SignUpScreen()),
     GetPage(name: verification, page: () {
-      List<int> decode = base64Decode(Get.parameters['pass']!.replaceAll(' ', '+'));
-      String data = utf8.decode(decode);
+      String? pass;
+      if(Get.parameters['pass'] != 'null') {
+        List<int> decode = base64Decode(Get.parameters['pass']!.replaceAll(' ', '+'));
+        pass = utf8.decode(decode);
+      }
+      String? session;
+      if(Get.parameters['session'] != null && Get.parameters['session'] != 'null') {
+        session = utf8.decode(base64Url.decode(Get.parameters['session'] ?? ''));
+      }
+      UpdateUserModel? userModel;
+      if(Get.parameters['user_model'] != null && Get.parameters['user_model'] != 'null') {
+        List<int> decode = base64Decode(Get.parameters['user_model'] != null ? Get.parameters['user_model']!.replaceAll(' ', '+') : '');
+        userModel = UpdateUserModel.fromJson(jsonDecode(utf8.decode(decode)));
+      }
       return VerificationScreen(
-        number: Get.parameters['number'], fromSignUp: Get.parameters['page'] == signUp, token: Get.parameters['token'],
-        password: data,
+        number: Get.parameters['number'] != '' && Get.parameters['number'] != 'null' ? Get.parameters['number'] : null,
+        fromSignUp: Get.parameters['page'] == signUp, token: Get.parameters['token'], password: pass,
+        email: Get.parameters['email'] != '' && Get.parameters['email'] != 'null' ? Get.parameters['email'] : null, loginType: Get.parameters['login_type']!,
+        firebaseSession: session, fromForgetPassword: Get.parameters['page'] == forgotPassword, userModel: userModel,
       );
     }),
     GetPage(name: accessLocation, page: () => AccessLocationScreen(
@@ -328,14 +351,7 @@ class RouteHelper {
       pageIndex: Get.parameters['page'] == 'home' ? 0 : Get.parameters['page'] == 'favourite' ? 1
           : Get.parameters['page'] == 'cart' ? 2 : Get.parameters['page'] == 'order' ? 3 : Get.parameters['page'] == 'menu' ? 4 : 0,
     ))),
-    GetPage(name: forgotPassword, page: () {
-      SocialLogInBodyModel? data;
-      if(Get.parameters['page'] == 'social-login') {
-        List<int> decode = base64Decode(Get.parameters['data']!.replaceAll(' ', '+'));
-        data = SocialLogInBodyModel.fromJson(jsonDecode(utf8.decode(decode)));
-      }
-      return ForgetPassScreen(fromSocialLogin: Get.parameters['page'] == 'social-login', socialLogInModel: data);
-    }),
+    GetPage(name: forgotPassword, page: () => ForgetPassScreen()),
     GetPage(name: resetPassword, page: () => NewPassScreen(
       resetToken: Get.parameters['token'], number: Get.parameters['phone'], fromPasswordChange: Get.parameters['page'] == 'password-change',
     )),
@@ -352,6 +368,7 @@ class RouteHelper {
         orderModel: null, fromOfflinePayment: Get.parameters['from_offline'] == 'true',
         contactNumber: Get.parameters['contact'],
         fromGuestTrack: Get.parameters['from_guest_track'] == 'true',
+        fromNotification: Get.parameters['from_notification'] == 'true',
 
       ));
     }),
@@ -389,11 +406,12 @@ class RouteHelper {
       String guestId = Get.parameters['guest-id']!;
       String number = Get.parameters['number']!;
       int? restaurantId = (Get.parameters['restaurant_id'] != null && Get.parameters['restaurant_id'] != 'null') ? int.parse(Get.parameters['restaurant_id']!) : null;
+      int? packageId = (Get.parameters['package_id'] != null && Get.parameters['package_id'] != 'null') ? int.parse(Get.parameters['package_id']!) : null;
       return getRoute(AppConstants.payInWevView ? PaymentWebViewScreen(
         orderModel: data, paymentMethod: paymentMethod, addFundUrl: addFundUrl, subscriptionUrl: subscriptionUrl,
-        guestId: guestId, contactNumber: number,
+        guestId: guestId, contactNumber: number, restaurantId: restaurantId, packageId: packageId,
       ) : PaymentScreen(orderModel: data, paymentMethod: paymentMethod, addFundUrl: addFundUrl, subscriptionUrl: subscriptionUrl,
-        guestId: guestId, contactNumber: number, restaurantId: restaurantId,
+        guestId: guestId, contactNumber: number, restaurantId: restaurantId, packageId: packageId,
       ));
     }),
     GetPage(name: checkout, page: () {
@@ -454,7 +472,7 @@ class RouteHelper {
         ),
     )),
     GetPage(name: wallet, page: () {
-      return getRoute(WalletScreen(fundStatus: Get.parameters['flag'] ?? Get.parameters['payment_status'], fromMenuPage: Get.parameters['from_menu_page'] == 'true'));
+      return getRoute(WalletScreen(fundStatus: Get.parameters['flag'] ?? Get.parameters['payment_status'], fromMenuPage: Get.parameters['from_menu_page'] == 'true', fromNotification: Get.parameters['from_notification'] == 'true'));
     }),
     GetPage(name: loyalty, page: () => getRoute(const LoyaltyScreen())),
     GetPage(name: searchRestaurantItem, page: () => getRoute(RestaurantProductSearchScreen(storeID: Get.parameters['id']))),
@@ -474,6 +492,7 @@ class RouteHelper {
       return getRoute(ChatScreen(
         notificationBody: notificationBody, user: user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']!) : null,
         conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']!) : null,
+        fromNotification: Get.parameters['fromNotification'] == 'true',
       ));
     }),
     GetPage(name: conversation, page: () => const ConversationScreen()),
@@ -481,11 +500,16 @@ class RouteHelper {
     GetPage(name: restaurantRegistration, page: () => const RestaurantRegistrationScreen()),
     GetPage(name: deliveryManRegistration, page: () => const DeliveryManRegistrationScreen()),
     GetPage(name: refund, page: () => RefundRequestScreen(orderId: Get.parameters['id'])),
-    GetPage(name: businessPlan, page: () => BusinessPlanScreen(restaurantId: int.parse(Get.parameters['id']!))),
     GetPage(name: order, page: () => getRoute(const OrderScreen())),
     GetPage(name: cuisine, page: () => getRoute(const CuisineScreen())),
     GetPage(name: cuisineRestaurant, page: () => getRoute(CuisineRestaurantScreen(cuisineId: int.parse(Get.parameters['id']!), name: Get.parameters['name']))),
-    GetPage(name: subscriptionSuccess, page: () => getRoute(SubscriptionSuccessScreen(success: Get.parameters['flag'] == 'success', fromSubscription: Get.parameters['from_subscription'] == 'true', restaurantId: (Get.parameters['restaurant_id'] != null && Get.parameters['restaurant_id'] != 'null') ? int.parse(Get.parameters['restaurant_id']!) : null))),
+    GetPage(name: subscriptionSuccess, page: () => getRoute(SubscriptionSuccessOrFailedScreen(
+      success: Get.parameters['flag'] == 'success',
+      fromSubscription: Get.parameters['from_subscription'] == 'true',
+      restaurantId: (Get.parameters['restaurant_id'] != null && Get.parameters['restaurant_id'] != 'null') ? int.parse(Get.parameters['restaurant_id']!) : null,
+      packageId: (Get.parameters['package_id'] != null && Get.parameters['package_id'] != 'null') ? int.parse(Get.parameters['package_id']!) : null,
+    ))),
+    GetPage(name: subscriptionPayment, page: () => SubscriptionPaymentScreen(restaurantId: int.parse(Get.parameters['restaurant-id']!), packageId: int.parse(Get.parameters['package-id']!))),
     GetPage(name: offlinePaymentScreen, page: () {
       List<int> decode = base64Decode(Get.parameters['order_body']!.replaceAll(' ', '+'));
       PlaceOrderBodyModel orderBody = PlaceOrderBodyModel.fromJson(jsonDecode(utf8.decode(decode)));
@@ -504,6 +528,11 @@ class RouteHelper {
       orderId: Get.parameters['order_id']!, number: Get.parameters['number']!,
     )),
     GetPage(name: favourite, page: () => getRoute(const FavouriteScreen())),
+    GetPage(name: newUserSetupScreen, page: () => NewUserSetupScreen(
+      name: Get.parameters['name']!, loginType: Get.parameters['login_type']!,
+      phone: Get.parameters['phone'] != '' && Get.parameters['phone'] != 'null' ? Get.parameters['phone']!.replaceAll(' ', '+') : null,
+      email: Get.parameters['email'] != '' && Get.parameters['email'] != 'null' ? Get.parameters['email']!.replaceAll(' ', '+') : null,
+    )),
   ];
 
   static getRoute(Widget? navigateTo, {bool byPuss = false}) {
@@ -514,7 +543,7 @@ class RouteHelper {
       minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionIos;
     }
     return AppConstants.appVersion < minimumVersion! ? const UpdateScreen(isUpdate: true)
-        : Get.find<SplashController>().configModel!.maintenanceMode! ? const UpdateScreen(isUpdate: false)
+        : MaintenanceHelper.isMaintenanceEnable() ? const UpdateScreen(isUpdate: false)
         : (AddressHelper.getAddressFromSharedPref() == null && !byPuss)
         ? AccessLocationScreen(fromSignUp: false, fromHome: false, route: Get.currentRoute) : navigateTo;
   }

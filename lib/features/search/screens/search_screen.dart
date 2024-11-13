@@ -81,7 +81,7 @@ class SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (val) async {
+      onPopInvokedWithResult: (didPop, result) async {
         _actionOnBackButton();
       },
       child: Scaffold(

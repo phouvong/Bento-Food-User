@@ -1,5 +1,6 @@
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
+import 'package:stackfood_multivendor/features/verification/domein/model/verification_data_model.dart';
 import 'package:stackfood_multivendor/features/verification/domein/services/verification_service_interface.dart';
 import 'package:get/get.dart';
 
@@ -62,11 +63,11 @@ class VerificationController extends GetxController implements GetxService {
     return responseModel;
   }
 
-  Future<ResponseModel> verifyPhone(String? phone, String? token) async {
+  Future<ResponseModel> verifyPhone({required VerificationDataModel data}) async {
     _isLoading = true;
     update();
-    ResponseModel responseModel = await verificationServiceInterface.verifyPhone(phone, token, _verificationCode);
-    if(responseModel.isSuccess) {
+    ResponseModel responseModel = await verificationServiceInterface.verifyPhone(data);
+    if(responseModel.isSuccess && responseModel.authResponseModel != null && responseModel.authResponseModel!.isExistUser == null && responseModel.authResponseModel!.isPersonalInfo!) {
       Get.find<ProfileController>().getUserInfo();
     }
     _isLoading = false;
@@ -81,4 +82,18 @@ class VerificationController extends GetxController implements GetxService {
       update();
     }
   }
+
+  Future<ResponseModel> verifyFirebaseOtp({required String phoneNumber, required String session, required String otp, required String loginType, required String? token, required bool isSignUpPage, required bool isForgetPassPage}) async {
+    _isLoading = true;
+    update();
+    ResponseModel responseModel = await verificationServiceInterface.verifyFirebaseOtp(phoneNumber: phoneNumber, session: session, otp: otp, loginType: loginType, token: token, isSignUpPage: isSignUpPage, isForgetPassPage: isForgetPassPage);
+
+    if (responseModel.isSuccess && isSignUpPage && !isForgetPassPage) {
+      Get.find<ProfileController>().getUserInfo();
+    }
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
 }

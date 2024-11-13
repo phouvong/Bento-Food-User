@@ -1,5 +1,7 @@
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/features/profile/domain/models/update_profile_response_model.dart';
+import 'package:stackfood_multivendor/features/profile/domain/models/update_user_model.dart';
 import 'package:stackfood_multivendor/features/profile/domain/models/userinfo_model.dart';
 import 'package:stackfood_multivendor/features/profile/domain/repositories/profile_repository_interface.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
@@ -11,17 +13,17 @@ class ProfileRepository implements ProfileRepositoryInterface {
   ProfileRepository({required this.apiClient});
 
   @override
-  Future<ResponseModel> updateProfile(UserInfoModel userInfoModel, XFile? data, String token) async {
+  Future<ResponseModel> updateProfile(UpdateUserModel userInfoModel, XFile? data, String tokeni) async {
     ResponseModel responseModel;
-    Map<String, String> body = {};
-    body.addAll(<String, String>{
-      'f_name': userInfoModel.fName!, 'l_name': userInfoModel.lName!, 'email': userInfoModel.email!
-    });
-    Response response = await apiClient.postMultipartData(AppConstants.updateProfileUri, body, [MultipartBody('image', data)], [], handleError: false);
+    Response response = await apiClient.postMultipartData(AppConstants.updateProfileUri, userInfoModel.toJson(), [MultipartBody('image', data)], [], handleError: false);
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, response.bodyString);
+      responseModel = ResponseModel(true, response.body['message'],
+        updateProfileResponseModel: response.body['verification_on'] != null ? UpdateProfileResponseModel.fromJson(response.body) : null,
+      );
     } else {
-      responseModel = ResponseModel(false, response.statusText);
+      responseModel = ResponseModel(false, response.statusText,
+        updateProfileResponseModel: response.body['verification_on'] != null ? UpdateProfileResponseModel.fromJson(response.body) : null,
+      );
     }
     return responseModel;
   }
@@ -29,8 +31,14 @@ class ProfileRepository implements ProfileRepositoryInterface {
   @override
   Future<ResponseModel> changePassword(UserInfoModel userInfoModel) async {
     ResponseModel responseModel;
-    Response response = await apiClient.postData(AppConstants.updateProfileUri, {'f_name': userInfoModel.fName, 'l_name': userInfoModel.lName,
-      'email': userInfoModel.email, 'password': userInfoModel.password}, handleError: false);
+    Map<String, dynamic> data = {
+      'name': '${userInfoModel.fName} ${userInfoModel.lName}',
+      'email': userInfoModel.email,
+      'password': userInfoModel.password,
+      'phone': userInfoModel.phone,
+      'button_type': 'change_password'
+    };
+    Response response = await apiClient.postData(AppConstants.updateProfileUri, data, handleError: false);
     if (response.statusCode == 200) {
       String? message = response.body["message"];
       responseModel = ResponseModel(true, message);

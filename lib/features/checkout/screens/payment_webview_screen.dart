@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:stackfood_multivendor/features/checkout/widgets/payment_failed_dialog.dart';
+import 'package:stackfood_multivendor/features/dashboard/controllers/dashboard_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/order/domain/models/order_model.dart';
 import 'package:stackfood_multivendor/features/location/domain/models/zone_response_model.dart';
@@ -23,8 +24,10 @@ class PaymentWebViewScreen extends StatefulWidget {
   final String? subscriptionUrl;
   final String guestId;
   final String contactNumber;
+  final int? restaurantId;
+  final int? packageId;
   const PaymentWebViewScreen({super.key, required this.orderModel, required this.paymentMethod, this.addFundUrl, this.subscriptionUrl,
-    required this.guestId, required this.contactNumber});
+    required this.guestId, required this.contactNumber, this.restaurantId, this.packageId});
 
   @override
   PaymentScreenState createState() => PaymentScreenState();
@@ -73,7 +76,7 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvoked: (val) async {
+      onPopInvokedWithResult: (didPop, result) async {
         _exitApp();
       },
       child: Scaffold(
@@ -94,7 +97,7 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
                 webViewController = controller;
               },
               onLoadStart: (controller, url) async {
-                _redirect(url.toString(), widget.contactNumber);
+                _redirect(url.toString(), widget.contactNumber, widget.restaurantId, widget.packageId);
                 setState(() {
                   _isLoading = true;
                 });
@@ -114,7 +117,7 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
                 setState(() {
                   _isLoading = false;
                 });
-                _redirect(url.toString(), widget.contactNumber);
+                _redirect(url.toString(), widget.contactNumber, widget.restaurantId, widget.packageId);
               },
               onProgressChanged: (controller, progress) {
                 if (progress == 100) {
@@ -151,7 +154,7 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
 
   }
 
-  void _redirect(String url, String? contactNumber) {
+  void _redirect(String url, String? contactNumber, int? restaurantId, int? packageId) {
     if(_canRedirect) {
       bool isSuccess = url.contains('success') && url.startsWith(AppConstants.baseUrl);
       bool isFailed = url.contains('fail') && url.startsWith(AppConstants.baseUrl);
@@ -160,8 +163,7 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
         _canRedirect = false;
       }
 
-
-      if((widget.addFundUrl == '' && widget.addFundUrl!.isEmpty)){
+      if((widget.addFundUrl == '' && widget.addFundUrl!.isEmpty && widget.subscriptionUrl == '' && widget.subscriptionUrl!.isEmpty)){
         if (isSuccess) {
           double total = ((widget.orderModel.orderAmount! / 100) * Get.find<SplashController>().configModel!.loyaltyPointItemPurchasePoint!);
           Get.find<LoyaltyController>().saveEarningPoint(total.toStringAsFixed(0));
@@ -174,8 +176,17 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
           if(Get.currentRoute.contains(RouteHelper.payment)) {
             Get.back();
           }
-          Get.back();
-          Get.toNamed(RouteHelper.getWalletRoute(fundStatus: isSuccess ? 'success' : isFailed ? 'fail' : 'cancel', /*token: UniqueKey().toString()*/));
+          if( widget.subscriptionUrl != null &&  widget.subscriptionUrl!.isNotEmpty &&  widget.addFundUrl == '' &&  widget.addFundUrl!.isEmpty) {
+            Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(true);
+            Get.find<DashboardController>().saveIsRestaurantRegistrationSharedPref(true);
+            Get.offAllNamed(RouteHelper.getSubscriptionSuccessRoute(
+              status: isSuccess ? 'success' : isFailed ? 'fail' : 'cancel',
+              fromSubscription: true, restaurantId:  restaurantId, packageId: packageId,
+            ));
+          } else {
+            Get.back();
+            Get.offAllNamed(RouteHelper.getWalletRoute(fundStatus: isSuccess ? 'success' : isFailed ? 'fail' : 'cancel', /*token: UniqueKey().toString()*/));
+          }
         }
       }
     }

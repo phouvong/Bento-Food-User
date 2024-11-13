@@ -53,7 +53,7 @@ class ConfirmationDialogWidget extends StatelessWidget {
             GetBuilder<ProfileController>(builder: (userController) {
               return GetBuilder<AuthController>(builder: (authController) {
                 return GetBuilder<OrderController>(builder: (orderController) {
-                  return (orderController.isLoading || userController.isLoading || authController.guestLoading) ? const Center(child: CircularProgressIndicator()) : Row(children: [
+                  return (orderController.isLoading || userController.isLoading || authController.guestLoading || authController.isLoading) ? const Center(child: CircularProgressIndicator()) : Row(children: [
                     Expanded(child: TextButton(
                       onPressed: () => isLogOut ? onYesPressed() : onNoPressed != null ? onNoPressed!() : Get.back(),
                       style: TextButton.styleFrom(

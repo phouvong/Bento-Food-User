@@ -4,16 +4,18 @@ import 'package:stackfood_multivendor/features/auth/domain/models/social_log_in_
 
 abstract class AuthServiceInterface{
 
-  Future<ResponseModel> registration(SignUpBodyModel signUpModel, bool isCustomerVerificationOn);
-  Future<ResponseModel> login({String? phone, String? password, bool customerVerification = false, bool alreadyInApp = false});
+  Future<ResponseModel> registration(SignUpBodyModel signUpModel);
+  Future<ResponseModel> login({required String emailOrPhone, required String password, required String loginType, required String fieldType, bool alreadyInApp = false});
+  Future<ResponseModel> otpLogin({required String phone, required String otp, required String loginType, required String verified, bool alreadyInApp = false});
+  Future<ResponseModel> updatePersonalInfo({required String name, required String? phone, required String loginType, required String? email, required String? referCode, bool alreadyInApp = false});
   String getUserCountryCode();
   String getUserNumber();
   String getUserPassword();
   void saveUserNumberAndPassword(String number, String password, String countryCode);
   Future<bool> clearUserNumberAndPassword();
   Future<ResponseModel> guestLogin();
-  Future<void> loginWithSocialMedia(SocialLogInBodyModel socialLogInModel, {bool isCustomerVerificationOn = false});
-  Future<void> registerWithSocialMedia(SocialLogInBodyModel socialLogInModel, {bool isCustomerVerificationOn = false});
+  Future<ResponseModel> loginWithSocialMedia(SocialLogInBodyModel socialLogInModel, {bool isCustomerVerificationOn = false});
+  // Future<void> registerWithSocialMedia(SocialLogInBodyModel socialLogInModel, {bool isCustomerVerificationOn = false});
   Future<void> updateToken();
   void saveDmTipIndex(String i);
   String getDmTipIndex();

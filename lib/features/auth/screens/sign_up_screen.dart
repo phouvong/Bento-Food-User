@@ -27,7 +27,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(child: Center(
         child: Container(
           width: context.width > 700 ? 700 : context.width,
-          padding: context.width > 700 ? const EdgeInsets.all(40) : const EdgeInsets.all(Dimensions.paddingSizeLarge),
+          padding: context.width > 700 ? const EdgeInsets.all(40) : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
           decoration: context.width > 700 ? BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),

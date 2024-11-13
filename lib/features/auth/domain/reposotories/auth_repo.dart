@@ -52,6 +52,8 @@ class AuthRepo implements AuthRepoInterface<SignUpBodyModel> {
       }
       if(!GetPlatform.isWeb) {
         FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
+        FirebaseMessaging.instance.subscribeToTopic('zone_${AddressHelper.getAddressFromSharedPref()!.zoneId}_customer');
+        FirebaseMessaging.instance.subscribeToTopic(AppConstants.maintenanceModeTopic);
       }
     }
     return await apiClient.postData(AppConstants.tokenUri, {"_method": "put", "cm_firebase_token": notificationDeviceToken.isNotEmpty ? notificationDeviceToken : deviceToken});
@@ -76,16 +78,55 @@ class AuthRepo implements AuthRepoInterface<SignUpBodyModel> {
   }
 
   @override
-  Future<Response> login({String? phone, String? password}) async {
+  Future<Response> login({required String emailOrPhone, required String password, required String loginType, required String fieldType, bool alreadyInApp = false}) async {
     String guestId = getGuestId();
     Map<String, String> data = {
-      "phone": phone!,
-      "password": password!,
+      "email_or_phone": emailOrPhone,
+      "password": password,
+      "login_type": loginType,
+      "field_type": fieldType,
     };
     if(guestId.isNotEmpty) {
       data.addAll({"guest_id": guestId});
     }
     return await apiClient.postData(AppConstants.loginUri, data, handleError: false);
+
+  }
+
+  @override
+  Future<Response> otpLogin({required String phone, required String otp, required String loginType, required String verified}) async {
+    String guestId = getGuestId();
+    Map<String, String> data = {
+      "phone": phone,
+      "login_type": loginType,
+    };
+    if(guestId.isNotEmpty) {
+      data.addAll({"guest_id": guestId});
+    }
+    if(otp.isNotEmpty) {
+      data.addAll({"otp": otp});
+    }
+    if(verified.isNotEmpty) {
+      data.addAll({"verified": verified});
+    }
+    return await apiClient.postData(AppConstants.loginUri, data, handleError: false);
+
+  }
+
+  @override
+  Future<Response> updatePersonalInfo({required String name, required String? phone, required String loginType, required String? email, required String? referCode}) async {
+    Map<String, String> data = {
+      "login_type": loginType,
+      "name": name,
+      "ref_code": referCode??'',
+    };
+    if(phone != null && phone.isNotEmpty) {
+      data.addAll({"phone": phone});
+    }
+    if(email != null && email.isNotEmpty) {
+      data.addAll({"email": email});
+    }
+    return await apiClient.postData(AppConstants.personalInformationUri, data, handleError: false);
 
   }
 
@@ -155,13 +196,18 @@ class AuthRepo implements AuthRepoInterface<SignUpBodyModel> {
 
   @override
   Future<Response> loginWithSocialMedia(SocialLogInBodyModel socialLogInModel) async {
-    return await apiClient.postData(AppConstants.socialLoginUri, socialLogInModel.toJson());
+    String guestId = getGuestId();
+    Map<String, dynamic> data = socialLogInModel.toJson();
+    if(guestId.isNotEmpty) {
+      data.addAll({"guest_id": guestId});
+    }
+    return await apiClient.postData(AppConstants.loginUri, data);
   }
 
-  @override
-  Future<Response> registerWithSocialMedia(SocialLogInBodyModel socialLogInModel) async {
-    return await apiClient.postData(AppConstants.socialRegisterUri, socialLogInModel.toJson());
-  }
+  // @override
+  // Future<Response> registerWithSocialMedia(SocialLogInBodyModel socialLogInModel) async {
+  //   return await apiClient.postData(AppConstants.loginUri, socialLogInModel.toJson());
+  // }
 
   @override
   bool isLoggedIn() {
@@ -183,6 +229,7 @@ class AuthRepo implements AuthRepoInterface<SignUpBodyModel> {
   Future<bool> clearSharedData({bool removeToken = true}) async {
     if(!GetPlatform.isWeb) {
       FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+      FirebaseMessaging.instance.unsubscribeFromTopic('zone_${AddressHelper.getAddressFromSharedPref()!.zoneId}_customer');
       if(removeToken) {
         await apiClient.postData(AppConstants.tokenUri, {"_method": "put", "cm_firebase_token": '@'});
       }

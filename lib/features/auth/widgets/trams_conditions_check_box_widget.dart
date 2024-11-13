@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/deliveryman_registration_controller.dart';
+import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
 import 'package:stackfood_multivendor/util/styles.dart';
@@ -18,7 +19,7 @@ class TramsConditionsCheckBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: fromSignUp || fromDmRegistration ? MainAxisAlignment.start : MainAxisAlignment.center, children: [
+    return Row(mainAxisAlignment: /*fromSignUp || fromDmRegistration ?*/ MainAxisAlignment.start /*: MainAxisAlignment.center*/, children: [
 
       fromSignUp || fromDmRegistration ? Checkbox(
         activeColor: Theme.of(context).primaryColor,
@@ -31,12 +32,12 @@ class TramsConditionsCheckBoxWidget extends StatelessWidget {
       Flexible(
         child: RichText(
           text: TextSpan(children: [
-            TextSpan(text: fromDmRegistration ? 'by_singing_up_i_agree_with_all_the'.tr : 'by_login_i_agree_with_all_the'.tr, style: robotoRegular.copyWith(fontSize: fromDialog ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).hintColor)),
+            TextSpan(text: 'i_agree_with_all_the'.tr, style: robotoRegular.copyWith(fontSize: ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).hintColor)),
             const TextSpan(text: ' '),
             TextSpan(
               recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(RouteHelper.getHtmlRoute('terms-and-condition')),
               text: 'terms_conditions'.tr,
-              style: robotoMedium.copyWith(fontSize: fromDialog ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).primaryColor),
+              style: robotoMedium.copyWith(fontSize: ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeExtraSmall : null, color: Theme.of(context).primaryColor),
             ),
           ]),
         ),

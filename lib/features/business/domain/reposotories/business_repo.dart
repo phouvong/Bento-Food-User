@@ -1,6 +1,5 @@
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/business/domain/models/business_plan_body.dart';
-import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
 import 'package:stackfood_multivendor/features/business/domain/reposotories/business_repo_interface.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
@@ -30,16 +29,6 @@ class BusinessRepo implements BusinessRepoInterface<dynamic> {
   }
 
   @override
-  Future<PackageModel?> getList({int? offset}) async {
-    PackageModel? packageModel;
-    Response response = await apiClient.getData(AppConstants.restaurantPackagesUri);
-    if(response.statusCode == 200) {
-      packageModel = PackageModel.fromJson(response.body);
-    }
-    return packageModel;
-  }
-
-  @override
   Future add(dynamic value) {
     throw UnimplementedError();
   }
@@ -56,6 +45,11 @@ class BusinessRepo implements BusinessRepoInterface<dynamic> {
 
   @override
   Future update(Map<String, dynamic> body, int? id) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future getList({int? offset}) {
     throw UnimplementedError();
   }
 

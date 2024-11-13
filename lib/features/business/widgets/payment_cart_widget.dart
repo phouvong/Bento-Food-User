@@ -1,4 +1,5 @@
 import 'package:stackfood_multivendor/features/business/controllers/business_controller.dart';
+import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
 import 'package:stackfood_multivendor/util/styles.dart';
 import 'package:flutter/material.dart';
@@ -12,36 +13,45 @@ class PaymentCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<BusinessController>(
-        builder: (businessController) {
-          return Stack( clipBehavior: Clip.none, children: [
-            InkWell(
-              onTap: onTap as void Function()?,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  border: businessController.paymentIndex == index ? Border.all(color: Theme.of(context).primaryColor, width: 1) : null,
-                  boxShadow: businessController.paymentIndex != index ? [BoxShadow(color: Colors.grey[300]!, blurRadius: 10)] : null,
-                  color: businessController.paymentIndex == index ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
-                ),
-                alignment: Alignment.centerLeft,
-                width: context.width,
-                padding: const EdgeInsets.all(Dimensions.paddingSizeExtraLarge),
-                child: Text(title, style: robotoBold.copyWith(color: businessController.paymentIndex == index ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge!.color)),
-              ),
-            ),
+    return GetBuilder<BusinessController>(builder: (businessController) {
+      return Stack( clipBehavior: Clip.none, children: [
 
-            businessController.paymentIndex == index ? Positioned(
-              top: -8, right: -8,
-              child: Container(
+        InkWell(
+          onTap: onTap as void Function()?,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+              border: businessController.paymentIndex == index ? Border.all(color: Theme.of(context).primaryColor, width: 1) : null,
+              boxShadow: businessController.paymentIndex != index ? [BoxShadow(color: Colors.grey[300]!, blurRadius: 10)] : null,
+              color: businessController.paymentIndex == index ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
+            ),
+            alignment: Alignment.centerLeft,
+            width: context.width,
+            padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
+            child: Row(children: [
+              Text(title, style: robotoBold.copyWith(color: businessController.paymentIndex == index ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge!.color)),
+              const Spacer(),
+
+              (ResponsiveHelper.isDesktop(context) && businessController.paymentIndex == index) ? Container(
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
                 child: Icon(Icons.check, size: 18, color: Theme.of(context).cardColor),
-              ),
-            ) : const SizedBox(),
-          ],
-          );
-        }
-    );
+              ) : const SizedBox(),
+            ]),
+          ),
+        ),
+
+        (ResponsiveHelper.isMobile(context) && businessController.paymentIndex == index)  ? Positioned(
+          top: -8, right: -8,
+          child: Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+            child: Icon(Icons.check, size: 18, color: Theme.of(context).cardColor),
+          ),
+        ) : const SizedBox(),
+
+      ]);
+    });
   }
 }
+

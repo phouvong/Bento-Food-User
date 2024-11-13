@@ -25,8 +25,9 @@ class PaymentScreen extends StatefulWidget {
   final String guestId;
   final String contactNumber;
   final int? restaurantId;
+  final int? packageId;
   const PaymentScreen({super.key, required this.orderModel, required this.paymentMethod, this.addFundUrl, this.subscriptionUrl,
-    required this.guestId, required this.contactNumber, this.restaurantId});
+    required this.guestId, required this.contactNumber, this.restaurantId, this.packageId});
 
   @override
   PaymentScreenState createState() => PaymentScreenState();
@@ -43,6 +44,7 @@ class PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
+
     if(widget.addFundUrl == '' && widget.addFundUrl!.isEmpty && widget.subscriptionUrl == '' && widget.subscriptionUrl!.isEmpty) {
       selectedUrl = '${AppConstants.baseUrl}/payment-mobile?customer_id=${widget.orderModel.userId == 0 ? widget.guestId : widget.orderModel.userId}&order_id=${widget.orderModel.id}&payment_method=${widget.paymentMethod}';
     } else if(widget.subscriptionUrl != '' && widget.subscriptionUrl!.isNotEmpty){
@@ -61,7 +63,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     }
 
     browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: maxCodOrderAmount, addFundUrl: widget.addFundUrl,
-        subscriptionUrl: widget.subscriptionUrl, contactNumber: widget.contactNumber, restaurantId: widget.restaurantId);
+        subscriptionUrl: widget.subscriptionUrl, contactNumber: widget.contactNumber, restaurantId: widget.restaurantId, packageId: widget.packageId);
 
     if(!GetPlatform.isIOS) {
       await InAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -95,7 +97,7 @@ class PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvoked: (val) {
+      onPopInvokedWithResult: (didPop, result) async{
         _exitApp().then((value) => value!);
       },
       child: Scaffold(
@@ -140,8 +142,9 @@ class MyInAppBrowser extends InAppBrowser {
   final String? subscriptionUrl;
   final String? contactNumber;
   final int? restaurantId;
+  final int? packageId;
   MyInAppBrowser({required this.orderID, required this.orderAmount, required this.maxCodOrderAmount, this.contactNumber, super.windowId,
-    super.initialUserScripts, this.addFundUrl, this.subscriptionUrl, this.restaurantId});
+    super.initialUserScripts, this.addFundUrl, this.subscriptionUrl, this.restaurantId, this.packageId});
 
   bool _canRedirect = true;
 
@@ -157,7 +160,7 @@ class MyInAppBrowser extends InAppBrowser {
     if (kDebugMode) {
       print("\n\nStarted: $url\n\n");
     }
-    _redirect(url.toString(), contactNumber, restaurantId);
+    _redirect(url.toString(), contactNumber, restaurantId, packageId);
   }
 
   @override
@@ -166,7 +169,7 @@ class MyInAppBrowser extends InAppBrowser {
     if (kDebugMode) {
       print("\n\nStopped: $url\n\n");
     }
-    _redirect(url.toString(), contactNumber, restaurantId);
+    _redirect(url.toString(), contactNumber, restaurantId, packageId);
   }
 
   @override
@@ -228,11 +231,17 @@ class MyInAppBrowser extends InAppBrowser {
     }
   }
 
-  void _redirect(String url, String? contactNumber, int? restaurantId) {
+  void _redirect(String url, String? contactNumber, int? restaurantId, int? packageId) {
+
+    bool forSubscription = (subscriptionUrl != null && subscriptionUrl!.isNotEmpty && addFundUrl == '' && addFundUrl!.isEmpty);
+
     if(_canRedirect) {
-      bool isSuccess = url.contains('${AppConstants.baseUrl}/payment-success');
-      bool isFailed = url.contains('${AppConstants.baseUrl}/payment-fail');
-      bool isCancel = url.contains('${AppConstants.baseUrl}/payment-cancel');
+      bool isSuccess = forSubscription ? url.startsWith('${AppConstants.baseUrl}/subscription-success')
+          : url.startsWith('${AppConstants.baseUrl}/payment-success');
+      bool isFailed = forSubscription ? url.startsWith('${AppConstants.baseUrl}/subscription-fail')
+          : url.startsWith('${AppConstants.baseUrl}/payment-fail');
+      bool isCancel = forSubscription ? url.startsWith('${AppConstants.baseUrl}/subscription-cancel')
+          : url.startsWith('${AppConstants.baseUrl}/payment-cancel');
       if (isSuccess || isFailed || isCancel) {
         _canRedirect = false;
         close();
@@ -241,7 +250,7 @@ class MyInAppBrowser extends InAppBrowser {
       if((addFundUrl == '' && addFundUrl!.isEmpty && subscriptionUrl == '' && subscriptionUrl!.isEmpty)){
         _orderPaymentDoneDecision(isSuccess, isFailed, isCancel);
       } else{
-        _decideSubscriptionOrWallet(isSuccess, isFailed, isCancel, restaurantId);
+        _decideSubscriptionOrWallet(isSuccess, isFailed, isCancel, restaurantId, packageId);
       }
     }
   }
@@ -256,7 +265,7 @@ class MyInAppBrowser extends InAppBrowser {
     }
   }
 
-  void _decideSubscriptionOrWallet(bool isSuccess, bool isFailed, bool isCancel, int? restaurantId) {
+  void _decideSubscriptionOrWallet(bool isSuccess, bool isFailed, bool isCancel, int? restaurantId, int? packageId) {
     if(isSuccess || isFailed || isCancel) {
       if(Get.currentRoute.contains(RouteHelper.payment)) {
         Get.back();
@@ -264,7 +273,10 @@ class MyInAppBrowser extends InAppBrowser {
       if(subscriptionUrl != null && subscriptionUrl!.isNotEmpty && addFundUrl == '' && addFundUrl!.isEmpty) {
         Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(true);
         Get.find<DashboardController>().saveIsRestaurantRegistrationSharedPref(true);
-        Get.offAllNamed(RouteHelper.getSubscriptionSuccessRoute(isSuccess ? 'success' : isFailed ? 'fail' : 'cancel', true, restaurantId));
+        Get.offAllNamed(RouteHelper.getSubscriptionSuccessRoute(
+          status: isSuccess ? 'success' : isFailed ? 'fail' : 'cancel',
+          fromSubscription: true, restaurantId: restaurantId, packageId: packageId,
+        ));
       } else {
         Get.back();
         Get.offAllNamed(RouteHelper.getWalletRoute(fundStatus: isSuccess ? 'success' : isFailed ? 'fail' : 'cancel', /*token: UniqueKey().toString()*/));

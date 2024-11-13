@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class AppConstants {
   static const String appName = 'Bentofood';
-  static const double appVersion = 7.7;
+  static const double appVersion = 7.9;
 
   static const String fontFamily = 'Lao';
   static const bool payInWevView = false;
@@ -74,8 +74,8 @@ class AppConstants {
   static const String searchLocationUri = '/api/v1/config/place-api-autocomplete';
   static const String placeDetailsUri = '/api/v1/config/place-api-details';
   static const String geocodeUri = '/api/v1/config/geocode-api';
-  static const String socialLoginUri = '/api/v1/auth/social-login';
-  static const String socialRegisterUri = '/api/v1/auth/social-register';
+  // static const String socialLoginUri = '/api/v1/auth/social-login';
+  // static const String socialRegisterUri = '/api/v1/auth/social-register';
   static const String updateZoneUri = '/api/v1/customer/update-zone';
   static const String walletTransactionUri = '/api/v1/customer/wallet/transactions';
   static const String loyaltyTransactionUri = '/api/v1/customer/loyalty-point/transactions';
@@ -88,8 +88,6 @@ class AppConstants {
   static const String zoneListUri = '/api/v1/zone/list';
   static const String restaurantRegisterUri = '/api/v1/auth/vendor/register';
   static const String dmRegisterUri = '/api/v1/auth/delivery-man/store';
-  static const String restaurantPackagesUri = '/api/v1/auth/vendor/package-view';
-  static const String businessPlanUri = '/api/v1/auth/vendor/business_plan';
   static const String refundReasonsUri = '/api/v1/customer/order/refund-reasons';
   static const String refundRequestUri = '/api/v1/customer/order/refund-request';
   static const String orderCancellationUri = '/api/v1/customer/order/cancellation-reasons';
@@ -114,7 +112,6 @@ class AppConstants {
   static const String walletBonusUri = '/api/v1/customer/wallet/bonuses';
   static const String mostTipsUri = '/api/v1/most-tips';
   static const String orderAgainUri = '/api/v1/customer/order-again';
-  static const String businessPlanPaymentUri = '/api/v1/auth/vendor/subscription/payment/api';
   static const String guestLoginUri = '/api/v1/auth/guest/request';
   static const String offlineMethodListUri = '/api/v1/offline_payment_method_list';
   static const String offlinePaymentSaveInfoUri = '/api/v1/customer/order/offline-payment';
@@ -123,6 +120,14 @@ class AppConstants {
   static const String cashBackOfferListUri = '/api/v1/cashback/list';
   static const String getCashBackAmountUri = '/api/v1/cashback/getCashback';
   static const String advertisementListUri = '/api/v1/advertisement/list';
+  static const String personalInformationUri = '/api/v1/auth/update-info';
+  static const String firebaseAuthVerify = '/api/v1/auth/firebase-verify-token';
+  static const String firebaseResetPassword = '/api/v1/auth/firebase-reset-password';
+
+  ///Subscription
+  static const String businessPlanUri = '/api/v1/vendor/business_plan';
+  static const String businessPlanPaymentUri = '/api/v1/vendor/subscription/payment/api';
+  static const String restaurantPackagesUri = '/api/v1/vendor/package-view';
 
   /// Cart
   static const String getCartListUri = '/api/v1/customer/cart/list';
@@ -164,7 +169,8 @@ class AppConstants {
   static const String dmRegisterSuccess = 'stackfood_dm_registration_success';
   static const String isRestaurantRegister = 'stackfood_restaurant_registration';
   static const String referBottomSheet = 'stackfood_reffer_bottomsheet_show';
-
+  static const String maintenanceModeTopic = 'maintenance_mode_user_app';
+  static const String demoResetTopic = 'stackfood_demo_reset';
 
 
   ///Refer & Earn work flow list..
@@ -247,4 +253,11 @@ class AppConstants {
       'value' : 'CashBack'
     },
   ];
+
+  static const double maxLimitOfFileSentINConversation = 25;
+  static const double maxLimitOfTotalFileSent = 5;
+  static const double maxSizeOfASingleFile = 10;
+  static const double maxImageSend = 10;
+
+  static const double limitOfPickedVideoSizeInMB = 50;
 }

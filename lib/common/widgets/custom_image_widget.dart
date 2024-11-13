@@ -3,7 +3,7 @@ import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.d
 import 'package:stackfood_multivendor/util/images.dart';
 import 'package:flutter/material.dart';
 
-class CustomImageWidget extends StatelessWidget {
+class CustomImageWidget extends StatefulWidget {
   final String image;
   final double? height;
   final double? width;
@@ -16,18 +16,42 @@ class CustomImageWidget extends StatelessWidget {
     this.isRestaurant = false, this.isFood = false});
 
   @override
+  State<CustomImageWidget> createState() => _CustomImageWidgetState();
+}
+
+class _CustomImageWidgetState extends State<CustomImageWidget> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
 
     // if (kDebugMode) {
     //   print('==========Image========>> $image');
     // }
 
-    return CachedNetworkImage(
-      imageUrl: image, height: height, width: width, fit: fit,
-      placeholder: (context, url) => CustomAssetImageWidget(placeholder.isNotEmpty ? placeholder : isRestaurant ? Images.restaurantPlaceholder : isFood ? Images.foodPlaceholder : Images.placeholderPng,
-          height: height, width: width, fit: fit, color: imageColor),
-      errorWidget: (context, url, error) => CustomAssetImageWidget(placeholder.isNotEmpty ? placeholder : isRestaurant ? Images.restaurantPlaceholder : isFood ? Images.foodPlaceholder : Images.placeholderPng,
-          height: height, width: width, fit: fit, color: imageColor),
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          _isHovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _isHovered = false;
+        });
+      },
+      child: AnimatedScale(
+        scale: _isHovered ? 1.2 : 1.0,  // Scale to 1.2 when hovered
+        duration: Duration(milliseconds: 300), // Animation duration
+        curve: Curves.easeInOut,  // Smooth curve
+        child: CachedNetworkImage(
+          imageUrl: widget.image, height: widget.height, width: widget.width, fit: widget.fit,
+          placeholder: (context, url) => CustomAssetImageWidget(widget.placeholder.isNotEmpty ? widget.placeholder : widget.isRestaurant ? Images.restaurantPlaceholder : widget.isFood ? Images.foodPlaceholder : Images.placeholderPng,
+              height: widget.height, width: widget.width, fit: widget.fit, color: widget.imageColor),
+          errorWidget: (context, url, error) => CustomAssetImageWidget(widget.placeholder.isNotEmpty ? widget.placeholder : widget.isRestaurant ? Images.restaurantPlaceholder : widget.isFood ? Images.foodPlaceholder : Images.placeholderPng,
+              height: widget.height, width: widget.width, fit: widget.fit, color: widget.imageColor),
+        ),
+      ),
     );
   }
 }

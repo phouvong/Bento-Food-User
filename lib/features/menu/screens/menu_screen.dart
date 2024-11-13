@@ -187,7 +187,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     )
                   ]),
 
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  (Get.find<SplashController>().configModel!.refEarningStatus == 1)
+                   || (Get.find<SplashController>().configModel!.toggleDmRegistration! && !ResponsiveHelper.isDesktop(context))
+                   || (Get.find<SplashController>().configModel!.toggleRestaurantRegistration! && !ResponsiveHelper.isDesktop(context)) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
                       child: Text(
@@ -219,7 +221,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         ) : const SizedBox(),
                       ]),
                     )
-                  ]),
+                  ]) : const SizedBox(),
 
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Padding(

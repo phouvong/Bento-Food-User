@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:stackfood_multivendor/util/app_constants.dart';
 
 class LocationService implements LocationServiceInterface{
   final LocationRepoInterface locationRepoInterface;
@@ -22,7 +23,7 @@ class LocationService implements LocationServiceInterface{
     Position myPosition;
     try {
       await Geolocator.requestPermission();
-      Position newLocalData = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position newLocalData = await Geolocator.getCurrentPosition();
       myPosition = newLocalData;
     }catch(e) {
       myPosition = Position(
@@ -44,9 +45,9 @@ class LocationService implements LocationServiceInterface{
   void handleTopicSubscription(AddressModel? savedAddress, AddressModel? address) {
     if(!GetPlatform.isWeb) {
       if(Get.find<SplashController>().configModel!.demo!) {
-        FirebaseMessaging.instance.subscribeToTopic('demo_reset');
+        FirebaseMessaging.instance.subscribeToTopic(AppConstants.demoResetTopic);
       } else {
-        FirebaseMessaging.instance.unsubscribeFromTopic('demo_reset');
+        FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.demoResetTopic);
       }
       if (savedAddress != null) {
         if(savedAddress.zoneIds != null) {

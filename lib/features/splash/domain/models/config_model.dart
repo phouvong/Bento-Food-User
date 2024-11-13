@@ -88,6 +88,14 @@ class ConfigModel {
   String? favIconFullUrl;
   bool? extraPackagingChargeStatus;
   bool? countryPickerStatus;
+  MaintenanceModeData? maintenanceModeData;
+  CentralizeLoginSetup? centralizeLoginSetup;
+  bool? firebaseOtpVerification;
+  int? subscriptionFreeTrialDays;
+  bool? subscriptionFreeTrialStatus;
+  int? subscriptionBusinessModel;
+  int? commissionBusinessModel;
+  String? subscriptionFreeTrialType;
 
   ConfigModel({
     this.businessName,
@@ -179,6 +187,14 @@ class ConfigModel {
     this.favIconFullUrl,
     this.extraPackagingChargeStatus,
     this.countryPickerStatus,
+    this.maintenanceModeData,
+    this.centralizeLoginSetup,
+    this.firebaseOtpVerification,
+    this.subscriptionFreeTrialDays,
+    this.subscriptionFreeTrialStatus,
+    this.subscriptionBusinessModel,
+    this.commissionBusinessModel,
+    this.subscriptionFreeTrialType,
   });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -296,6 +312,14 @@ class ConfigModel {
     favIconFullUrl = json['fav_icon_full_url'];
     extraPackagingChargeStatus = json['extra_packaging_charge'];
     countryPickerStatus = json['country_picker_status'] == 1;
+    maintenanceModeData = json['maintenance_mode_data'] != null ? MaintenanceModeData.fromJson(json['maintenance_mode_data']) : null;
+    centralizeLoginSetup = json['centralize_login'] != null ? CentralizeLoginSetup.fromJson(json['centralize_login']) : null;
+    firebaseOtpVerification = json['firebase_otp_verification'] == 1;
+    subscriptionFreeTrialDays = json['subscription_free_trial_days'];
+    subscriptionFreeTrialStatus = json['subscription_free_trial_status'] == 1 ? true : false;
+    subscriptionBusinessModel = json['subscription_business_model'];
+    commissionBusinessModel = json['commission_business_model'];
+    subscriptionFreeTrialType = json['subscription_free_trial_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -397,6 +421,16 @@ class ConfigModel {
     data['fav_icon_full_url'] = favIconFullUrl;
     data['extra_packaging_charge'] = extraPackagingChargeStatus;
     data['country_picker_status'] = countryPickerStatus;
+    if (maintenanceModeData != null) {
+      data['maintenance_mode_data'] = maintenanceModeData!.toJson();
+    }
+    data['centralizeLoginSetup'] = centralizeLoginSetup!.toJson();
+    data['firebase_otp_verification'] = firebaseOtpVerification;
+    data['subscription_free_trial_days'] = subscriptionFreeTrialDays;
+    data['subscription_free_trial_status'] = subscriptionFreeTrialStatus;
+    data['subscription_business_model'] = subscriptionBusinessModel;
+    data['commission_business_model'] = commissionBusinessModel;
+    data['subscription_free_trial_type'] = subscriptionFreeTrialType;
     return data;
   }
 }
@@ -713,6 +747,133 @@ class MediaData {
     data['image'] = image;
     data['pdf'] = pdf;
     data['docs'] = docs;
+    return data;
+  }
+}
+
+class MaintenanceModeData {
+  List<String>? maintenanceSystemSetup;
+  MaintenanceDurationSetup? maintenanceDurationSetup;
+  MaintenanceMessageSetup? maintenanceMessageSetup;
+
+  MaintenanceModeData({
+    this.maintenanceSystemSetup,
+    this.maintenanceDurationSetup,
+    this.maintenanceMessageSetup,
+  });
+
+  MaintenanceModeData.fromJson(Map<String, dynamic> json) {
+    maintenanceSystemSetup = json['maintenance_system_setup'].cast<String>();
+    maintenanceDurationSetup = json['maintenance_duration_setup'] != null ? MaintenanceDurationSetup.fromJson(json['maintenance_duration_setup']) : null;
+    maintenanceMessageSetup = json['maintenance_message_setup'] != null ? MaintenanceMessageSetup.fromJson(json['maintenance_message_setup']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['maintenance_system_setup'] = maintenanceSystemSetup;
+    if (maintenanceDurationSetup != null) {
+      data['maintenance_duration_setup'] = maintenanceDurationSetup!.toJson();
+    }
+    if (maintenanceMessageSetup != null) {
+      data['maintenance_message_setup'] = maintenanceMessageSetup!.toJson();
+    }
+    return data;
+  }
+}
+
+class MaintenanceDurationSetup {
+  String? maintenanceDuration;
+  String? startDate;
+  String? endDate;
+
+  MaintenanceDurationSetup({
+    this.maintenanceDuration,
+    this.startDate,
+    this.endDate,
+  });
+
+  MaintenanceDurationSetup.fromJson(Map<String, dynamic> json) {
+    maintenanceDuration = json['maintenance_duration'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['maintenance_duration'] = maintenanceDuration;
+    data['start_date'] = startDate;
+    data['end_date'] = endDate;
+    return data;
+  }
+}
+
+class MaintenanceMessageSetup {
+  int? businessNumber;
+  int? businessEmail;
+  String? maintenanceMessage;
+  String? messageBody;
+
+  MaintenanceMessageSetup({this.businessNumber, this.businessEmail, this.maintenanceMessage, this.messageBody});
+
+  MaintenanceMessageSetup.fromJson(Map<String, dynamic> json) {
+    businessNumber = json['business_number'];
+    businessEmail = json['business_email'];
+    maintenanceMessage = json['maintenance_message'];
+    messageBody = json['message_body'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['business_number'] = businessNumber;
+    data['business_email'] = businessEmail;
+    data['maintenance_message'] = maintenanceMessage;
+    data['message_body'] = messageBody;
+    return data;
+  }
+}
+
+class CentralizeLoginSetup {
+  bool? manualLoginStatus;
+  bool? otpLoginStatus;
+  bool? socialLoginStatus;
+  bool? googleLoginStatus;
+  bool? facebookLoginStatus;
+  bool? appleLoginStatus;
+  bool? emailVerificationStatus;
+  bool? phoneVerificationStatus;
+
+  CentralizeLoginSetup({
+    this.manualLoginStatus,
+    this.otpLoginStatus,
+    this.socialLoginStatus,
+    this.googleLoginStatus,
+    this.facebookLoginStatus,
+    this.appleLoginStatus,
+    this.emailVerificationStatus,
+    this.phoneVerificationStatus,
+  });
+
+  CentralizeLoginSetup.fromJson(Map<String, dynamic> json) {
+    manualLoginStatus = json['manual_login_status'] == 1;
+    otpLoginStatus = json['otp_login_status'] == 1;
+    socialLoginStatus = json['social_login_status'] == 1;
+    googleLoginStatus = json['google_login_status'] == 1;
+    facebookLoginStatus = json['facebook_login_status'] == 1;
+    appleLoginStatus = json['apple_login_status'] == 1;
+    emailVerificationStatus = json['email_verification_status'] == 1;
+    phoneVerificationStatus = json['phone_verification_status'] == 1;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['manual_login_status'] = manualLoginStatus;
+    data['otp_login_status'] = otpLoginStatus;
+    data['social_login_status'] = socialLoginStatus;
+    data['google_login_status'] = googleLoginStatus;
+    data['facebook_login_status'] = facebookLoginStatus;
+    data['apple_login_status'] = appleLoginStatus;
+    data['email_verification_status'] = emailVerificationStatus;
+    data['phone_verification_status'] = phoneVerificationStatus;
     return data;
   }
 }

@@ -6,22 +6,29 @@ import 'package:get/get.dart';
 
 class PackageWidget extends StatelessWidget {
   final String title;
-  const PackageWidget({super.key, required this.title});
+  final bool isSelect;
+  const PackageWidget({super.key, required this.title, this.isSelect = false});
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+
+    bool isDesktop = ResponsiveHelper.isDesktop(context);
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
-        padding: EdgeInsets.only(left: ResponsiveHelper.isDesktop(Get.context) ? MediaQuery.of(Get.context!).size.width * 0.05 : MediaQuery.of(Get.context!).size.width * 0.15),
+        padding: const EdgeInsets.only(left: 30),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          const Icon(Icons.check_circle, size: 18, color: Colors.green),
+          Icon(Icons.check_circle, size: 18, color: isSelect ? Theme.of(context).cardColor : Colors.green),
           const SizedBox(width: Dimensions.paddingSizeSmall),
 
-          Text(title.tr, style: robotoMedium),
+          Text(title.tr, style: robotoRegular.copyWith(fontSize: isDesktop ? Dimensions.fontSizeExtraSmall : Dimensions.fontSizeSmall, color: isSelect ? Theme.of(context).cardColor
+              : Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7))),
+
         ]),
       ),
 
-      Divider(indent: 50, endIndent: 50, color: Theme.of(Get.context!).dividerColor,thickness: 1,)
+      Divider(indent: 20, endIndent: 50, color: Theme.of(Get.context!).disabledColor.withOpacity(0.5), thickness: 1),
+
     ]);
   }
 }

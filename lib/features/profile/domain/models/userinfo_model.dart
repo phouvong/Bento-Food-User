@@ -20,6 +20,8 @@ class UserInfoModel {
   bool? isValidForDiscount;
   double? discountAmount;
   String? discountAmountType;
+  bool? isPhoneVerified;
+  bool? isEmailVerified;
 
   UserInfoModel({
     this.id,
@@ -41,6 +43,8 @@ class UserInfoModel {
     this.isValidForDiscount,
     this.discountAmount,
     this.discountAmountType,
+    this.isPhoneVerified,
+    this.isEmailVerified,
   });
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
@@ -63,6 +67,8 @@ class UserInfoModel {
     isValidForDiscount = json['is_valid_for_discount'] ?? false;
     discountAmount = json['discount_amount']?.toDouble();
     discountAmountType = json['discount_amount_type'];
+    isPhoneVerified = json['is_phone_verified'] == 1;
+    isEmailVerified = json['is_email_verified'] == 1;
   }
 
   Map<String, dynamic> toJson() {
@@ -80,13 +86,15 @@ class UserInfoModel {
     data['loyalty_point'] = loyaltyPoint;
     data['ref_code'] = refCode;
     if (userInfo != null) {
-      data['user`info'] = userInfo!.toJson();
+      data['userinfo'] = userInfo!.toJson();
     }
     data['created_at'] = createdAt;
     data['validity'] = validity;
     data['is_valid_for_discount'] = isValidForDiscount;
     data['discount_amount'] = discountAmount;
     data['discount_amount_type'] = discountAmountType;
+    data['is_phone_verified'] = isPhoneVerified;
+    data['is_email_verified'] = isEmailVerified;
     return data;
   }
 }

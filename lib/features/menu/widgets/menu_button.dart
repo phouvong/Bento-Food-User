@@ -30,7 +30,8 @@ class MenuButton extends StatelessWidget {
         if(isLogout) {
           Get.back();
           if(Get.find<AuthController>().isLoggedIn()) {
-            Get.dialog(ConfirmationDialogWidget(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true, onYesPressed: () {
+            Get.dialog(ConfirmationDialogWidget(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true,
+                onYesPressed: () {
               Get.find<AuthController>().clearSharedData();
               Get.find<AuthController>().socialLogout();
               Get.find<CartController>().clearCartList();

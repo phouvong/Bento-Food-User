@@ -15,23 +15,27 @@ class RestaurantBodyModel {
   String? password;
   String? zoneId;
   List<String>? cuisineId;
+  String? businessPlan;
+  String? packageId;
 
-  RestaurantBodyModel(
-      {this.translation,
-        this.deliveryTimeType,
-        this.vat,
-        this.minDeliveryTime,
-        this.maxDeliveryTime,
-        this.lat,
-        this.lng,
-        this.fName,
-        this.lName,
-        this.phone,
-        this.email,
-        this.password,
-        this.zoneId,
-        this.cuisineId,
-      });
+  RestaurantBodyModel({
+    this.translation,
+    this.deliveryTimeType,
+    this.vat,
+    this.minDeliveryTime,
+    this.maxDeliveryTime,
+    this.lat,
+    this.lng,
+    this.fName,
+    this.lName,
+    this.phone,
+    this.email,
+    this.password,
+    this.zoneId,
+    this.cuisineId,
+    this.businessPlan,
+    this.packageId,
+  });
 
   RestaurantBodyModel.fromJson(Map<String, dynamic> json) {
     translation = json['translations'];
@@ -48,6 +52,8 @@ class RestaurantBodyModel {
     password = json['password'];
     zoneId = json['zone_id'];
     cuisineId = json['cuisine_ids'];
+    businessPlan = json['business_plan'];
+    packageId = json['package_id'];
   }
 
   Map<String, String> toJson() {
@@ -66,7 +72,8 @@ class RestaurantBodyModel {
     data['password'] = password!;
     data['zone_id'] = zoneId!;
     data['cuisine_ids'] = jsonEncode(cuisineId);
-
+    data['business_plan'] = businessPlan ?? '';
+    data['package_id'] = packageId!;
     return data;
   }
 }

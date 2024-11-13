@@ -195,7 +195,10 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
                 ),
                 padding: const EdgeInsets.only(left: 10),
                 alignment: Alignment.centerLeft,
-                child: Text('search'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
+                child: Text(
+                  (GetPlatform.isWeb && !widget.fromView) ? restaurantRegController.restaurantAddress.toString() : 'search'.tr,
+                  style: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                ),
               ),
             ),
           ),
@@ -333,7 +336,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
     Future.delayed( const Duration(milliseconds: 500),(){
       _mapController?.animateCamera(CameraUpdate.newLatLngBounds(
         boundsFromLatLngList(zoneLatLongList),
-        ResponsiveHelper.isDesktop(context) ? 30 : 100.5,
+        ResponsiveHelper.isDesktop(Get.context) ? 30 : 100.5,
       ));
     });
 

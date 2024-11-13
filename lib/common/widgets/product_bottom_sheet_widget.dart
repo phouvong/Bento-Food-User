@@ -69,7 +69,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
 
     String? warning = Get.find<ProductController>().checkOutOfStockVariationSelected(product?.variations);
     if(warning != null) {
-      showCustomSnackBar(warning, showToaster: true);
+      showCustomSnackBar(warning);
     }
     if(product != null && product!.variations!.isEmpty) {
       Get.find<ProductController>().setExistInCart(product!);
@@ -276,6 +276,38 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                               ],
                             ) : const SizedBox(),
 
+                            (product!.nutritionsName != null && product!.nutritionsName!.isNotEmpty) ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('nutrition_details'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+
+                                Wrap(children: List.generate(product!.nutritionsName!.length, (index) {
+                                  return Text(
+                                    '${product!.nutritionsName![index]}${product!.nutritionsName!.length-1 == index ? '.' : ', '}',
+                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.5)),
+                                  );
+                                })),
+                                const SizedBox(height: Dimensions.paddingSizeLarge),
+                              ],
+                            ) : const SizedBox(),
+
+                            (product!.allergiesName != null && product!.allergiesName!.isNotEmpty) ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('allergic_ingredients'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+
+                                Wrap(children: List.generate(product!.allergiesName!.length, (index) {
+                                  return Text(
+                                    '${product!.allergiesName![index]}${product!.allergiesName!.length-1 == index ? '.' : ', '}',
+                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.5)),
+                                  );
+                                })),
+                                const SizedBox(height: Dimensions.paddingSizeLarge),
+                              ],
+                            ) : const SizedBox(),
+
                             /// Variation
                             product!.variations != null ? ListView.builder(
                               shrinkWrap: true,
@@ -399,10 +431,12 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                                       fillColor: WidgetStateColor.resolveWith((states) => productController.selectedVariations[index][i]! ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),
                                                     ),
 
-                                                    Text(
-                                                      product!.variations![index].variationValues![i].level!.trim(),
-                                                      maxLines: 1, overflow: TextOverflow.ellipsis,
-                                                      style: productController.selectedVariations[index][i]! ? robotoMedium : robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                                                    Flexible(
+                                                      child: Text(
+                                                        product!.variations![index].variationValues![i].level!.trim(),
+                                                        maxLines: 1, overflow: TextOverflow.ellipsis,
+                                                        style: productController.selectedVariations[index][i]! ? robotoMedium : robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                                                      ),
                                                     ),
 
                                                     Flexible(
@@ -723,14 +757,14 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
       for(int index=0; index<product!.variations!.length; index++) {
         if(!product!.variations![index].multiSelect! && product!.variations![index].required!
             && !productController.selectedVariations[index].contains(true)) {
-          showCustomSnackBar('${'choose_a_variation_from'.tr} ${product!.variations![index].name}', showToaster: true);
+          showCustomSnackBar('${'choose_a_variation_from'.tr} ${product!.variations![index].name}');
           productController.changeCanAddToCartProduct(false);
           return;
         }else if(product!.variations![index].multiSelect! && (product!.variations![index].required!
             || productController.selectedVariations[index].contains(true)) && product!.variations![index].min!
             > productController.selectedVariationLength(productController.selectedVariations, index)) {
           showCustomSnackBar('${'you_need_to_select_minimum'.tr} ${product!.variations![index].min} '
-              '${'to_maximum'.tr} ${product!.variations![index].max} ${'options_from'.tr} ${product!.variations![index].name} ${'variation'.tr}', showToaster: true);
+              '${'to_maximum'.tr} ${product!.variations![index].max} ${'options_from'.tr} ${product!.variations![index].name} ${'variation'.tr}');
           productController.changeCanAddToCartProduct(false);
           return;
         } else {
@@ -738,7 +772,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
         }
       }
     } else if( !widget.isCampaign && product!.variations!.isEmpty && product!.stockType != 'unlimited' && product!.itemStock! <= 0) {
-      showCustomSnackBar('product_is_out_of_stock'.tr, showToaster: true);
+      showCustomSnackBar('product_is_out_of_stock'.tr);
       productController.changeCanAddToCartProduct(false);
       return;
     }

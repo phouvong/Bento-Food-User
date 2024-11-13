@@ -1,3 +1,6 @@
+import 'package:stackfood_multivendor/features/business/controllers/business_controller.dart';
+import 'package:stackfood_multivendor/features/business/domain/models/package_model.dart';
+import 'package:stackfood_multivendor/features/dashboard/controllers/dashboard_controller.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
@@ -11,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stackfood_multivendor/helper/route_helper.dart';
 
 class RestaurantRegistrationController extends GetxController implements GetxService {
   final RestaurantRegistrationServiceInterface restaurantRegistrationServiceInterface;
@@ -19,6 +23,9 @@ class RestaurantRegistrationController extends GetxController implements GetxSer
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool _zoneLoading = false;
+  bool get zoneLoading => _zoneLoading;
 
   List<DataModel>? _dataList;
   List<DataModel>? get dataList => _dataList;
@@ -65,6 +72,23 @@ class RestaurantRegistrationController extends GetxController implements GetxSer
   bool _inZone = false;
   bool get inZone => _inZone;
 
+  int _businessIndex = 0;
+  int get businessIndex => _businessIndex;
+
+  int _activeSubscriptionIndex = 0;
+  int get activeSubscriptionIndex => _activeSubscriptionIndex;
+
+  String _businessPlanStatus = 'business';
+  String get businessPlanStatus => _businessPlanStatus;
+
+  int _paymentIndex = 0;
+  int get paymentIndex => _paymentIndex;
+
+  String? _digitalPaymentName;
+  String? get digitalPaymentName => _digitalPaymentName;
+
+  PackageModel? _packageModel;
+  PackageModel? get packageModel => _packageModel;
 
   void setRestaurantAdditionalJoinUsPageData({bool isUpdate = true}){
     _dataList = [];
@@ -149,7 +173,7 @@ class RestaurantRegistrationController extends GetxController implements GetxSer
 
   void setLocation(LatLng location, {bool forRestaurantRegistration = false, int? zoneId}) async {
     // Get.dialog(const CustomLoaderWidget(), barrierDismissible: false);
-    _isLoading = true;
+    _zoneLoading = true;
     update();
     ZoneResponseModel response = await Get.find<LocationController>().getZone(
       location.latitude.toString(), location.longitude.toString(), false,
@@ -174,10 +198,14 @@ class RestaurantRegistrationController extends GetxController implements GetxSer
       _restaurantLocation = null;
       _zoneIds = null;
     }
-    _isLoading = false;
+    _zoneLoading = false;
     update();
   }
 
+  void setZoneIndex(int? index) {
+    _selectedZoneIndex = index;
+    update();
+  }
 
   void minTimeChange(String time){
     _storeMinTime = time;
@@ -220,15 +248,50 @@ class RestaurantRegistrationController extends GetxController implements GetxSer
   Future<void> registerRestaurant(Map<String, String> data, List<FilePickerResult> additionalDocuments, List<String> inputTypeList) async {
     _isLoading = true;
     update();
+
     List<MultipartDocument> multiPartsDocuments = restaurantRegistrationServiceInterface.prepareMultipartDocuments(inputTypeList, additionalDocuments);
-    await restaurantRegistrationServiceInterface.registerRestaurant(data, _pickedLogo, _pickedCover, multiPartsDocuments);
+    Response? response = await restaurantRegistrationServiceInterface.registerRestaurant(data, _pickedLogo, _pickedCover, multiPartsDocuments);
+
+    if(response.statusCode == 200) {
+      Get.find<DashboardController>().saveRegistrationSuccessfulSharedPref(true);
+      int? restaurantId = response.body['restaurant_id'];
+      int? packageId = response.body['package_id'];
+      if(packageId == null) {
+        Get.find<BusinessController>().submitBusinessPlan(restaurantId: restaurantId!, packageId: null);
+      } else {
+        if(!GetPlatform.isWeb) {
+          Get.toNamed(RouteHelper.getSubscriptionPaymentRoute(restaurantId: restaurantId, packageId: packageId));
+        } else {
+          Get.offNamed(RouteHelper.getSubscriptionPaymentRoute(restaurantId: restaurantId, packageId: packageId));
+        }
+      }
+    }
     _isLoading = false;
     update();
-
   }
 
-  void setZoneIndex(int? index) {
-    _selectedZoneIndex = index;
+  void resetBusiness(){
+    _businessIndex = Get.find<SplashController>().configModel!.commissionBusinessModel == 0 ? 1 : 0;
+    _activeSubscriptionIndex = 0;
+    _businessPlanStatus = 'business';
+    _paymentIndex = Get.find<SplashController>().configModel!.subscriptionFreeTrialStatus??false ? 1 : 0;
+  }
+
+  Future<void> getPackageList({bool isUpdate = true}) async {
+    _packageModel = await restaurantRegistrationServiceInterface.getPackageList();
+    if(isUpdate) {
+      update();
+    }
+  }
+
+  void setBusiness(int business){
+    _activeSubscriptionIndex = 0;
+    _businessIndex = business;
+    update();
+  }
+
+  void selectSubscriptionCard(int index){
+    _activeSubscriptionIndex = index;
     update();
   }
 

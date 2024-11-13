@@ -85,7 +85,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) async {
         if(Get.find<DeliverymanRegistrationController>().dmStatus != 0.1 && !didPop){
           Get.find<DeliverymanRegistrationController>().dmStatusChange(0.1);
         }else{
@@ -524,6 +524,8 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                                 inputAction: TextInputAction.done,
                                 labelText: 'identity_number'.tr,
                                 required: true,
+                                isEnabled: deliverymanController.identityTypeIndex != 0,
+                                fromDeliveryRegistration: true,
                                 validator: (value) => ValidateCheck.validateEmptyText(value, "identity_number_field_is_required".tr),
                               ),
                               const SizedBox(height: Dimensions.paddingSizeOverLarge),

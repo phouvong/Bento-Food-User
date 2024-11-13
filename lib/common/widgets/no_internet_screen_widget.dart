@@ -33,7 +33,9 @@ class NoInternetScreen extends StatelessWidget {
 
             GestureDetector(
               onTap: () async {
-                if(await Connectivity().checkConnectivity() != ConnectivityResult.none) {
+                final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+
+                if(!connectivityResult.contains(ConnectivityResult.none)) {
                   Get.off(child);
                 }else {
                   showCustomSnackBar('no_internet_connection'.tr, isError: true);

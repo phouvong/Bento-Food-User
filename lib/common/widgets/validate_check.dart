@@ -1,5 +1,7 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 class ValidateCheck{
   static String? validateEmail(String? value) {
@@ -13,9 +15,9 @@ class ValidateCheck{
     final kEmailValid = RegExp(pattern);
     bool isValid = kEmailValid.hasMatch(value.toString());
     if (value!.isEmpty) {
-      return '\u26A0 ${'email_field_is_required'.tr}';
+      return 'please_enter_email'.tr;
     } else if (isValid == false) {
-      return '\u26A0 ${"enter_valid_email_address".tr}';
+      return "enter_valid_email_address".tr;
     }
     return null;
   }
@@ -50,7 +52,7 @@ class ValidateCheck{
 
   static String? validateConfirmPassword(String? value, String? password) {
     if (value == null || value.isEmpty) {
-      return 'confirm_password_field_is_required'.tr;
+      return 'please_enter_confirm_password'.tr;
     }else if(value != password){
       return 'confirm_password_does_not_matched'.tr;
     }
@@ -70,5 +72,26 @@ class ValidateCheck{
       return 'you_do_not_have_enough_point_to_exchange'.tr;
     }
     return null;
+  }
+
+  static String getValidPhone(String number, {bool withCountryCode = false}) {
+    bool isValid = false;
+    String phone = "";
+
+    try{
+      PhoneNumber phoneNumber = PhoneNumber.parse(number);
+      isValid = phoneNumber.isValid(type: PhoneNumberType.mobile);
+      if(isValid){
+        phone = withCountryCode ? "+${phoneNumber.countryCode}${phoneNumber.nsn}" : phoneNumber.nsn.toString();
+        if (kDebugMode) {
+          print("Phone Number : $phone");
+        }
+      }
+    }catch(e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+    return phone;
   }
 }
