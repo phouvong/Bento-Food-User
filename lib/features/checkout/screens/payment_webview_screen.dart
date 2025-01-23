@@ -167,9 +167,9 @@ class PaymentScreenState extends State<PaymentWebViewScreen> {
         if (isSuccess) {
           double total = ((widget.orderModel.orderAmount! / 100) * Get.find<SplashController>().configModel!.loyaltyPointItemPurchasePoint!);
           Get.find<LoyaltyController>().saveEarningPoint(total.toStringAsFixed(0));
-          Get.offNamed(RouteHelper.getOrderSuccessRoute(widget.orderModel.id.toString(), 'success', widget.orderModel.orderAmount, contactNumber));
+          Get.offNamed(RouteHelper.getOrderSuccessRoute(widget.orderModel.id.toString(), 'success', widget.orderModel.orderAmount, contactNumber, isDeliveryOrder: widget.orderModel.orderType == 'delivery'));
         } else if (isFailed || isCancel) {
-          Get.offNamed(RouteHelper.getOrderSuccessRoute(widget.orderModel.id.toString(), 'fail', widget.orderModel.orderAmount, contactNumber));
+          Get.offNamed(RouteHelper.getOrderSuccessRoute(widget.orderModel.id.toString(), 'fail', widget.orderModel.orderAmount, contactNumber, isDeliveryOrder: widget.orderModel.orderType == 'delivery'));
         }
       } else{
         if(isSuccess || isFailed || isCancel) {

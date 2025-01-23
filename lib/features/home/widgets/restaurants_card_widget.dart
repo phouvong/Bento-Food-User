@@ -45,7 +45,7 @@ class RestaurantsCardWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 0, blurRadius: 10, offset: const Offset(0, 1))],
+            boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 0, blurRadius: 10, offset: const Offset(0, 1))],
           ),
           child: CustomInkWellWidget(
             onTap: () {
@@ -65,7 +65,7 @@ class RestaurantsCardWidget extends StatelessWidget {
                             padding: EdgeInsets.all(isNewOnStackFood! ? 2 : 3),
                             height: isNewOnStackFood! ? 95 : 65, width: isNewOnStackFood! ? 95 : 65,
                             decoration:  BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.2),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                             ),
                             child: ClipRRect(
@@ -161,7 +161,7 @@ class RestaurantsCardWidget extends StatelessWidget {
                             padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                             height: 30, width: 80,
                             decoration:  BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(50),
                             ),
                             child: Row(
@@ -245,7 +245,7 @@ class RestaurantsCardShimmer extends StatelessWidget {
                           padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                           height: 80, width: 80,
                           decoration:  BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           ),
                           child: ClipRRect(

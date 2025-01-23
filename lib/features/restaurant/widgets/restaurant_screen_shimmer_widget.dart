@@ -285,7 +285,7 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                     height: 150, width: Dimensions.webMaxWidth,
                     decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor.withOpacity(0.7),
+                    color: Theme.of(context).cardColor.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault),
                     border: Border.all(color: Theme.of(context).shadowColor),
                   ),
@@ -501,13 +501,13 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
             margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
             width: Dimensions.webMaxWidth, height: 150,
-            color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[300],
+            color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey[300],
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
               Row(children: [
                 Container(
                   height: 20, width: 200,
-                  color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                  color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                 ),
                 const Spacer(),
 
@@ -515,14 +515,14 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                   height: 35, width: 300,
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                   decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                   ),
                   child: Row(children: [
-                    Icon(Icons.search, size: 20, color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[300]),
+                    Icon(Icons.search, size: 20, color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey[300]),
                     const SizedBox(width: Dimensions.paddingSizeSmall),
                     Expanded(
-                      child: Text('search_for_products'.tr, style: robotoRegular.copyWith(color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[300])),
+                      child: Text('search_for_products'.tr, style: robotoRegular.copyWith(color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey[300])),
                     ),
                   ]),
                 ),
@@ -534,7 +534,7 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                 Container(
                   height: 30, width: 50,
                   decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                   ),
                 ),
@@ -543,7 +543,7 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                 Container(
                   height: 30, width: 50,
                   decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                   ),
                 ),
@@ -552,7 +552,7 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                 Container(
                   height: 30, width: 50,
                   decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                   ),
                 ),
@@ -561,7 +561,7 @@ class RestaurantScreenShimmerWidget extends StatelessWidget {
                 Container(
                   height: 30, width: 50,
                   decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+                    color: Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Get.isDarkMode ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                   ),
                 ),

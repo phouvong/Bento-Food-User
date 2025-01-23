@@ -18,7 +18,7 @@ class OrderTypeWidget extends StatelessWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           border: Border.all(color: isSelected ? Theme.of(context).cardColor : Colors.transparent, width: 2),
-          boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 5, spreadRadius: 0, offset: const Offset(2, 5))] : [],
+          boxShadow: isSelected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 5, spreadRadius: 0, offset: const Offset(2, 5))] : [],
         ),
         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
         child: Row(children: [

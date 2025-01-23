@@ -22,7 +22,7 @@ class NewOnStackFoodViewWidget extends StatelessWidget {
           child: Container(
             width: Dimensions.webMaxWidth,
             height: 210,
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

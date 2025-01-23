@@ -26,7 +26,7 @@ class ImageDialogWidget extends StatelessWidget {
 
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withValues(alpha: 0.20)),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CustomImageWidget(

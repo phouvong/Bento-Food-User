@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
@@ -19,14 +20,24 @@ class LocationBannerViewWidget extends StatelessWidget {
         padding: EdgeInsets.all(ResponsiveHelper.isMobile(context) ? 0 : Dimensions.paddingSizeLarge),
         height: ResponsiveHelper.isMobile(context) ? 110 : 147,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(Get.find<ThemeController>().darkTheme ? 0.5 : 0.1),
+          //color: Theme.of(context).primaryColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0.5 : 0.1),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0.5 : 0.07),
+              Theme.of(context).primaryColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0.5 : 0.1),
+              Theme.of(context).primaryColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0.5 : 0.2),
+              Theme.of(context).primaryColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0.5 : 0.25),
+            ],
+            begin: Alignment.center,
+            end: Alignment.bottomCenter,
+          ),
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
         ),
         child: Row(children: [
           SizedBox(width: ResponsiveHelper.isMobile(context) ? Dimensions.paddingSizeExtraSmall : 0),
           Expanded(
             child: Row(children: [
-              Image.asset(Images.nearbyRestaurant, height: ResponsiveHelper.isMobile(context) ? 60 : 93, width: ResponsiveHelper.isMobile(context) ? 74 : 119),
+              CustomAssetImageWidget(Images.nearbyRestaurant, height: ResponsiveHelper.isMobile(context) ? 60 : 93, width: ResponsiveHelper.isMobile(context) ? 74 : 119, fit: BoxFit.contain),
               SizedBox(width: ResponsiveHelper.isMobile(context) ? Dimensions.paddingSizeSmall : Dimensions.paddingSizeLarge),
 
               Flexible(
@@ -48,7 +59,8 @@ class LocationBannerViewWidget extends StatelessWidget {
           ),
           const SizedBox(width: Dimensions.paddingSizeSmall),
 
-          Column(mainAxisAlignment: ResponsiveHelper.isMobile(context) ? MainAxisAlignment.end : MainAxisAlignment.end, children: [
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SizedBox(height: 20),
 
             Stack(clipBehavior: Clip.none, children: [
               CustomButtonWidget(
@@ -62,10 +74,13 @@ class LocationBannerViewWidget extends StatelessWidget {
 
               Positioned(
                 top: ResponsiveHelper.isDesktop(context) ? -30 : -25, right: 0, left: 0,
-                child: Image.asset(
-                  Images.nearbyLocation,
-                  height: 40,
-                  width: 40,
+                child: SizedBox(
+                  height: 40, width: 40,
+                  child: CustomAssetImageWidget(
+                    Images.nearbyLocation,
+                    height: 40,
+                    width: 40, fit: BoxFit.contain,
+                  ),
                 ),
               ),
 

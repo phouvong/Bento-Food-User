@@ -4,7 +4,6 @@ import 'package:stackfood_multivendor/features/order/domain/models/subscription_
 import 'package:stackfood_multivendor/features/order/widgets/bottom_view_widget.dart';
 import 'package:stackfood_multivendor/features/order/widgets/order_info_section.dart';
 import 'package:stackfood_multivendor/features/order/widgets/order_pricing_section.dart';
-import 'package:stackfood_multivendor/features/splash/controllers/splash_controller.dart';
 import 'package:stackfood_multivendor/features/order/domain/models/order_details_model.dart';
 import 'package:stackfood_multivendor/features/order/domain/models/order_model.dart';
 import 'package:stackfood_multivendor/helper/date_converter.dart';
@@ -27,7 +26,8 @@ class OrderDetailsScreen extends StatefulWidget {
   final String? contactNumber;
   final bool fromGuestTrack;
   final bool fromNotification;
-  const OrderDetailsScreen({super.key, required this.orderModel, required this.orderId, this.contactNumber, this.fromOfflinePayment = false, this.fromGuestTrack = false, this.fromNotification = false});
+  final bool fromDineIn;
+  const OrderDetailsScreen({super.key, required this.orderModel, required this.orderId, this.contactNumber, this.fromOfflinePayment = false, this.fromGuestTrack = false, this.fromNotification = false, this.fromDineIn = false});
 
   @override
   OrderDetailsScreenState createState() => OrderDetailsScreenState();
@@ -41,11 +41,13 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
     await Get.find<OrderController>().trackOrder(widget.orderId.toString(), widget.orderModel, false, contactNumber: widget.contactNumber).then((value) {
       if(widget.fromOfflinePayment) {
         Future.delayed(const Duration(seconds: 2), () => showAnimatedDialog(Get.context!, OfflineSuccessDialog(orderId: widget.orderId)));
+      }else if(widget.fromDineIn) {
+        Future.delayed(const Duration(seconds: 2), () => showAnimatedDialog(Get.context!, OfflineSuccessDialog(orderId: widget.orderId, isDineIn: true)));
       }
     });
-    if(widget.orderModel == null) {
-      await Get.find<SplashController>().getConfigData();
-    }
+    // if(widget.orderModel == null && !widget.fromDineIn) {
+    //   await Get.find<SplashController>().getConfigData();
+    // }
     Get.find<OrderController>().getOrderCancelReasons();
     Get.find<OrderController>().getOrderDetails(widget.orderId.toString());
     if(Get.find<OrderController>().trackModel != null){
@@ -106,8 +108,10 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
           bool? taxIncluded = false;
           OrderModel? order = orderController.trackModel;
           bool subscription = false;
+          bool isDineIn = false;
           List<String> schedules = [];
           if(orderController.orderDetails != null && order != null) {
+            isDineIn = order.orderType == 'dine_in';
             subscription = order.subscription != null;
 
             if(subscription) {
@@ -156,14 +160,23 @@ class OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBind
           double total = itemsPrice + addOns - discount! + (taxIncluded! ? 0 : tax!) + deliveryCharge! - couponDiscount! + dmTips! + additionalCharge + extraPackagingCharge - referrerBonusAmount;
 
         return Scaffold(
-            appBar: subscription && !ResponsiveHelper.isDesktop(context) ? AppBar(
+            appBar: (subscription || isDineIn) && !ResponsiveHelper.isDesktop(context) ? AppBar(
               surfaceTintColor: Theme.of(context).cardColor,
               title: Column(children: [
 
-                Text('${'subscription'.tr} # ${order?.id.toString()}', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                Text('${isDineIn ? 'order'.tr : 'subscription'.tr} # ${order?.id.toString()}', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
                 const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                Text('${'your_order_is'.tr} ${order?.orderStatus}', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
+                subscription
+                    ? Text('${'your_order_is'.tr} ${order?.orderStatus}', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor))
+                    : Text(
+                  (order?.orderStatus == 'pending' || order?.orderStatus == 'confirmed') ? '${'your_order_is'.tr} ${order?.orderStatus?.tr}'
+                      : order?.orderStatus == 'processing' ? 'your_food_is_cooking'.tr
+                      : order?.orderStatus == 'handover' ? 'your_food_is_ready'.tr
+                      : order?.orderStatus == 'canceled' ? 'your_order_is_canceled'.tr
+                      : 'your_food_is_served'.tr,
+                  style: robotoRegular.copyWith(color: Theme.of(context).primaryColor),
+                ),
 
               ]),
               centerTitle: true,

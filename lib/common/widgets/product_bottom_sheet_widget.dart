@@ -217,7 +217,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                   return Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                      color: Theme.of(context).primaryColor.withOpacity(0.05),
+                                      color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
                                     ),
                                     padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                                     margin: EdgeInsets.only(top: GetPlatform.isAndroid ? 0 : Dimensions.paddingSizeLarge),
@@ -257,7 +257,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                                         color: Theme.of(context).cardColor,
-                                        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 10, spreadRadius: 1)],
+                                        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 10, spreadRadius: 1)],
                                     ),
                                     child: Row(children: [
                                       Image.asset(product!.veg == 1 ? Images.vegLogo : Images.nonVegLogo, height: 20, width: 20),
@@ -285,7 +285,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                 Wrap(children: List.generate(product!.nutritionsName!.length, (index) {
                                   return Text(
                                     '${product!.nutritionsName![index]}${product!.nutritionsName!.length-1 == index ? '.' : ', '}',
-                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.5)),
+                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.5)),
                                   );
                                 })),
                                 const SizedBox(height: Dimensions.paddingSizeLarge),
@@ -301,7 +301,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                 Wrap(children: List.generate(product!.allergiesName!.length, (index) {
                                   return Text(
                                     '${product!.allergiesName![index]}${product!.allergiesName!.length-1 == index ? '.' : ', '}',
-                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.5)),
+                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.5)),
                                   );
                                 })),
                                 const SizedBox(height: Dimensions.paddingSizeLarge),
@@ -329,9 +329,9 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                   margin: EdgeInsets.only(bottom: index != product!.variations!.length - 1 ? Dimensions.paddingSizeDefault : 0),
                                   decoration: BoxDecoration(
                                       color: product!.variations![index].required! ? (product!.variations![index].multiSelect! ? product!.variations![index].min! : 1) <= selectedCount
-                                          ? Theme.of(context).primaryColor.withOpacity(0.05) :Theme.of(context).disabledColor.withOpacity(0.05) : Colors.transparent,
+                                          ? Theme.of(context).primaryColor.withValues(alpha: 0.05) :Theme.of(context).disabledColor.withValues(alpha: 0.05) : Colors.transparent,
                                       border: Border.all(color: product!.variations![index].required! ? (product!.variations![index].multiSelect! ? product!.variations![index].min! : 1) <= selectedCount
-                                          ? Theme.of(context).primaryColor.withOpacity(0.3) : Theme.of(context).disabledColor.withOpacity(0.3) : Colors.transparent, width: 1),
+                                          ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).disabledColor.withValues(alpha: 0.3) : Colors.transparent, width: 1),
                                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault)
                                   ),
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -341,7 +341,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: product!.variations![index].required! ? (product!.variations![index].multiSelect! ? product!.variations![index].min! : 1) > selectedCount
-                                              ? Theme.of(context).colorScheme.error.withOpacity(0.1) : Theme.of(context).primaryColor.withOpacity(0.1) : Theme.of(context).disabledColor.withOpacity(0.2),
+                                              ? Theme.of(context).colorScheme.error.withValues(alpha: 0.1) : Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                         ),
                                         padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
@@ -492,7 +492,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
 
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).disabledColor.withOpacity(0.1),
+                                        color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                       ),
                                       padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
@@ -707,7 +707,7 @@ class _ProductBottomSheetWidgetState extends State<ProductBottomSheetWidget> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       shape: BoxShape.circle,
-                      boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.3), blurRadius: 5)],
+                      boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), blurRadius: 5)],
                     ),
                     child: const Icon(Icons.close, size: 14),
                   ),

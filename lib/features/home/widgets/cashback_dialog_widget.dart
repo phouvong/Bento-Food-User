@@ -55,7 +55,7 @@ class CashBackDialogWidget extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).disabledColor.withOpacity(0.2),
+                            color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           ),
                           padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),

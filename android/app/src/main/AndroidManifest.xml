@@ -27,8 +27,9 @@
     </queries>
 
     <application
-        android:label="Bentofood"
+        android:label="bentofood"
         android:name="${applicationName}"
+        android:extractNativeLibs="true"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

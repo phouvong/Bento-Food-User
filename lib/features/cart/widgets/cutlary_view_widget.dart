@@ -18,7 +18,7 @@ class CutleryViewWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ),
       padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
       margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeExtraSmall),
@@ -40,11 +40,11 @@ class CutleryViewWidget extends StatelessWidget {
           scale: 0.7,
           child: CupertinoSwitch(
             value: cartController.addCutlery,
-            activeColor: Theme.of(context).primaryColor,
+            activeTrackColor: Theme.of(context).primaryColor,
             onChanged: (bool? value) {
               cartController.updateCutlery();
             },
-            trackColor: Theme.of(context).primaryColor.withOpacity(0.2),
+            inactiveTrackColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
           ),
         )
 

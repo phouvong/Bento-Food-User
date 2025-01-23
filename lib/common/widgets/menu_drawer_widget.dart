@@ -172,7 +172,7 @@ class MenuDrawerWidgetState extends State<MenuDrawerWidget> with SingleTickerPro
             //margin: const EdgeInsets.only(right: 30),
             decoration: BoxDecoration(
               //borderRadius: const BorderRadius.only(bottomRight: Radius.circular(Dimensions.radiusExtraLarge)),
-              color: Theme.of(context).primaryColor.withOpacity(0.10),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
             ),
             alignment: Alignment.centerLeft,
             child: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

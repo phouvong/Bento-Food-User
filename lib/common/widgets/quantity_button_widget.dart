@@ -19,7 +19,7 @@ class QuantityButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: showRemoveIcon ? Colors.transparent : isIncrement ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),
-          color: showRemoveIcon ? Theme.of(context).cardColor : isIncrement ? color ?? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withOpacity(0.2),
+          color: showRemoveIcon ? Theme.of(context).cardColor : isIncrement ? color ?? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withValues(alpha: 0.2),
         ),
         alignment: Alignment.center,
         child: Icon(

@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: FooterViewWidget(
                 minHeight: isLoggedIn ?  isDesktop ? 0.4 : 0.6 : 0.35,
                 child: (isLoggedIn && isDesktop) ? WebProfileWidget(profileController: profileController, orderController: orderController) : isLoggedIn ? Container(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   width: Dimensions.webMaxWidth, height: context.height - 80,
                   child: Center(
                     child: Column(children: [
@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Theme.of(context).cardColor,
-                                boxShadow: Get.isDarkMode ? null : [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 3, spreadRadius: 1, offset: const Offset(0, 1))],
+                                boxShadow: Get.isDarkMode ? null : [BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 3, spreadRadius: 1, offset: const Offset(0, 1))],
                               ),
                               padding: const EdgeInsets.all(8),
                               child: Icon(Icons.edit_outlined, size: 24, color: Theme.of(context).primaryColor),

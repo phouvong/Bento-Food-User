@@ -95,7 +95,7 @@ class _OfflinePaymentScreenState extends State<OfflinePaymentScreen> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 2, spreadRadius: 1)],
+                          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 2, spreadRadius: 1)],
                         ),
                         child: ExpansionTile(
                           initiallyExpanded: true,
@@ -107,9 +107,9 @@ class _OfflinePaymentScreenState extends State<OfflinePaymentScreen> {
                               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                               margin: const EdgeInsets.only(left: Dimensions.paddingSizeSmall, right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.05),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.2), width: 1),
+                                border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.2), width: 1),
                               ),
                               child: Column(children: [
 
@@ -230,7 +230,7 @@ class _OfflinePaymentScreenState extends State<OfflinePaymentScreen> {
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeDefault),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.1), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), blurRadius: 10)],
             ),
             child: CustomButtonWidget(
               buttonText: 'complete'.tr,

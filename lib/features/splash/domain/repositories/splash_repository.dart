@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/splash/domain/repositories/splash_repository_interface.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,9 +13,31 @@ class SplashRepository implements SplashRepositoryInterface {
   final SharedPreferences sharedPreferences;
   SplashRepository({required this.apiClient, required this.sharedPreferences});
 
+  // @override
+  // Future<Response> getConfigData({required DataSourceEnum? source}) async {
+  //   return await apiClient.getData(AppConstants.configUri);
+  // }
+
   @override
-  Future<Response> getConfigData() async {
-    return await apiClient.getData(AppConstants.configUri);
+  Future<Response> getConfigData({required DataSourceEnum? source}) async {
+    if (source == DataSourceEnum.local) {
+      String? cachedData = sharedPreferences.getString(AppConstants.configCacheKey);
+      if (cachedData != null) {
+        return Response(statusCode: 200, body: jsonDecode(cachedData));
+      } else {
+        return await getConfigDataFromApi();
+      }
+    } else {
+      return await getConfigDataFromApi();
+    }
+  }
+
+  Future<Response> getConfigDataFromApi() async {
+    Response response = await apiClient.getData(AppConstants.configUri);
+    if (response.statusCode == 200) {
+      sharedPreferences.setString(AppConstants.configCacheKey, jsonEncode(response.body));
+    }
+    return response;
   }
 
   @override

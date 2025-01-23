@@ -16,13 +16,14 @@ import 'package:url_launcher/url_launcher_string.dart';
 class RestaurantDetailsSheetWidget extends StatelessWidget {
   final Restaurant restaurant;
   final bool isActive;
-  const RestaurantDetailsSheetWidget({super.key, required this.restaurant, required this.isActive});
+  final bool fromOrder;
+  const RestaurantDetailsSheetWidget({super.key, required this.restaurant, required this.isActive, this.fromOrder = false});
 
   @override
   Widget build(BuildContext context) {
-    bool isAvailable = restaurant.open == 1 && restaurant.active!;
+    //bool isAvailable = restaurant.open == 1 && restaurant.active!;
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: EdgeInsets.all(fromOrder ? 0 : 15),
       child: InkWell(
         onTap: () {
           Get.toNamed(
@@ -31,7 +32,7 @@ class RestaurantDetailsSheetWidget extends StatelessWidget {
           );
         },
         child: Container(
-          width: 380, height: 150,
+          width: 380, height: fromOrder ? 160 : 150,
           padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
@@ -45,7 +46,7 @@ class RestaurantDetailsSheetWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 ),
                 child: ClipRRect(
@@ -136,7 +137,7 @@ class RestaurantDetailsSheetWidget extends StatelessWidget {
 
             Row(children: [
 
-              Row(children: [
+              /*Row(children: [
 
                 Icon(Icons.access_time, color: isAvailable ? Colors.green : Colors.red, size: 20),
                 const SizedBox(width: Dimensions.paddingSizeExtraSmall),
@@ -144,8 +145,8 @@ class RestaurantDetailsSheetWidget extends StatelessWidget {
                 Text(isAvailable ? 'open_now'.tr : 'closed_now'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,
                     color: isAvailable ? Colors.green : Colors.red)),
 
-              ]),
-              const Spacer(),
+              ]),*/
+              //const Spacer(),
 
               Text('${(Geolocator.distanceBetween(
                 double.parse(restaurant.latitude!), double.parse(restaurant.longitude!),

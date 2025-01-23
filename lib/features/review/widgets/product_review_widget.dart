@@ -35,7 +35,7 @@ class _ProductReviewWidgetState extends State<ProductReviewWidget> {
               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
               decoration: BoxDecoration(
-                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 2, offset: const Offset(0, 1))],
+                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.2), spreadRadius: 1, blurRadius: 2, offset: const Offset(0, 1))],
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
               ),
@@ -119,7 +119,7 @@ class _ProductReviewWidgetState extends State<ProductReviewWidget> {
                   capitalization: TextCapitalization.sentences,
                   isEnabled: !reviewController.submitList[index],
                   hintText: 'write_your_review_here'.tr,
-                  fillColor: Theme.of(context).disabledColor.withOpacity(0.05),
+                  fillColor: Theme.of(context).disabledColor.withValues(alpha: 0.05),
                   onChanged: (text) => reviewController.setReview(index, text),
                 ),
                 const SizedBox(height: 20),

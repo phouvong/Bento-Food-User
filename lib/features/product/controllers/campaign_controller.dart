@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/product/domain/models/basic_campaign_model.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/features/product/domain/services/campaign_service_interface.dart';
@@ -39,11 +40,30 @@ class CampaignController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getItemCampaignList(bool reload) async {
-    if(_itemCampaignList == null || reload) {
-      _itemCampaignList = await campaignServiceInterface.getItemCampaignList();
-      update();
+  Future<void> getItemCampaignList(bool reload, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
+    if(_itemCampaignList == null || reload || fromRecall) {
+      if(!fromRecall) {
+        _itemCampaignList = null;
+      }
+
+      List<Product>? itemCampaignList;
+      if(dataSource == DataSourceEnum.local) {
+        itemCampaignList = await campaignServiceInterface.getItemCampaignList(source: DataSourceEnum.local);
+        _prepareItemBasicCampaign(itemCampaignList);
+        getItemCampaignList(false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        itemCampaignList = await campaignServiceInterface.getItemCampaignList(source: DataSourceEnum.client);
+        _prepareItemBasicCampaign(itemCampaignList);
+      }
     }
+  }
+
+  _prepareItemBasicCampaign(List<Product>? itemCampaignList) {
+    if (itemCampaignList != null) {
+      _itemCampaignList = [];
+      _itemCampaignList = itemCampaignList;
+    }
+    update();
   }
 
 }

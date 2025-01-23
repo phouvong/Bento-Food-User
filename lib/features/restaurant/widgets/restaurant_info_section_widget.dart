@@ -54,7 +54,7 @@ class RestaurantInfoSectionWidget extends StatelessWidget {
               title: CustomizableSpaceBarWidget(
                 builder: (context, scrollingRate) {
                   return !isDesktop ? Container(
-                    color: Theme.of(context).cardColor.withOpacity(scrollingRate),
+                    color: Theme.of(context).cardColor.withValues(alpha: scrollingRate),
                     padding: EdgeInsets.only(
                       bottom: 0,
                       left: Get.find<LocalizationController>().isLtr ? 40 * scrollingRate : 0,
@@ -67,7 +67,7 @@ class RestaurantInfoSectionWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1 - (0.1 * scrollingRate)), blurRadius: 10)]
+                          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1 - (0.1 * scrollingRate)), blurRadius: 10)]
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
                         padding: EdgeInsets.only(
@@ -95,7 +95,7 @@ class RestaurantInfoSectionWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                       ),
                       margin: EdgeInsets.symmetric(horizontal: hasCoupons ? Dimensions.paddingSizeDefault : 200, vertical: Dimensions.paddingSizeSmall),
                       child: Column(
@@ -149,7 +149,7 @@ class RestaurantInfoSectionWidget extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: Theme.of(context).cardColor,
                                     border: Border.all(color: Theme.of(context).primaryColor, width: 0.2),
-                                    boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.3), blurRadius: 10)]
+                                    boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), blurRadius: 10)]
                                   ),
                                   padding: const EdgeInsets.all(2),
                                   child: ClipRRect(
@@ -167,7 +167,7 @@ class RestaurantInfoSectionWidget extends StatelessWidget {
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
                                             borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Dimensions.radiusSmall)),
-                                            color: Colors.black.withOpacity(0.6),
+                                            color: Colors.black.withValues(alpha: 0.6),
                                           ),
                                           child: Text(
                                             'closed_now'.tr, textAlign: TextAlign.center,

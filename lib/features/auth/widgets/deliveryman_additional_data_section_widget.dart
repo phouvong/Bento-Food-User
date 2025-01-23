@@ -28,7 +28,7 @@ class DeliverymanAdditionalDataSectionWidget extends StatelessWidget {
       decoration: isDesktop ? null : BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ),
       padding: EdgeInsets.only(
         left: isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall,
@@ -163,7 +163,7 @@ class DeliverymanAdditionalDataSectionWidget extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.1),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                               ),
                               child: Row(children: [
                                 Image.asset(Images.documentIcon, height: 30, width: 30, fit: BoxFit.contain),
@@ -213,7 +213,7 @@ class DeliverymanAdditionalDataSectionWidget extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).disabledColor.withOpacity(0.1),
+                              color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                             ),
                             child: Row(children: [
                               Icon(Icons.cloud_upload_outlined, size: 35, color: Theme.of(context).disabledColor),
@@ -297,7 +297,7 @@ class DeliverymanAdditionalDataSectionWidget extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.1),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                               ),
                               child: Row(children: [
                                 Image.asset(Images.documentIcon, height: 30, width: 30, fit: BoxFit.contain),

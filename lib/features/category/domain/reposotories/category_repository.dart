@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
@@ -27,14 +30,30 @@ class CategoryRepository implements CategoryRepositoryInterface {
   }
 
   @override
-  Future<List<CategoryModel>?> getList({int? offset}) async {
+  Future<List<CategoryModel>?> getList({int? offset, DataSourceEnum? source}) async {
     List<CategoryModel>? categoryList;
-    Response response = await apiClient.getData(AppConstants.categoryUri);
-    if (response.statusCode == 200) {
-      categoryList = [];
-      response.body.forEach((category) {
-        categoryList!.add(CategoryModel.fromJson(category));
-      });
+    String cacheId = AppConstants.categoryUri;
+
+    switch(source!){
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.categoryUri);
+
+        if(response.statusCode == 200){
+          categoryList = [];
+          response.body.forEach((category) {
+            categoryList!.add(CategoryModel.fromJson(category));
+          });
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          categoryList = [];
+          jsonDecode(cacheResponseData).forEach((category) {
+            categoryList!.add(CategoryModel.fromJson(category));
+          });
+        }
     }
     return categoryList;
   }

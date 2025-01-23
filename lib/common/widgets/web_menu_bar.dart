@@ -20,16 +20,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
-  const WebMenuBar({super.key});
+  final bool fromDineIn;
+  const WebMenuBar({super.key, this.fromDineIn = false});
 
   @override
   Widget build(BuildContext context) {
     bool isSelectLanguage = false;
+
     return  Column(
       children: [
         Container(
           height: 40, width: double.infinity,
-          color: Theme.of(context).primaryColor.withOpacity(0.05),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
           child: Center(
             child: SizedBox(
               width: Dimensions.webMaxWidth,
@@ -92,15 +94,40 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                     )));
                   }
 
-                  for(int index=0; index<AppConstants.joinDropdown.length; index++) {
-                    if(index != 0) {
-                      joinUsList.add(DropdownItem<int>(value: index, child: Padding(
+                  if (Get.find<SplashController>().configModel!.toggleRestaurantRegistration!) {
+                    joinUsList.add(DropdownItem<int>(
+                      value: 1,
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
-                        child: Text(AppConstants.joinDropdown[index].tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, fontWeight: FontWeight.w100, color: Get.find<ThemeController>().darkTheme ? Colors.white : Colors.black)),
-                      )));
-                    }
-
+                        child: Text(
+                          AppConstants.joinDropdown[1].tr,
+                          style: robotoRegular.copyWith(
+                            fontSize: Dimensions.fontSizeExtraSmall,
+                            fontWeight: FontWeight.w100,
+                            color: Get.find<ThemeController>().darkTheme ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ));
                   }
+
+                  if (Get.find<SplashController>().configModel!.toggleDmRegistration!) {
+                    joinUsList.add(DropdownItem<int>(
+                      value: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                        child: Text(
+                          AppConstants.joinDropdown[2].tr,
+                          style: robotoRegular.copyWith(
+                            fontSize: Dimensions.fontSizeExtraSmall,
+                            fontWeight: FontWeight.w100,
+                            color: Get.find<ThemeController>().darkTheme ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ));
+                  }
+
                   return Row(children: [
                     SizedBox(
                       width: 120,
@@ -130,12 +157,12 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                         items: languageList,
                         child: Row(
                           children: [
-                            SizedBox(height: 15, width: 15, child: Image.asset(isSelectLanguage ? AppConstants.languages[localizationController.selectedLanguageIndex].imageUrl! : AppConstants.languages[0].imageUrl!)),
+                            SizedBox(height: 15, width: 15, child: Image.asset(isSelectLanguage ? AppConstants.languages[localizationController.selectedLanguageIndex].imageUrl! : AppConstants.languages[localizationController.selectedLanguageIndex].imageUrl!)),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Text(
-                                isSelectLanguage ? AppConstants.languages[localizationController.selectedLanguageIndex].languageName! : AppConstants.languages[0].languageName!,
+                                isSelectLanguage ? AppConstants.languages[localizationController.selectedLanguageIndex].languageName! : AppConstants.languages[localizationController.selectedLanguageIndex].languageName!,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
                               ),
                             ),
@@ -144,13 +171,13 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
 
-                    ConstrainedBox (
+                    Get.find<SplashController>().configModel!.toggleRestaurantRegistration! || Get.find<SplashController>().configModel!.toggleDmRegistration! ? ConstrainedBox (
                       constraints: const BoxConstraints(minWidth: 100, maxWidth: 170),
                       child: CustomDropdown<int>(
                         onChange: (int? value, int index) {
-                          if(index == 0){
+                          if(value == 1){
                             Get.toNamed(RouteHelper.getRestaurantRegistrationRoute());
-                          } else if (index == 1) {
+                          } else if (value == 2) {
                             Get.toNamed(RouteHelper.getDeliverymanRegistrationRoute());
                           }
                         },
@@ -180,7 +207,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
 
-                    ),
+                    ) : SizedBox.shrink(),
 
                   ]);
                 }),
@@ -284,7 +311,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
             MenuIconButton(icon: CupertinoIcons.bell_fill, onTap: () => Get.toNamed(RouteHelper.getNotificationRoute())),
             const SizedBox(width: 20),
 
-            MenuIconButton(icon: Icons.shopping_cart, isCart: true, onTap: () => Get.toNamed(RouteHelper.getCartRoute())),
+            MenuIconButton(icon: Icons.shopping_cart, isCart: true, onTap: () => Get.toNamed(RouteHelper.getCartRoute(fromDineIn: fromDineIn))),
             const SizedBox(width: 20),
 
             GetBuilder<AuthController>(builder: (authController) {

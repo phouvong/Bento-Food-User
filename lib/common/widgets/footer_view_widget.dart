@@ -55,100 +55,110 @@ class _FooterViewWidgetState extends State<FooterViewWidget> {
                 const SizedBox(height: Dimensions.paddingSizeSmall),
 
 
-                Text('subscribe_to_out_new_channel_to_get_latest_updates'.tr, style: robotoRegular.copyWith(color: _color, fontSize: Dimensions.fontSizeSmall)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text('subscribe_to_out_new_channel_to_get_latest_updates'.tr, style: robotoRegular.copyWith(color: _color, fontSize: Dimensions.fontSizeSmall)),
+                ),
                 const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                Container(
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
-                  ),
-                  child: Row(children: [
-                    const SizedBox(width: 20),
-                    Expanded(child: TextField(
-                      controller: _newsLetterController,
-                      expands: false,
-                      style: robotoMedium.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeExtraSmall),
-                      decoration: InputDecoration(
-                        hintText: 'your_email_address'.tr,
-                        hintStyle: robotoRegular.copyWith(color: Colors.grey, fontSize: Dimensions.fontSizeExtraSmall),
-                        border: InputBorder.none,
-                        isCollapsed: true
-                      ),
-                      maxLines: 1,
-                    )),
-                    GetBuilder<SplashController>(builder: (splashController) {
-                      return InkWell(
-                        onTap: () {
-                          String email = _newsLetterController.text.trim().toString();
-                          if (email.isEmpty) {
-                            showCustomSnackBar('enter_email_address'.tr);
-                          }else if (!GetUtils.isEmail(email)) {
-                            showCustomSnackBar('enter_a_valid_email_address'.tr);
-                          }else{
-                            Get.find<SplashController>().subscribeMail(email).then((value) {
-                              if(value) {
-                                _newsLetterController.clear();
-                              }
-                            });
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 2),
-                          decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          child: !splashController.isLoading ? Text('subscribe'.tr, style: robotoRegular.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall))
-                              : const SizedBox(height: 15, width: 20, child: CircularProgressIndicator(color: Colors.white)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Container(
+                    width: 300,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2)],
+                    ),
+                    child: Row(children: [
+                      const SizedBox(width: 20),
+                      Expanded(child: TextField(
+                        controller: _newsLetterController,
+                        expands: false,
+                        style: robotoMedium.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeExtraSmall),
+                        decoration: InputDecoration(
+                          hintText: 'your_email_address'.tr,
+                          hintStyle: robotoRegular.copyWith(color: Colors.grey, fontSize: Dimensions.fontSizeExtraSmall),
+                          border: InputBorder.none,
+                          isCollapsed: true
                         ),
-                      );
-                    }),
-                  ]),
+                        maxLines: 1,
+                      )),
+                      GetBuilder<SplashController>(builder: (splashController) {
+                        return InkWell(
+                          onTap: () {
+                            String email = _newsLetterController.text.trim().toString();
+                            if (email.isEmpty) {
+                              showCustomSnackBar('enter_email_address'.tr);
+                            }else if (!GetUtils.isEmail(email)) {
+                              showCustomSnackBar('enter_a_valid_email_address'.tr);
+                            }else{
+                              Get.find<SplashController>().subscribeMail(email).then((value) {
+                                if(value) {
+                                  _newsLetterController.clear();
+                                }
+                              });
+                            }
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 2,vertical: 2),
+                            decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: !splashController.isLoading ? Text('subscribe'.tr, style: robotoRegular.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall))
+                                : const SizedBox(height: 15, width: 20, child: CircularProgressIndicator(color: Colors.white)),
+                          ),
+                        );
+                      }),
+                    ]),
+                  ),
                 ),
+                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                 GetBuilder<SplashController>(
                   builder: (splashController) {
-                    return SizedBox(height: 50, child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: splashController.configModel!.socialMedia!.length,
-                      itemBuilder: (context, index) {
-                        String? name = splashController.configModel!.socialMedia![index].name;
-                        late String icon;
-                        if(name == 'facebook'){
-                          icon = Images.facebook;
-                        }else if(name == 'linkedin'){
-                          icon = Images.linkedin;
-                        } else if(name == 'youtube'){
-                          icon = Images.youtube;
-                        }else if(name == 'twitter'){
-                          icon = Images.twitter;
-                        }else if(name == 'instagram'){
-                          icon = Images.instagram;
-                        }else if(name == 'pinterest'){
-                          icon = Images.pinterest;
-                        }
-                        return  Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                          child: InkWell(
-                            onTap: () async {
-                              String url = splashController.configModel!.socialMedia![index].link!;
-                              if(!url.startsWith('https://')) {
-                                url = 'https://$url';
-                              }
-                              url = url.replaceFirst('www.', '');
-                              if(await canLaunchUrlString(url)) {
-                                _launchURL(url);
-                              }
-                            },
-                            child: Image.asset(icon, height: 30, width: 30, fit: BoxFit.contain),
-                          ),
-                        );
-                      },
-                    ));
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 7),
+                      child: SizedBox(height: 50, child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: splashController.configModel!.socialMedia!.length,
+                        itemBuilder: (context, index) {
+                          String? name = splashController.configModel!.socialMedia![index].name;
+                          late String icon;
+                          if(name == 'facebook'){
+                            icon = Images.facebook;
+                          }else if(name == 'linkedin'){
+                            icon = Images.linkedin;
+                          } else if(name == 'youtube'){
+                            icon = Images.youtube;
+                          }else if(name == 'twitter'){
+                            icon = Images.twitter;
+                          }else if(name == 'instagram'){
+                            icon = Images.instagram;
+                          }else if(name == 'pinterest'){
+                            icon = Images.pinterest;
+                          }
+                          return  Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
+                            child: InkWell(
+                              onTap: () async {
+                                String url = splashController.configModel!.socialMedia![index].link!;
+                                if(!url.startsWith('https://')) {
+                                  url = 'https://$url';
+                                }
+                                url = url.replaceFirst('www.', '');
+                                if(await canLaunchUrlString(url)) {
+                                  _launchURL(url);
+                                }
+                              },
+                              child: Image.asset(icon, height: 30, width: 30, fit: BoxFit.contain),
+                            ),
+                          );
+                        },
+                      )),
+                    );
                   }
                 ),
               ])),
@@ -165,12 +175,12 @@ class _FooterViewWidgetState extends State<FooterViewWidget> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       gradient: LinearGradient(colors: [
-                        Theme.of(context).disabledColor.withOpacity(0.03),
-                        Theme.of(context).disabledColor.withOpacity(0.05),
-                        Theme.of(context).disabledColor.withOpacity(0.1),
-                        Theme.of(context).disabledColor.withOpacity(0.1),
-                        Theme.of(context).disabledColor.withOpacity(0.05),
-                        Theme.of(context).disabledColor.withOpacity(0.03),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.03),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.05),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.1),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.1),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.05),
+                        Theme.of(context).disabledColor.withValues(alpha: 0.03),
                       ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                     ),
                     child: Row(
@@ -204,10 +214,10 @@ class _FooterViewWidgetState extends State<FooterViewWidget> {
                             Text('quick_links'.tr, style: robotoBold.copyWith(color: _color, fontSize: Dimensions.fontSizeSmall)),
                             const SizedBox(height: Dimensions.paddingSizeLarge),
 
-                            _config!.refundPolicyStatus == 1 ? FooterButton(title: 'money_refund'.tr, route: RouteHelper.getHtmlRoute('refund-policy')) : const SizedBox(),
+                            _config!.refundPolicyStatus == 1 ? FooterButton(title: 'refund_policy'.tr, route: RouteHelper.getHtmlRoute('refund-policy')) : const SizedBox(),
                             SizedBox(height: _config.refundPolicyStatus == 1 ? Dimensions.paddingSizeSmall : 0.0),
 
-                            _config.shippingPolicyStatus == 1 ? FooterButton(title: 'shipping'.tr, route: RouteHelper.getHtmlRoute('shipping-policy')) : const SizedBox(),
+                            _config.shippingPolicyStatus == 1 ? FooterButton(title: 'shipping_policy'.tr, route: RouteHelper.getHtmlRoute('shipping-policy')) : const SizedBox(),
                             SizedBox(height: _config.shippingPolicyStatus == 1 ? Dimensions.paddingSizeSmall : 0.0),
 
 

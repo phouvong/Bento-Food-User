@@ -47,7 +47,7 @@ class _AddFundDialogueWidgetState extends State<AddFundDialogueWidget> {
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).cardColor.withOpacity(0.5),
+                color: Theme.of(context).cardColor.withValues(alpha: 0.5),
               ),
               padding: const EdgeInsets.all(3),
               child: const Icon(Icons.clear),
@@ -128,7 +128,7 @@ class _AddFundDialogueWidgetState extends State<AddFundDialogueWidget> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.05) : Colors.transparent,
+                                  color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Colors.transparent,
                                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault)
                               ),
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeLarge),

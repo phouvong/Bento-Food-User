@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_restaurants_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/services/cuisine_service_interface.dart';
@@ -33,12 +34,25 @@ class CuisineController extends GetxController implements GetxService {
     _cuisineRestaurantsModel = null;
   }
 
-  Future<List<int?>> getCuisineList() async {
+  Future<void> getCuisineList({DataSourceEnum dataSource = DataSourceEnum.local}) async {
     _selectedCuisines = [];
-    _cuisineModel = await cuisineServiceInterface.getCuisineList();
-    List<int?> cuisineIds = cuisineServiceInterface.generateCuisineIds(_cuisineModel);
+    CuisineModel? cuisineModel;
+    if(dataSource == DataSourceEnum.local) {
+      cuisineModel = await cuisineServiceInterface.getCuisineList(source: DataSourceEnum.local);
+      _prepareCuisineList(cuisineModel);
+      getCuisineList(dataSource: DataSourceEnum.client);
+    } else {
+      cuisineModel = await cuisineServiceInterface.getCuisineList(source: DataSourceEnum.client);
+      _prepareCuisineList(cuisineModel);
+    }
+  }
+
+  _prepareCuisineList(CuisineModel? cuisineModel) {
+    if (cuisineModel != null) {
+      _cuisineModel = cuisineModel;
+      cuisineServiceInterface.generateCuisineIds(_cuisineModel);
+    }
     update();
-    return cuisineIds;
   }
 
   Future<void> getCuisineRestaurantList(int cuisineId, int offset, bool reload) async {

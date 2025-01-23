@@ -85,7 +85,7 @@
 //
 //                 Container(
 //                   decoration: BoxDecoration(
-//                     color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withOpacity(0.10) : Theme.of(context).cardColor,
+//                     color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withValues(alpha: 0.10) : Theme.of(context).cardColor,
 //                     borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
 //                   ),
 //                   child: CustomInkWellWidget(
@@ -142,7 +142,7 @@
 //                       }
 //
 //                     },
-//                     highlightColor: Theme.of(context).colorScheme.background.withOpacity(0.1),
+//                     highlightColor: Theme.of(context).colorScheme.background.withValues(alpha: 0.1),
 //                     radius: Dimensions.radiusSmall,
 //                     child: Stack(children: [
 //                       Padding(
@@ -196,7 +196,7 @@
 //                   ),
 //                 ),
 //
-//                 index + 1 == widget.conversation!.conversations!.length ? const SizedBox() : Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+//                 index + 1 == widget.conversation!.conversations!.length ? const SizedBox() : Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 //
 //               ],
 //             );
@@ -246,7 +246,7 @@
 //                       ])),
 //                     ]),
 //
-//                     Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+//                     Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 //
 //                   ],
 //                 ),
@@ -334,7 +334,7 @@ class _ConversationListViewWidgetState extends State<ConversationListViewWidget>
 
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
               ),
               child: CustomInkWellWidget(
                 onTap: () {
@@ -356,7 +356,7 @@ class _ConversationListViewWidgetState extends State<ConversationListViewWidget>
                     showCustomSnackBar('${type!.tr} ${'not_found'.tr}');
                   }
                 },
-                highlightColor: Theme.of(context).colorScheme.surface.withOpacity(0.1),
+                highlightColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
                 radius: Dimensions.radiusSmall,
                 child: Stack(children: [
                   Padding(
@@ -458,7 +458,7 @@ class ConversationShimmer extends StatelessWidget {
                       ])),
                     ]),
 
-                    Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+                    Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 
                   ],
                 ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_model.dart';
 import 'package:stackfood_multivendor/features/notification/domain/repository/notification_repository_interface.dart';
 import 'package:stackfood_multivendor/util/app_constants.dart';
@@ -60,12 +62,28 @@ class NotificationRepository implements NotificationRepositoryInterface {
   }
 
   @override
-  Future<List<NotificationModel>?> getList({int? offset}) async {
+  Future<List<NotificationModel>?> getList({int? offset, DataSourceEnum? source}) async {
     List<NotificationModel>? notificationList;
-    Response response = await apiClient.getData(AppConstants.notificationUri);
-    if (response.statusCode == 200) {
-      notificationList = [];
-      response.body.forEach((notification) => notificationList!.add(NotificationModel.fromJson(notification)));
+    String cacheId = AppConstants.notificationUri;
+
+    switch(source!){
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.notificationUri);
+        if(response.statusCode == 200){
+          notificationList = [];
+          response.body.forEach((notification) {
+            notificationList!.add(NotificationModel.fromJson(notification));
+          });
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          notificationList = [];
+          jsonDecode(cacheResponseData).forEach((notification) {
+            notificationList!.add(NotificationModel.fromJson(notification));
+          });
+        }
     }
     return notificationList;
   }

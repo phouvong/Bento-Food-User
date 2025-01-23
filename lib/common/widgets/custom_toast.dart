@@ -39,7 +39,7 @@ class CustomToast extends StatelessWidget {
               left: Dimensions.paddingSizeLarge,
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Icon(isError ? CupertinoIcons.multiply_circle_fill : Icons.check_circle, color: isError ? const Color(0xffFF9090).withOpacity(0.5) : const Color(0xff039D55), size: 20),
+              Icon(isError ? CupertinoIcons.multiply_circle_fill : Icons.check_circle, color: isError ? const Color(0xffFF9090).withValues(alpha: 0.5) : const Color(0xff039D55), size: 20),
               const SizedBox(width: Dimensions.paddingSizeSmall),
 
               Flexible(child: Text(text, style: robotoRegular.copyWith(color: textColor), maxLines: 3, overflow: TextOverflow.ellipsis)),

@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_loader_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:stackfood_multivendor/features/address/controllers/address_controller.dart';
@@ -63,7 +64,7 @@ class _AccessLocationScreenState extends State<AccessLocationScreen> {
           ),
         );
       });
-    } else {
+    } else if(!widget.fromHome){
       _getCurrentLocationAndRoute();
     }
   }
@@ -139,7 +140,7 @@ class _AccessLocationScreenState extends State<AccessLocationScreen> {
             child: Center(child: Padding(
               padding: context.width > 700 ? const EdgeInsets.all(50) : EdgeInsets.zero,
               child: SizedBox(width: 700, child: Column(children: [
-                Image.asset(Images.deliveryLocation, height: 220),
+                CustomAssetImageWidget(Images.deliveryLocation, height: 220),
                 const SizedBox(height: Dimensions.paddingSizeLarge),
                 Text(
                   'find_restaurants_and_foods'.tr.toUpperCase(), textAlign: TextAlign.center,

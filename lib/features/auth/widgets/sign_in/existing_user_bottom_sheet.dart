@@ -43,7 +43,7 @@ class ExistingUserBottomSheet extends StatelessWidget {
         ) : Container(
           height: 5, width: 35,
           decoration: BoxDecoration(
-            color: Theme.of(context).disabledColor.withOpacity(0.2),
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(5),
           ),
         ),
@@ -51,7 +51,7 @@ class ExistingUserBottomSheet extends StatelessWidget {
 
         ClipOval(child: CustomImageWidget(
           placeholder: Images.guestIconLight,
-          imageColor: Theme.of(context).colorScheme.error.withOpacity(0.3),
+          imageColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
           image: userModel.image??'',
           height: 70, width: 70, fit: BoxFit.cover,
         )),
@@ -87,7 +87,7 @@ class ExistingUserBottomSheet extends StatelessWidget {
 
                 Expanded(child: CustomButtonWidget(
                   buttonText: 'no'.tr,
-                  color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
                   fontSize: Dimensions.fontSizeDefault,
                   textColor: Theme.of(context).textTheme.bodyLarge!.color,
                   onPressed: () {

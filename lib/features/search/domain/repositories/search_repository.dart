@@ -33,8 +33,15 @@ class SearchRepository implements SearchRepositoryInterface {
   }
 
   @override
-  Future<Response> getSearchData(String query, bool isRestaurant) async {
-    return await apiClient.getData('${AppConstants.searchUri}${isRestaurant ? 'restaurants' : 'products'}/search?name=$query&offset=1&limit=50');
+  Future<Response> getSearchData({required String query, required bool isRestaurant, required int offset,
+    String? type, int? isNew = 0, int? isPopular = 0, double? minPrice, double? maxPrice,
+    int? isOneRatting = 0, int? isTwoRatting = 0, int? isThreeRatting = 0, int? isFourRatting = 0, int? isFiveRatting = 0,
+    String? sortBy, int? discounted = 0, required List<int> selectedCuisines, int? isOpenRestaurant}) async {
+
+    return await apiClient.getData('${AppConstants.searchUri}${isRestaurant ? 'restaurants' : 'products'}/search?name=$query&offset=$offset&limit=10'
+        '&type=$type&new=$isNew&popular=$isPopular&rating_1=$isOneRatting&rating_2=$isTwoRatting&rating_3=$isThreeRatting&rating_4=$isFourRatting'
+        '&rating_5=$isFiveRatting&discounted=$discounted&sort_by=${sortBy??''}${isRestaurant ? '' : '&min_price=${minPrice!>0 ? minPrice : ''}'
+        '&max_price=${maxPrice!>0 ? maxPrice : ''}'}${isRestaurant ? '&cuisine=$selectedCuisines' : ''}${isRestaurant ? '&open=$isOpenRestaurant' : ''}');
   }
 
   @override

@@ -38,7 +38,7 @@ class BonusBannerWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       border: Border.all(color: Theme.of(context).primaryColor),
-                      color: Theme.of(context).primaryColor.withOpacity(0.03),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.03),
                     ),
                     padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                     child: Row(children: [
@@ -78,7 +78,7 @@ class BonusBannerWidget extends StatelessWidget {
                 int index = walletController.fundBonusList!.indexOf(bnr);
                 return TabPageSelectorIndicator(
                   backgroundColor: index == walletController.currentIndex ? Theme.of(context).primaryColor
-                      : Theme.of(context).primaryColor.withOpacity(0.5),
+                      : Theme.of(context).primaryColor.withValues(alpha: 0.5),
                   borderColor: Theme.of(context).colorScheme.surface,
                   size: index == walletController.currentIndex ? 10 : 7,
                 );

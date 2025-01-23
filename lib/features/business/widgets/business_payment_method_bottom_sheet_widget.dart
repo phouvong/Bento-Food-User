@@ -87,7 +87,7 @@ class _PaymentMethodBottomSheetState extends State<BusinessPaymentMethodBottomSh
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.05) : Colors.transparent,
+                                color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Colors.transparent,
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                                 border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).disabledColor, width: 0.3),
                               ),

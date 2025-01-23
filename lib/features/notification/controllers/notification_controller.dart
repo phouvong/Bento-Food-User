@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/notification/domain/models/notification_model.dart';
 import 'package:stackfood_multivendor/features/notification/domain/service/notification_service_interface.dart';
 import 'package:get/get.dart';
@@ -12,15 +13,28 @@ class NotificationController extends GetxController implements GetxService {
   bool _hasNotification = false;
   bool get hasNotification => _hasNotification;
 
-  Future<int> getNotificationList(bool reload) async {
-    if(_notificationList == null || reload) {
-      _notificationList = await notificationServiceInterface.getList();
-      if(_notificationList != null) {
-        _hasNotification = _notificationList!.length != getSeenNotificationCount();
+  Future<void> getNotificationList(bool reload, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
+    if(_notificationList == null || reload || fromRecall) {
+      _notificationList = null;
+
+      List<NotificationModel>? notificationList;
+      if(dataSource == DataSourceEnum.local) {
+        notificationList = await notificationServiceInterface.getList(source: DataSourceEnum.local);
+        _prepareNotificationList(notificationList);
+        getNotificationList(false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        notificationList = await notificationServiceInterface.getList(source: DataSourceEnum.client);
+        _prepareNotificationList(notificationList);
       }
-      update();
     }
-    return _notificationList!.length;
+  }
+
+  _prepareNotificationList(List<NotificationModel>? notificationList) {
+    if(notificationList != null) {
+      _notificationList = notificationList;
+      _hasNotification = _notificationList!.length != getSeenNotificationCount();
+    }
+    update();
   }
 
   void saveSeenNotificationCount(int count) {

@@ -63,6 +63,7 @@ class ConfigModel {
   List<Language>? language;
   bool? takeAway;
   bool? homeDelivery;
+  bool? dineIn;
   bool? repeatOrderOption;
   List<SocialMedia>? socialMedia;
   String? footerText;
@@ -96,6 +97,7 @@ class ConfigModel {
   int? subscriptionBusinessModel;
   int? commissionBusinessModel;
   String? subscriptionFreeTrialType;
+  bool? dineInOrderOption;
 
   ConfigModel({
     this.businessName,
@@ -162,6 +164,7 @@ class ConfigModel {
     this.language,
     this.takeAway,
     this.homeDelivery,
+    this.dineIn,
     this.repeatOrderOption,
     this.socialMedia,
     this.footerText,
@@ -195,6 +198,7 @@ class ConfigModel {
     this.subscriptionBusinessModel,
     this.commissionBusinessModel,
     this.subscriptionFreeTrialType,
+    this.dineInOrderOption,
   });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -277,6 +281,7 @@ class ConfigModel {
     }
     takeAway = json['take_away'];
     homeDelivery = json['home_delivery'];
+    dineIn = json['dine_in_order_option'] == 1;
     repeatOrderOption = json['repeat_order_option'];
     if (json['social_media'] != null) {
       socialMedia = <SocialMedia>[];
@@ -320,6 +325,7 @@ class ConfigModel {
     subscriptionBusinessModel = json['subscription_business_model'];
     commissionBusinessModel = json['commission_business_model'];
     subscriptionFreeTrialType = json['subscription_free_trial_type'];
+    dineInOrderOption = json['dine_in_order_option'] == 1;
   }
 
   Map<String, dynamic> toJson() {
@@ -386,6 +392,7 @@ class ConfigModel {
     }
     data['take_away'] = takeAway;
     data['home_delivery'] = homeDelivery;
+    data['dine_in_order_option'] = dineIn;
     data['repeat_order_option'] = repeatOrderOption;
     if (socialMedia != null) {
       data['social_media'] = socialMedia!.map((v) => v.toJson()).toList();

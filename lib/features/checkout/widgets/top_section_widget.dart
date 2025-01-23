@@ -4,6 +4,7 @@ import 'package:stackfood_multivendor/features/checkout/widgets/coupon_section.d
 import 'package:stackfood_multivendor/features/checkout/widgets/delivery_man_tips_section.dart';
 import 'package:stackfood_multivendor/features/checkout/widgets/delivery_option_button.dart';
 import 'package:stackfood_multivendor/features/checkout/widgets/delivery_section.dart';
+import 'package:stackfood_multivendor/features/checkout/widgets/estimated_arrival_time_widget.dart';
 import 'package:stackfood_multivendor/features/checkout/widgets/guest_login_widget.dart';
 import 'package:stackfood_multivendor/features/checkout/widgets/order_type_widget.dart';
 import 'package:stackfood_multivendor/features/checkout/widgets/partial_pay_view.dart';
@@ -54,6 +55,7 @@ class TopSectionWidget extends StatelessWidget {
   final JustTheController deliveryFeeTooltipController;
   final double badWeatherCharge;
   final double extraChargeForToolTip;
+  final ScrollController deliveryOptionScrollController;
 
   const TopSectionWidget({
     super.key, required this.charge, required this.deliveryCharge, required this.locationController,
@@ -64,7 +66,7 @@ class TopSectionWidget extends StatelessWidget {
     required this.guestNameTextEditingController, required this.guestNumberTextEditingController, required this.guestNumberNode,
     required this.isOfflinePaymentActive, required this.guestEmailController, required this.guestEmailNode,
     required this.loginTooltipController, required this.callBack, required this.deliveryChargeForView,
-    required this.deliveryFeeTooltipController, required this.badWeatherCharge, required this.extraChargeForToolTip});
+    required this.deliveryFeeTooltipController, required this.badWeatherCharge, required this.extraChargeForToolTip, required this.deliveryOptionScrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class TopSectionWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
               ),
               margin: EdgeInsets.symmetric(horizontal: isDesktop ? 0 : Dimensions.fontSizeDefault),
               padding: EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeLarge),
@@ -163,7 +165,7 @@ class TopSectionWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
               ),
               margin: EdgeInsets.symmetric(horizontal: isDesktop ? 0 : Dimensions.fontSizeDefault),
               padding: EdgeInsets.symmetric(horizontal: isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
@@ -172,10 +174,9 @@ class TopSectionWidget extends StatelessWidget {
                 Text('delivery_option'.tr, style: robotoMedium),
                 const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(children: [
+                SingleChildScrollView(controller: deliveryOptionScrollController, scrollDirection: Axis.horizontal, child: Row(children: [
 
-                  (Get.find<SplashController>().configModel!.homeDelivery! && checkoutController.restaurant!.delivery!)
-                      ? DeliveryOptionButton(
+                  (Get.find<SplashController>().configModel!.homeDelivery! && checkoutController.restaurant!.delivery!) ? DeliveryOptionButton(
                     value: 'delivery', title: 'home_delivery'.tr, charge: charge,
                     isFree: checkoutController.restaurant!.freeDelivery, total: total,
                     chargeForView: deliveryChargeForView, deliveryFeeTooltipController: deliveryFeeTooltipController,
@@ -183,25 +184,26 @@ class TopSectionWidget extends StatelessWidget {
                   ) : const SizedBox(),
                   const SizedBox(width: Dimensions.paddingSizeDefault),
 
-                  (Get.find<SplashController>().configModel!.takeAway! && checkoutController.restaurant!.takeAway!)
-                      ? DeliveryOptionButton(
+                  (Get.find<SplashController>().configModel!.takeAway! && checkoutController.restaurant!.takeAway!) ? DeliveryOptionButton(
                     value: 'take_away', title: 'take_away'.tr, charge: deliveryCharge, isFree: true, total: total,
                     badWeatherCharge: badWeatherCharge, extraChargeForToolTip: extraChargeForToolTip,
+                  ) : const SizedBox(),
+                  const SizedBox(width: Dimensions.paddingSizeDefault),
+
+                  (Get.find<SplashController>().configModel!.dineInOrderOption! && checkoutController.restaurant!.isActiveDineIn!) ? DeliveryOptionButton(
+                    value: 'dine_in', title: 'dine_in'.tr, charge: deliveryCharge, isFree: true, total: total,
+                    badWeatherCharge: badWeatherCharge, extraChargeForToolTip: extraChargeForToolTip, guestNameTextEditingController: guestNameTextEditingController,
+                    guestNumberTextEditingController: guestNumberTextEditingController, guestEmailController: guestEmailController,
                   ) : const SizedBox(),
 
                 ])),
                 SizedBox(height: isDesktop ? Dimensions.paddingSizeDefault : 0),
               ]),
             ) : const SizedBox(),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-            /*SizedBox(height: checkoutController.orderType != 'take_away' ? ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeSmall : Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall),
-
-            (checkoutController.orderType != 'take_away' && !ResponsiveHelper.isDesktop(context)) ? Center(child: Text('${'delivery_charge'.tr}: ${(checkoutController.orderType == 'take_away'
-                || (checkoutController.orderType == 'delivery' ? checkoutController.restaurant!.freeDelivery! : true)) ? 'free'.tr
-                : charge != -1 ? PriceConverter.convertPrice(checkoutController.orderType == 'delivery' ? charge : deliveryCharge)
-                : 'calculating'.tr}', textDirection: TextDirection.ltr)) : const SizedBox(),*/
-
-            SizedBox(height: !ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeDefault : 0),
+            ///Dine in Estimated Arrival Time
+            EstimatedArrivalTimeWidget(checkoutController: checkoutController),
 
             /// Time Slot
             TimeSlotSection(fromCart: fromCart, checkoutController: checkoutController, tomorrowClosed: tomorrowClosed, todayClosed: todayClosed, tooltipController2: tooltipController2),

@@ -1,9 +1,9 @@
-
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/features/cart/domain/models/cart_model.dart';
 
 abstract class ProductServiceInterface {
-  Future<List<Product>?> getPopularProductList({required String type});
+  Future<List<Product>?> getPopularProductList({required String type, DataSourceEnum? source});
   Future<Product?> getProductDetails({required int id, required bool isCampaign});
   List<bool> initializeCartAddonActiveList(Product? product, List<AddOn>? addOnIds);
   List<int?> initializeCartAddonQuantityList(Product? product, List<AddOn>? addOnIds);

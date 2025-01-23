@@ -41,7 +41,7 @@ class RestaurantDescriptionViewWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Dimensions.radiusSmall)),
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                 ),
                 child: Text(
                   'closed_now'.tr, textAlign: TextAlign.center,

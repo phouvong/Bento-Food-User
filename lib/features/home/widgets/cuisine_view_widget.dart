@@ -23,8 +23,8 @@ class CuisineViewWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeLarge),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: const AssetImage(Images.cuisineBg),
-              colorFilter: ColorFilter.mode(Theme.of(context).primaryColor.withOpacity(0.1), BlendMode.color),
+              image: const AssetImage(Images.cuisineBgPng),
+              colorFilter: ColorFilter.mode(Theme.of(context).primaryColor.withValues(alpha: 0.1), BlendMode.color),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.all(Radius.circular(ResponsiveHelper.isMobile(context) ? 0 : Dimensions.radiusSmall)),

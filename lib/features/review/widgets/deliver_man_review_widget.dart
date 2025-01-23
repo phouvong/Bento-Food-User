@@ -83,7 +83,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                 capitalization: TextCapitalization.sentences,
                 controller: _controller,
                 hintText: 'write_your_review_here'.tr,
-                fillColor: Theme.of(context).disabledColor.withOpacity(0.05),
+                fillColor: Theme.of(context).disabledColor.withValues(alpha: 0.05),
               ),
               const SizedBox(height: 40),
 

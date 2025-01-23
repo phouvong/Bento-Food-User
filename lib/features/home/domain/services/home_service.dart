@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/banner_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/cashback_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/repositories/home_repository_interface.dart';
@@ -8,13 +9,13 @@ class HomeService implements HomeServiceInterface {
   HomeService({required this.homeRepositoryInterface});
 
   @override
-  Future<BannerModel?> getBannerList() async {
-    return await homeRepositoryInterface.getList();
+  Future<BannerModel?> getBannerList({required DataSourceEnum source}) async {
+    return await homeRepositoryInterface.getList(source: source);
   }
 
   @override
-  Future<List<CashBackModel>?> getCashBackOfferList() async {
-    return await homeRepositoryInterface.getCashBackOfferList();
+  Future<List<CashBackModel>?> getCashBackOfferList({DataSourceEnum? source}) async {
+    return await homeRepositoryInterface.getCashBackOfferList(source: source);
   }
 
   @override

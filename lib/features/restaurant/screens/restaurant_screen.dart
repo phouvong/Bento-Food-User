@@ -28,7 +28,8 @@ import 'package:get/get.dart';
 class RestaurantScreen extends StatefulWidget {
   final Restaurant? restaurant;
   final String slug;
-  const RestaurantScreen({super.key, required this.restaurant, this.slug = ''});
+  final bool fromDineIn;
+  const RestaurantScreen({super.key, required this.restaurant, this.slug = '', this.fromDineIn = false});
 
   @override
   State<RestaurantScreen> createState() => _RestaurantScreenState();
@@ -69,7 +70,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   Widget build(BuildContext context) {
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     return Scaffold(
-      appBar: isDesktop ? const WebMenuBar() : null,
+      appBar: isDesktop ? WebMenuBar(fromDineIn: widget.fromDineIn) : null,
       endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<RestaurantController>(builder: (restController) {
@@ -158,7 +159,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     ) : const SizedBox() : const SizedBox(),
 
                     restController.recommendedProductModel != null && restController.recommendedProductModel!.products!.isNotEmpty ? Container(
-                      color: Theme.of(context).primaryColor.withOpacity(0.10),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                         Padding(
@@ -221,7 +222,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     width: Dimensions.webMaxWidth,
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
-                      boxShadow: isDesktop ? [] : [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                      boxShadow: isDesktop ? [] : [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                     ),
                     padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                     child: Column(children: [
@@ -237,7 +238,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
                               color: Theme.of(context).cardColor,
-                              border: Border.all(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.3)),
+                              border: Border.all(color: Theme.of(context).primaryColor, width: 0.3),
                             ),
                             child: Row(
                               children: [
@@ -247,7 +248,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     textInputAction: TextInputAction.search,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                      hintText: 'search_for_products'.tr,
+                                      hintText: 'search_for_your_food'.tr,
                                       hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), borderSide: BorderSide.none),
                                       filled: true,
@@ -266,7 +267,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                           }
                                         },
                                         child: Icon(restController.isSearching ? Icons.clear : CupertinoIcons.search,
-                                            color: Theme.of(context).primaryColor.withOpacity(0.50)),
+                                            color: Theme.of(context).primaryColor.withValues(alpha: 0.50)),
                                       ),
                                     ),
                                     onSubmitted: (String? value) {
@@ -293,7 +294,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               ),
                               padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                               child: Image.asset(Images.search, height: 25, width: 25, color: Theme.of(context).primaryColor, fit: BoxFit.cover),
@@ -302,6 +303,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
                           restController.type.isNotEmpty ? VegFilterWidget(
                             type: restController.type,
+                            iconColor: Theme.of(context).primaryColor,
                             onSelected: (String type) {
                               restController.getRestaurantProductList(restController.restaurant!.id, 1, type, true);
                             },
@@ -327,7 +329,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                  color: index == restController.categoryIndex ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+                                  color: index == restController.categoryIndex ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                                 ),
                                 child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                                   Text(
@@ -384,7 +386,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       }),
 
       bottomNavigationBar: GetBuilder<CartController>(builder: (cartController) {
-          return cartController.cartList.isNotEmpty && !isDesktop ? BottomCartWidget(restaurantId: cartController.cartList[0].product!.restaurantId!) : const SizedBox();
+          return cartController.cartList.isNotEmpty && !isDesktop ? BottomCartWidget(restaurantId: cartController.cartList[0].product!.restaurantId!, fromDineIn: widget.fromDineIn) : const SizedBox();
         })
     );
   }

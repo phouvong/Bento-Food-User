@@ -211,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }),
 
                   (chatController.messageModel != null && (chatController.messageModel!.status! || chatController.messageModel!.messages!.isEmpty)) ? Container(
-                    color: Theme.of(context).disabledColor.withOpacity(0.1),
+                    color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                     child: Column(children: [
 
                       chatController.takeImageLoading && !ResponsiveHelper.isDesktop(context) ? const LinearProgressIndicator(minHeight: 2) : const SizedBox(),
@@ -492,7 +492,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                                 color: Theme.of(context).cardColor,
-                                border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.5), width: 1),
+                                border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.5), width: 1),
                               ),
                               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                                 const SizedBox(width: Dimensions.paddingSizeSmall),
@@ -596,7 +596,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                               color: Theme.of(context).cardColor,
-                              border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.5), width: 1),
+                              border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.5), width: 1),
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: GetBuilder<ChatController>(builder: (chatController) {

@@ -41,7 +41,7 @@ class FundPaymentDialogWidget extends StatelessWidget {
                 // Get.offAllNamed(RouteHelper.getInitialRoute());
               },
               style: TextButton.styleFrom(
-                backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: const Size(Dimensions.webMaxWidth, 40), padding: EdgeInsets.zero,
+                backgroundColor: Theme.of(context).disabledColor.withValues(alpha: 0.3), minimumSize: const Size(Dimensions.webMaxWidth, 40), padding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
               ),
               child: Text(isSubscription ? 'cancel_payment'.tr : 'cancel_add_fund'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),

@@ -32,13 +32,15 @@ class _DeliveryManTipsSectionState extends State<DeliveryManTipsSection> {
   Widget build(BuildContext context) {
     double total = widget.totalPrice;
     bool isDesktop = ResponsiveHelper.isDesktop(context);
+    bool isDineIn = (widget.checkoutController.orderType == 'dine_in');
+
     return Column(
       children: [
-        (!widget.checkoutController.subscriptionOrder && !widget.takeAway && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? Container(
+        (!widget.checkoutController.subscriptionOrder && !widget.takeAway && !isDineIn && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? Container(
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+            boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
           ),
           margin: EdgeInsets.symmetric(horizontal: isDesktop ? 0 : Dimensions.fontSizeDefault),
           padding: EdgeInsets.all(isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall),
@@ -205,7 +207,7 @@ class _DeliveryManTipsSectionState extends State<DeliveryManTipsSection> {
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).primaryColor.withOpacity(0.5),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
                   ),
                   padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: const Icon(Icons.clear),
@@ -217,7 +219,7 @@ class _DeliveryManTipsSectionState extends State<DeliveryManTipsSection> {
           ]),
         ) : const SizedBox.shrink(),
 
-        SizedBox(height: (!widget.takeAway && Get.find<SplashController>().configModel!.dmTipsStatus == 1)
+        SizedBox(height: (!widget.takeAway && !isDineIn && Get.find<SplashController>().configModel!.dmTipsStatus == 1)
             ? Dimensions.paddingSizeSmall : 0),
       ],
     );

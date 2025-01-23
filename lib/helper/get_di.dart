@@ -4,6 +4,11 @@ import 'dart:convert';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/dashboard/domain/repositories/dashboard_repo.dart';
 import 'package:stackfood_multivendor/features/dashboard/domain/repositories/dashboard_repo_interface.dart';
+import 'package:stackfood_multivendor/features/dine_in/controllers/dine_in_controller.dart';
+import 'package:stackfood_multivendor/features/dine_in/domain/repositories/dine_in_repository.dart';
+import 'package:stackfood_multivendor/features/dine_in/domain/repositories/dine_in_repository_interface.dart';
+import 'package:stackfood_multivendor/features/dine_in/domain/services/dine_in_service.dart';
+import 'package:stackfood_multivendor/features/dine_in/domain/services/dine_in_service_interface.dart';
 import 'package:stackfood_multivendor/features/home/controllers/advertisement_controller.dart';
 import 'package:stackfood_multivendor/features/home/domain/repositories/advertisement_repository.dart';
 import 'package:stackfood_multivendor/features/home/domain/repositories/advertisement_repository_interface.dart';
@@ -305,6 +310,10 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => advertisementRepositoryInterface);
   AdvertisementServiceInterface advertisementServiceInterface = AdvertisementService(advertisementRepositoryInterface: Get.find());
   Get.lazyPut(() => advertisementServiceInterface);
+  DineInRepositoryInterface dineInRepositoryInterface = DineInRepository(apiClient: Get.find());
+  Get.lazyPut(() => dineInRepositoryInterface);
+  DineInServiceInterface dineInServiceInterface = DineInService(dineInRepositoryInterface: Get.find());
+  Get.lazyPut(() => dineInServiceInterface);
 
 
   /// Controller
@@ -342,6 +351,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => CampaignController(campaignServiceInterface: Get.find()));
   Get.lazyPut(() => CheckoutController(checkoutServiceInterface: Get.find()));
   Get.lazyPut(() => AdvertisementController(advertisementServiceInterface: Get.find()));
+  Get.lazyPut(() => DineInController(dineInServiceInterface: Get.find()));
 
 
   /// Retrieving localized data

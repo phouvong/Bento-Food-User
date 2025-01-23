@@ -184,7 +184,7 @@ class CategoryProductScreenState extends State<CategoryProductScreen> with Ticke
                       margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                        color: index == catController.subCategoryIndex ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+                        color: index == catController.subCategoryIndex ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                       ),
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Text(

@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -49,28 +50,28 @@ class RestaurantService implements RestaurantServiceInterface {
   }
 
   @override
-  Future<RestaurantModel?> getRestaurantList(int offset, String filterBy, int topRated, int discount, int veg, int nonVeg, {bool fromMap = false}) async {
-    return await restaurantRepositoryInterface.getList(offset: offset, filterBy: filterBy, topRated: topRated, discount: discount, veg: veg, nonVeg: nonVeg, fromMap: fromMap);
+  Future<RestaurantModel?> getRestaurantList(int offset, String filterBy, int topRated, int discount, int veg, int nonVeg, {bool fromMap = false, DataSourceEnum? source}) async {
+    return await restaurantRepositoryInterface.getList(offset: offset, filterBy: filterBy, topRated: topRated, discount: discount, veg: veg, nonVeg: nonVeg, fromMap: fromMap, source: source);
   }
 
   @override
-  Future<List<Restaurant>?> getOrderAgainRestaurantList() async {
-    return await restaurantRepositoryInterface.getRestaurantList(isOrderAgain: true);
+  Future<List<Restaurant>?> getOrderAgainRestaurantList({DataSourceEnum? source}) async {
+    return await restaurantRepositoryInterface.getRestaurantList(isOrderAgain: true, source: source);
   }
 
   @override
-  Future<List<Restaurant>?> getRecentlyViewedRestaurantList(String type) async {
-    return await restaurantRepositoryInterface.getRestaurantList(type: type, isRecentlyViewed: true);
+  Future<List<Restaurant>?> getRecentlyViewedRestaurantList(String type, {DataSourceEnum? source}) async {
+    return await restaurantRepositoryInterface.getRestaurantList(type: type, isRecentlyViewed: true, source: source);
   }
 
   @override
-  Future<List<Restaurant>?> getPopularRestaurantList(String type) async {
-    return await restaurantRepositoryInterface.getRestaurantList(type: type, isPopular: true);
+  Future<List<Restaurant>?> getPopularRestaurantList(String type, {DataSourceEnum? source}) async {
+    return await restaurantRepositoryInterface.getRestaurantList(type: type, isPopular: true, source: source);
   }
 
   @override
-  Future<List<Restaurant>?> getLatestRestaurantList(String type) async {
-    return await restaurantRepositoryInterface.getRestaurantList(type: type, isLatest: true);
+  Future<List<Restaurant>?> getLatestRestaurantList(String type, {DataSourceEnum? source}) async {
+    return await restaurantRepositoryInterface.getRestaurantList(type: type, isLatest: true, source: source);
   }
 
   @override

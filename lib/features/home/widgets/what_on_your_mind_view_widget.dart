@@ -61,7 +61,7 @@ class WhatOnYourMindViewWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Theme.of(context).cardColor,
-                            border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+                            border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
                           ),
                           child: Icon(Icons.arrow_forward, color: Theme.of(context).primaryColor),
                         ),
@@ -91,7 +91,7 @@ class WhatOnYourMindViewWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          color: Theme.of(context).disabledColor.withOpacity(0.2),
+                          color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),

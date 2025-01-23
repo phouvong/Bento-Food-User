@@ -21,8 +21,78 @@ class SearchService implements SearchServiceInterface {
   }
 
   @override
-  Future<Response> getSearchData(String query, bool isRestaurant) async {
-    return await searchRepositoryInterface.getSearchData(query, isRestaurant);
+  Future<Response> getSearchData({required String query, required bool isRestaurant, required int offset,
+    String? type, int? isNew = 0, int? isPopular = 0, double? minPrice, double? maxPrice,
+    int? isOneRatting = 0, int? isTwoRatting = 0, int? isThreeRatting = 0, int? isFourRatting = 0, int? isFiveRatting = 0,
+    String? sortBy, int? discounted = 0, required List<int> selectedCuisines, int? isOpenRestaurant}) async {
+
+    return await searchRepositoryInterface.getSearchData(query: query, isRestaurant: isRestaurant, offset: offset,
+    type: type, isNew: isNew, isPopular: isPopular, isOneRatting: isOneRatting, isTwoRatting: isTwoRatting, isThreeRatting: isThreeRatting,
+        isFourRatting: isFourRatting, isFiveRatting: isFiveRatting, sortBy: sortBy, discounted: discounted,
+        minPrice: minPrice, maxPrice: maxPrice, selectedCuisines: selectedCuisines, isOpenRestaurant: isOpenRestaurant);
+  }
+
+  @override
+  int findRatings(int rating) {
+    if(rating == 1) {
+      return 1;
+    } else if(rating == 2) {
+      return 2;
+    } else if(rating == 3) {
+      return 3;
+    } else if(rating == 4) {
+      return 4;
+    } else if(rating == 5) {
+      return 5;
+    } else {
+      return 0;
+    }
+  }
+
+  @override
+  String getSortBy(bool isRestaurant, int restaurantSortIndex, int sortIndex) {
+    if(isRestaurant) {
+      if(restaurantSortIndex == 0) {
+        return 'asc';
+      } else if(restaurantSortIndex == 1) {
+        return 'desc';
+      } else {
+        return '';
+      }
+    } else {
+      if(sortIndex == 0) {
+        return 'asc';
+      } else if(sortIndex == 1) {
+        return 'desc';
+      } else if(sortIndex == 2) {
+        return 'low';
+      } else if(sortIndex == 3) {
+        return 'high';
+      } else {
+        return '';
+      }
+    }
+  }
+
+  @override
+  String processType(bool isRestaurant, bool restVeg, bool restNonVeg, bool veg, bool nonVeg) {
+    if(isRestaurant) {
+      if(restVeg) {
+        return 'veg';
+      } else if (restNonVeg) {
+        return 'non_veg';
+      } else {
+        return '';
+      }
+    } else {
+      if(veg) {
+        return 'veg';
+      } else if(nonVeg) {
+        return 'non_veg';
+      } else {
+        return '';
+      }
+    }
   }
 
   @override

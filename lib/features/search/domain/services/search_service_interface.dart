@@ -7,7 +7,13 @@ import 'package:stackfood_multivendor/features/search/domain/models/search_sugge
 abstract class SearchServiceInterface {
   Future<List<Product>?> getSuggestedFoods();
   Future<SearchSuggestionModel?> getSearchSuggestions(String searchText);
-  Future<Response> getSearchData(String query, bool isRestaurant);
+  Future<Response> getSearchData({required String query, required bool isRestaurant, required int offset,
+    String? type, int? isNew = 0, int? isPopular = 0, double? minPrice, double? maxPrice,
+    int? isOneRatting = 0, int? isTwoRatting = 0, int? isThreeRatting = 0, int? isFourRatting = 0, int? isFiveRatting = 0,
+    String? sortBy, int? discounted = 0, required List<int> selectedCuisines, int? isOpenRestaurant});
+  int findRatings(int rating);
+  String getSortBy(bool isRestaurant, int restaurantSortIndex, int sortIndex);
+  String processType(bool isRestaurant, bool restVeg, bool restNonVeg, bool veg, bool nonVeg);
   Future<bool> saveSearchHistory(List<String> searchHistories);
   List<String> getSearchHistory();
   Future<bool> clearSearchHistory();

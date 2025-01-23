@@ -31,14 +31,14 @@
     var serviceWorkerVersion = {{flutter_service_worker_version}};
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js?version=7.9.0" defer></script>
+  <script src="flutter.js?version=8.0.0" defer></script>
 </head>
 <body>
 <!-- This script installs service_worker.js to provide PWA functionality to
      application. For more information, see:
      https://developers.google.com/web/fundamentals/primers/service-workers -->
 
-<script src="https://maps.googleapis.com/maps/api/js?key=YOU_MAP_KEY"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHZCBLcVJf2NqZYsd37TzUxqzVcDI-2JU"></script>
 <!--  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>-->
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -200,10 +200,20 @@
            if(document.getElementById('splash'))
              document.getElementById('splash').remove();
            appRunner.runApp();
+
          });
        }
      });
    });
+</script>
+
+<script>
+  function removePreloader() {
+    const preloader = document.querySelector('.preloader');
+    if (preloader) {
+      preloader.remove();
+    }
+  }
 </script>
 
 <script>

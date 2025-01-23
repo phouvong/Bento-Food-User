@@ -24,7 +24,7 @@ class _DeliveryInstructionViewState extends State<DeliveryInstructionView> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.5), width: 0.5),
+        border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.5), width: 0.5),
       ),
       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
       margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
@@ -72,7 +72,7 @@ class _DeliveryInstructionViewState extends State<DeliveryInstructionView> {
     //   decoration: BoxDecoration(
     //     color: Theme.of(context).cardColor,
     //     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-    //     boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+    //     boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
     //   ),
     //   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
     //   margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
@@ -112,7 +112,7 @@ class _DeliveryInstructionViewState extends State<DeliveryInstructionView> {
     //                     child: Container(
     //                       padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
     //                       decoration: BoxDecoration(
-    //                         color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.05) : Colors.grey[200],
+    //                         color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Colors.grey[200],
     //                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
     //                         border: Border.all(color: isSelected ?  Theme.of(context).primaryColor : Colors.transparent),
     //                       ),
@@ -146,7 +146,7 @@ class _DeliveryInstructionViewState extends State<DeliveryInstructionView> {
     //                       },
     //                       child: Container(
     //                         decoration: BoxDecoration(
-    //                           color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.5) : Colors.grey[200],
+    //                           color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.5) : Colors.grey[200],
     //                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
     //                           // boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
     //                         ),

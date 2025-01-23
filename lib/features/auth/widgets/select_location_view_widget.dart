@@ -68,7 +68,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
         decoration: widget.fromView && !isDesktop ? BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ) : null,
         height: widget.fromView ? null : context.height,
         padding: widget.fromView && !isDesktop ? const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault) : EdgeInsets.zero,
@@ -191,7 +191,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.fromView ? Dimensions.radiusSmall : 50),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2)],
                 ),
                 padding: const EdgeInsets.only(left: 10),
                 alignment: Alignment.centerLeft,
@@ -327,7 +327,7 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
         points: zoneLatLongList,
         strokeWidth: 2,
         strokeColor: Get.theme.colorScheme.primary,
-        fillColor: Get.theme.colorScheme.primary.withOpacity(.2),
+        fillColor: Get.theme.colorScheme.primary.withValues(alpha: .2),
       ),
     );
 

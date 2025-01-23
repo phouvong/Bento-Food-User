@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "299589180044",
     "project_id": "bento-food",
-    "storage_bucket": "bento-food.appspot.com"
+    "storage_bucket": "bento-food.firebasestorage.app"
   },
   "client": [
     {

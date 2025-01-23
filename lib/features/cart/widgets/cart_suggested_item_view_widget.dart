@@ -18,7 +18,7 @@ class CartSuggestedItemViewWidget extends StatelessWidget {
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor.withOpacity(Get.find<ThemeController>().darkTheme ? 0 : 1),
+        color: Theme.of(context).cardColor.withValues(alpha: Get.find<ThemeController>().darkTheme ? 0 : 1),
         borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
         boxShadow: isDesktop ? const [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 1)] : [],
       ),

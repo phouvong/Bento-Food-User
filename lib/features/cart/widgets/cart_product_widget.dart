@@ -61,7 +61,7 @@ class CartProductWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                    boxShadow: ResponsiveHelper.isDesktop(context) ? [] : [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 5, spreadRadius: 1)],
+                    boxShadow: ResponsiveHelper.isDesktop(context) ? [] : [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 5, spreadRadius: 1)],
                   ),
                   child: CustomInkWellWidget(
                     onTap: (){
@@ -96,7 +96,7 @@ class CartProductWidget extends StatelessWidget {
                                   top: 0, left: 0, bottom: 0, right: 0,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Colors.black.withOpacity(0.6)),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Colors.black.withValues(alpha: 0.6)),
                                     child: Text('not_available_now_break'.tr, textAlign: TextAlign.center, style: robotoRegular.copyWith(
                                       color: Colors.white, fontSize: 8,
                                     )),
@@ -232,7 +232,7 @@ class CartProductWidget extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context) ? 0 : Dimensions.radiusDefault),
-              color: Theme.of(context).disabledColor.withOpacity(ResponsiveHelper.isDesktop(context) ? 0.1 : 0.3),
+              color: Theme.of(context).disabledColor.withValues(alpha: ResponsiveHelper.isDesktop(context) ? 0.1 : 0.3),
             ),
             margin: EdgeInsets.only(bottom: ResponsiveHelper.isDesktop(context) ? 0 : Dimensions.paddingSizeDefault),
           ),

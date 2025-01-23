@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.dart';
 import 'package:stackfood_multivendor/util/images.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 class CustomImageWidget extends StatefulWidget {
   final String image;
@@ -45,6 +47,7 @@ class _CustomImageWidgetState extends State<CustomImageWidget> {
         duration: Duration(milliseconds: 300), // Animation duration
         curve: Curves.easeInOut,  // Smooth curve
         child: CachedNetworkImage(
+          imageRenderMethodForWeb: (kDebugMode && kIsWeb) ? ImageRenderMethodForWeb.HttpGet : ImageRenderMethodForWeb.HtmlImage,
           imageUrl: widget.image, height: widget.height, width: widget.width, fit: widget.fit,
           placeholder: (context, url) => CustomAssetImageWidget(widget.placeholder.isNotEmpty ? widget.placeholder : widget.isRestaurant ? Images.restaurantPlaceholder : widget.isFood ? Images.foodPlaceholder : Images.placeholderPng,
               height: widget.height, width: widget.width, fit: widget.fit, color: widget.imageColor),

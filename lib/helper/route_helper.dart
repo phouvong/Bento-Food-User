@@ -13,6 +13,7 @@ import 'package:stackfood_multivendor/features/checkout/screens/offline_payment_
 import 'package:stackfood_multivendor/features/checkout/screens/order_successful_screen.dart';
 import 'package:stackfood_multivendor/features/checkout/screens/payment_screen.dart';
 import 'package:stackfood_multivendor/features/checkout/screens/payment_webview_screen.dart';
+import 'package:stackfood_multivendor/features/dine_in/screens/dine_in_restaurant_screen.dart';
 import 'package:stackfood_multivendor/features/favourite/screens/favourite_screen.dart';
 import 'package:stackfood_multivendor/features/home/screens/map_view_screen.dart';
 import 'package:stackfood_multivendor/features/html/enums/html_type.dart';
@@ -143,6 +144,7 @@ class RouteHelper {
   static const String guestTrackOrderScreen = '/guest-track-order-screen';
   static const String favourite = '/favourite-screen';
   static const String newUserSetupScreen = '/new-user-setup-screen';
+  static const String dineInRestaurant = '/dine-in-restaurant';
 
   static String getInitialRoute({bool fromSplash = false}) => '$initial?from-splash=$fromSplash';
   static String getSplashRoute(NotificationBodyModel? body, DeepLinkBody? linkBody) {
@@ -181,7 +183,7 @@ class RouteHelper {
   static String getForgotPassRoute() => forgotPassword;
   static String getResetPasswordRoute(String? phone, String token, String page) => '$resetPassword?phone=$phone&token=$token&page=$page';
   static String getSearchRoute() => search;
-  static String getRestaurantRoute(int? id) {
+  static String getRestaurantRoute(int? id, {bool fromDinIn = false}) {
     if(kIsWeb) {
       // Define MetaSEO object
       MetaSEO meta = MetaSEO();
@@ -190,28 +192,32 @@ class RouteHelper {
       meta.description(description: 'This is Store screen. Here have all information of store');
       meta.keywords(keywords: 'Flutter, Dart, SEO, Meta, Web');
     }
-    return '$restaurant?id=$id';
+    return '$restaurant?id=$id&from_dine_in=$fromDinIn';
   }
-  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false, bool fromNotification = false}) {
-    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack&from_notification=$fromNotification';
+  static String getOrderDetailsRoute(int? orderID, {bool? fromOffline, String? contactNumber, bool fromGuestTrack = false, bool fromNotification = false, bool? fromDineIn}) {
+    return '$orderDetails?id=$orderID&from_offline=$fromOffline&contact=$contactNumber&from_guest_track=$fromGuestTrack&from_notification=$fromNotification&from_dine_in=$fromDineIn';
   }
   static String getProfileRoute() => profile;
   static String getUpdateProfileRoute() => updateProfile;
   static String getCouponRoute({required bool fromCheckout}) => '$coupon?fromCheckout=${fromCheckout ? 'true' : 'false'}';
   static String getNotificationRoute({bool fromNotification = false}) => '$notification?fromNotification=${fromNotification.toString()}';
-  static String getMapRoute(AddressModel addressModel, String page, {String? restaurantName}) {
+  static String getMapRoute(AddressModel addressModel, String page, {String? restaurantName, Restaurant? restaurant, bool? isDineOrder}) {
     List<int> encoded = utf8.encode(jsonEncode(addressModel.toJson()));
     String data = base64Encode(encoded);
-    return '$map?address=$data&page=$page&restaurantName=$restaurantName';
+    String? restaurantModel;
+    if(restaurant != null) {
+      List<int> encoded = utf8.encode(jsonEncode(restaurant.toJson()));
+      restaurantModel = base64Encode(encoded);
+    }
+    return '$map?address=$data&page=$page&restaurantName=$restaurantName&restaurant=$restaurantModel&isDineOrder=${isDineOrder.toString()}';
   }
   static String getAddressRoute() => address;
-  static String getOrderSuccessRoute(String orderID, String status, double? amount, String? contactNumber
-      ) => '$orderSuccess?id=$orderID&status=$status&amount=$amount&contact_number=$contactNumber';
+  static String getOrderSuccessRoute(String orderID, String status, double? amount, String? contactNumber, {bool? isDeliveryOrder}) => '$orderSuccess?id=$orderID&status=$status&amount=$amount&contact_number=$contactNumber&is_delivery_order=$isDeliveryOrder';
   static String getPaymentRoute(OrderModel orderModel, String? paymentMethod, {String? addFundUrl, String? subscriptionUrl, required String guestId, String? contactNumber, int? restaurantId, int? packageId}) {
     String data = base64Encode(utf8.encode(jsonEncode(orderModel.toJson())));
     return '$payment?order=$data&payment-method=$paymentMethod&add-fund-url=$addFundUrl&subscription-url=$subscriptionUrl&guest-id=$guestId&number=$contactNumber&restaurant_id=$restaurantId&package_id=$packageId';
   }
-  static String getCheckoutRoute(String page) => '$checkout?page=$page';
+  static String getCheckoutRoute(String page, {bool fromDineIn = false}) => '$checkout?page=$page&from_dine_in=$fromDineIn';
   static String getOrderTrackingRoute(int? id, String? contactNumber) => '$orderTracking?id=$id&contact_number=$contactNumber';
   static String getBasicCampaignRoute(BasicCampaignModel basicCampaignModel) {
     String data = base64Encode(utf8.encode(jsonEncode(basicCampaignModel.toJson())));
@@ -232,7 +238,7 @@ class RouteHelper {
     return '$rateReview?data=$data';
   }
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';
-  static String getCartRoute({bool fromReorder = false}) => '$cart?from_reorder=$fromReorder';
+  static String getCartRoute({bool fromReorder = false, bool fromDineIn = false}) => '$cart?from_reorder=$fromReorder&from_dine_in=$fromDineIn';
   static String getAddAddressRoute(bool fromCheckout, int? zoneId) => '$addAddress?page=${fromCheckout ? 'checkout' : 'address'}&zone_id=$zoneId';
   static String getEditAddressRoute(AddressModel? address, {bool fromGuest = false}) {
     String data = 'null';
@@ -266,7 +272,7 @@ class RouteHelper {
     return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index&fromNotification=${fromNotification.toString()}';
   }
   static String getConversationRoute() => conversation;
-  static String getMapViewRoute() => mapView;
+  static String getMapViewRoute({bool? fromDineInScreen}) => '$mapView?from_dine_in_screen=${fromDineInScreen.toString()}';
   static String getRestaurantRegistrationRoute() => restaurantRegistration;
   static String getDeliverymanRegistrationRoute() => deliveryManRegistration;
   static String getRefundRequestRoute(String orderID) => '$refund?id=$orderID';
@@ -289,6 +295,7 @@ class RouteHelper {
   static String getNewUserSetupScreen({required String name, required String loginType, required String? phone, required String? email}) {
     return '$newUserSetupScreen?name=$name&login_type=$loginType&phone=$phone&email=$email';
   }
+  static String getDineInRestaurantScreen() => dineInRestaurant;
 
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0, fromSplash: (Get.parameters['from-splash'] == 'true')))),
@@ -359,7 +366,7 @@ class RouteHelper {
     GetPage(name: restaurant, page: () {
       return getRoute(Get.arguments ?? RestaurantScreen(
         restaurant: Restaurant(id: Get.parameters['id'] != 'null' && Get.parameters['id'] != null ? int.parse(Get.parameters['id']!) : null),
-        slug: Get.parameters['slug'] ?? '',
+        slug: Get.parameters['slug'] ?? '', fromDineIn: Get.parameters['from_dine_in'] == 'true',
       ), byPuss: Get.parameters['slug']?.isNotEmpty ?? false);
     }),
     GetPage(name: orderDetails, page: () {
@@ -369,7 +376,7 @@ class RouteHelper {
         contactNumber: Get.parameters['contact'],
         fromGuestTrack: Get.parameters['from_guest_track'] == 'true',
         fromNotification: Get.parameters['from_notification'] == 'true',
-
+        fromDineIn: Get.parameters['from_dine_in'] == 'true',
       ));
     }),
     GetPage(name: profile, page: () => getRoute(const ProfileScreen())),
@@ -379,7 +386,16 @@ class RouteHelper {
     GetPage(name: map, page: () {
       List<int> decode = base64Decode(Get.parameters['address']!.replaceAll(' ', '+'));
       AddressModel data = AddressModel.fromJson(jsonDecode(utf8.decode(decode)));
-      return getRoute(MapScreen(fromRestaurant: Get.parameters['page'] == 'restaurant', address: data, restaurantName: Get.parameters['restaurantName']));
+      Restaurant? restaurant;
+      if(Get.parameters['restaurant'] != null && Get.parameters['restaurant'] != 'null') {
+        List<int> decode = base64Decode(Get.parameters['restaurant'] != null ? Get.parameters['restaurant']!.replaceAll(' ', '+') : '');
+        restaurant = Restaurant.fromJson(jsonDecode(utf8.decode(decode)));
+      }
+      return getRoute(MapScreen(
+        fromRestaurant: Get.parameters['page'] == 'restaurant', address: data, restaurantName: Get.parameters['restaurantName'],
+        fromOrder: Get.parameters['page'] == 'order', restaurant: restaurant,
+        fromDineInOrder: Get.parameters['isDineOrder'] == 'true',
+      ));
     }),
     GetPage(name: address, page: () => getRoute(const AddressScreen())),
     GetPage(name: orderSuccess, page: () {
@@ -390,6 +406,7 @@ class RouteHelper {
         contactPersonNumber: Get.parameters['contact_number'] != null && Get.parameters['contact_number'] != 'null'
             ? Get.parameters['contact_number']
             : Get.find<AuthController>().isGuestLoggedIn() ? Get.find<AuthController>().getGuestNumber() : null,
+        isDeliveryOrder: Get.parameters['is_delivery_order'] == 'true',
       ));
     }),
     GetPage(name: payment, page: () {
@@ -418,7 +435,7 @@ class RouteHelper {
       CheckoutScreen? checkoutScreen = Get.arguments;
       bool fromCart = Get.parameters['page'] == 'cart';
       return getRoute(checkoutScreen ?? (!fromCart ? const NotFoundWidget() : CheckoutScreen(
-        cartList: null, fromCart: Get.parameters['page'] == 'cart',
+        cartList: null, fromCart: Get.parameters['page'] == 'cart', fromDineInPage: Get.parameters['from_dine_in'] == 'true',
       )));
     }),
     GetPage(name: orderTracking, page: () => getRoute(OrderTrackingScreen(orderID: Get.parameters['id'], contactNumber: Get.parameters['contact_number']))),
@@ -448,7 +465,7 @@ class RouteHelper {
     GetPage(name: itemCampaign, page: () => getRoute(const ItemCampaignScreen())),
     GetPage(name: support, page: () => getRoute(byPuss: true, const SupportScreen())),
     GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
-    GetPage(name: cart, page: () => getRoute(CartScreen(fromNav: false, fromReorder: Get.parameters['from_reorder'] == 'true'))),
+    GetPage(name: cart, page: () => getRoute(CartScreen(fromNav: false, fromReorder: Get.parameters['from_reorder'] == 'true', fromDineIn: Get.parameters['from_dine_in'] == 'true'))),
     GetPage(name: addAddress, page: () => getRoute(AddAddressScreen(fromCheckout: Get.parameters['page'] == 'checkout', zoneId: int.parse(Get.parameters['zone_id']!)))),
     GetPage(name: editAddress, page: () {
       AddressModel? data;
@@ -496,7 +513,7 @@ class RouteHelper {
       ));
     }),
     GetPage(name: conversation, page: () => const ConversationScreen()),
-    GetPage(name: mapView, page: () => getRoute(const MapViewScreen())),
+    GetPage(name: mapView, page: () => getRoute(MapViewScreen(fromDineInScreen: Get.parameters['from_dine_in_screen'] == 'true'))),
     GetPage(name: restaurantRegistration, page: () => const RestaurantRegistrationScreen()),
     GetPage(name: deliveryManRegistration, page: () => const DeliveryManRegistrationScreen()),
     GetPage(name: refund, page: () => RefundRequestScreen(orderId: Get.parameters['id'])),
@@ -533,6 +550,7 @@ class RouteHelper {
       phone: Get.parameters['phone'] != '' && Get.parameters['phone'] != 'null' ? Get.parameters['phone']!.replaceAll(' ', '+') : null,
       email: Get.parameters['email'] != '' && Get.parameters['email'] != 'null' ? Get.parameters['email']!.replaceAll(' ', '+') : null,
     )),
+    GetPage(name: dineInRestaurant, page: () => getRoute(const DineInRestaurantScreen())),
   ];
 
   static getRoute(Widget? navigateTo, {bool byPuss = false}) {

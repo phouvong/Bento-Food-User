@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/checkout/controllers/checkout_controller.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -24,8 +25,21 @@ class AddressController extends GetxController implements GetxService {
     return responseModel;
   }
 
-  Future<void> getAddressList({bool canInsertAddress = false}) async {
-    List<AddressModel>? addressList = await addressServiceInterface.getList();
+  Future<void> getAddressList({bool canInsertAddress = false, DataSourceEnum dataSource = DataSourceEnum.local}) async {
+    _addressList = null;
+    List<AddressModel>? addressList;
+
+    if(dataSource == DataSourceEnum.local){
+      addressList = await addressServiceInterface.getList(source: DataSourceEnum.local);
+      _prepareAddressList(addressList, canInsertAddress: canInsertAddress);
+      getAddressList(dataSource: DataSourceEnum.client);
+    }else{
+      addressList = await addressServiceInterface.getList(source: DataSourceEnum.client);
+      _prepareAddressList(addressList, canInsertAddress: canInsertAddress);
+    }
+  }
+
+  _prepareAddressList(List<AddressModel>? addressList, {bool canInsertAddress = false}) {
     if (addressList != null) {
       _addressList = [];
       _allAddressList = [];

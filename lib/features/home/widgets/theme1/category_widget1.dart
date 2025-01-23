@@ -62,7 +62,7 @@ class CategoryWidget1 extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(vertical: 2),
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Dimensions.radiusSmall)),
-                                    color: Theme.of(context).primaryColor.withOpacity(0.8),
+                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
                                   ),
                                   child: Text(
                                     categoryController.categoryList![index].name!, maxLines: 1, overflow: TextOverflow.ellipsis,

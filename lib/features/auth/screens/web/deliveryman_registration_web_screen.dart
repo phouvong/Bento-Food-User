@@ -87,7 +87,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                     ),
                     padding: const EdgeInsets.only(top: Dimensions.paddingSizeLarge, bottom: Dimensions.paddingSizeExtraOverLarge),
                     child: Column(children: [
@@ -248,7 +248,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
                                     width: 180, height: 180,
                                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                                      Icon(CupertinoIcons.camera_fill, size: 38, color: Theme.of(context).disabledColor.withOpacity(0.7)),
+                                      Icon(CupertinoIcons.camera_fill, size: 38, color: Theme.of(context).disabledColor.withValues(alpha: 0.7)),
                                       const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                                       Padding(
@@ -262,7 +262,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
 
                                       Text(
                                         'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: 10),
+                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: 10),
                                         textAlign: TextAlign.center,
                                       ),
 
@@ -312,7 +312,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                     ),
                     padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeLarge),
                     child: Column(children: [
@@ -521,7 +521,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
                                         child: Column(children: [
                                           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                                          Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withOpacity(0.8), size: 38),
+                                          Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withValues(alpha: 0.8), size: 38),
                                           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                                           Text('upload_identity_image'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeExtraSmall)),
@@ -529,7 +529,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
 
                                           Text(
                                             'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                            style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: 10),
+                                            style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: 10),
                                             textAlign: TextAlign.center,
                                           ),
                                         ]),
@@ -583,7 +583,7 @@ class _DeliverymanRegistrationWebScreenState extends State<DeliverymanRegistrati
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                      boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                     ),
                     padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeLarge),
                     child: Column(children: [

@@ -57,7 +57,7 @@ class ConfirmationDialogWidget extends StatelessWidget {
                     Expanded(child: TextButton(
                       onPressed: () => isLogOut ? onYesPressed() : onNoPressed != null ? onNoPressed!() : Get.back(),
                       style: TextButton.styleFrom(
-                        backgroundColor: isDelete == true ? Theme.of(context).colorScheme.error : Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: const Size(Dimensions.webMaxWidth, 40), padding: EdgeInsets.zero,
+                        backgroundColor: isDelete == true ? Theme.of(context).colorScheme.error : Theme.of(context).disabledColor.withValues(alpha: 0.3), minimumSize: const Size(Dimensions.webMaxWidth, 40), padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
                       ),
                       child: Text(
@@ -68,7 +68,7 @@ class ConfirmationDialogWidget extends StatelessWidget {
                     const SizedBox(width: Dimensions.paddingSizeLarge),
 
                     Expanded(child: CustomButtonWidget(
-                      color: isDelete == true ? Theme.of(context).disabledColor.withOpacity(0.3) : Theme.of(context).primaryColor,
+                      color: isDelete == true ? Theme.of(context).disabledColor.withValues(alpha: 0.3) : Theme.of(context).primaryColor,
                       textColor: isDelete == true ? Theme.of(context).disabledColor : Theme.of(context).cardColor,
                       buttonText: isLogOut ? isDelete == true ? 'cancel'.tr : 'no'.tr : isDelete == true ? 'delete'.tr : 'yes'.tr,
                       onPressed: () => isLogOut ? Get.back() : onYesPressed(),

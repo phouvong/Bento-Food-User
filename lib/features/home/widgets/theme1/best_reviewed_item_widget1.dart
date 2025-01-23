@@ -92,7 +92,7 @@ class BestReviewedItemWidget1 extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 2, horizontal: Dimensions.paddingSizeExtraSmall),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor.withOpacity(0.8),
+                                color: Theme.of(context).cardColor.withValues(alpha: 0.8),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                               child: Row(children: [
@@ -225,7 +225,7 @@ class BestReviewedItemShimmer extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: Dimensions.paddingSizeExtraSmall),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor.withOpacity(0.8),
+                        color: Theme.of(context).cardColor.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       ),
                       child: Row(children: [

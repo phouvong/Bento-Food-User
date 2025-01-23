@@ -18,11 +18,11 @@ class RestaurantDistanceCustomClip extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     paint0Stroke.shader = ui.Gradient.linear(Offset(size.width * 0.4960317, size.height * -8.802609e-8),
-        Offset(size.width * 0.5000000, size.height * 1.086957), [const Color(0xffD7D7D7).withOpacity(1), Colors.white.withOpacity(0)], [0, 1]);
+        Offset(size.width * 0.5000000, size.height * 1.086957), [const Color(0xffD7D7D7).withValues(alpha: 1), Colors.white.withValues(alpha: 0)], [0, 1]);
     canvas.drawPath(path_0, paint0Stroke);
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = Colors.white.withOpacity(1.0);
+    paint0Fill.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_0, paint0Fill);
   }
 

@@ -2,6 +2,9 @@ import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_tool_tip.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/checkout/controllers/checkout_controller.dart';
+import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
+import 'package:stackfood_multivendor/helper/auth_helper.dart';
+import 'package:stackfood_multivendor/helper/custom_validator.dart';
 import 'package:stackfood_multivendor/helper/price_converter.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
 import 'package:stackfood_multivendor/util/styles.dart';
@@ -19,8 +22,12 @@ class DeliveryOptionButton extends StatelessWidget {
   final JustTheController? deliveryFeeTooltipController;
   final double badWeatherCharge;
   final double extraChargeForToolTip;
+  final TextEditingController? guestNameTextEditingController;
+  final TextEditingController? guestNumberTextEditingController;
+  final TextEditingController? guestEmailController;
   const DeliveryOptionButton({super.key, required this.value, required this.title, required this.charge, required this.isFree, required this.total,
-    this.chargeForView, this.deliveryFeeTooltipController, required this.badWeatherCharge, required this.extraChargeForToolTip});
+    this.chargeForView, this.deliveryFeeTooltipController, required this.badWeatherCharge, required this.extraChargeForToolTip,
+    this.guestNameTextEditingController, this.guestNumberTextEditingController, this.guestEmailController});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class DeliveryOptionButton extends StatelessWidget {
       builder: (checkoutController) {
         bool select = checkoutController.orderType == value;
         return InkWell(
-          onTap: () {
+          onTap: () async {
             checkoutController.setOrderType(value);
             checkoutController.setInstruction(-1);
 
@@ -41,6 +48,27 @@ class DeliveryOptionButton extends StatelessWidget {
                 } catch(_) {}
                 checkoutController.checkBalanceStatus(total, discount: charge! + tips);
               }
+            }else if(checkoutController.orderType == 'dine_in') {
+              checkoutController.addTips(0);
+              if(checkoutController.isPartialPay || checkoutController.paymentMethodIndex == 1) {
+                double tips = 0;
+                try{
+                  tips = double.parse(checkoutController.tipController.text);
+                } catch(_) {}
+                checkoutController.checkBalanceStatus(total, discount: charge! + tips);
+              }
+
+              if(AuthHelper.isLoggedIn()) {
+                // if (Get.find<ProfileController>().userInfoModel == null) {
+                //   await Get.find<ProfileController>().getUserInfo();
+                // }
+                String phone = await _splitPhoneNumber(Get.find<ProfileController>().userInfoModel?.userInfo?.phone ?? '');
+
+                guestNameTextEditingController?.text = '${Get.find<ProfileController>().userInfoModel?.userInfo?.fName ?? ''} ${Get.find<ProfileController>().userInfoModel?.userInfo?.fName ?? ''}';
+                guestNumberTextEditingController?.text = phone;
+                guestEmailController?.text = Get.find<ProfileController>().userInfoModel?.userInfo?.email ?? '';
+              }
+
             }else{
               checkoutController.updateTips(
                 Get.find<AuthController>().getDmTipIndex().isNotEmpty ? int.parse(Get.find<AuthController>().getDmTipIndex()) : 0, notify: false,
@@ -103,5 +131,11 @@ class DeliveryOptionButton extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<String> _splitPhoneNumber(String number) async {
+    PhoneValid phoneNumber = await CustomValidator.isPhoneValid(number);
+    Get.find<CheckoutController>().countryDialCode = '+${phoneNumber.countryCode}';
+    return phoneNumber.phone.replaceFirst('+${phoneNumber.countryCode}', '');
   }
 }

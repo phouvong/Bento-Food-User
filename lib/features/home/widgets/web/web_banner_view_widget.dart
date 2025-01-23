@@ -145,7 +145,7 @@ class WebBannerViewWidget extends StatelessWidget {
                         child: Text('$endBannerIndex/$totalBanner', style: robotoRegular.copyWith(color: Colors.white, fontSize: 12)),
                       ) : Container(
                         height: 4.18, width: 5.57,
-                        decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
+                        decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
                       ),
                     );
                   }).toList(),

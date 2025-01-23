@@ -50,7 +50,7 @@ class _TodayTrendsViewWidgetState extends State<TodayTrendsViewWidget> {
           child: Container(
             height: ResponsiveHelper.isDesktop(context) ? 406 : 400,
             width: Dimensions.webMaxWidth,
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                 Padding(
@@ -102,7 +102,7 @@ class _TodayTrendsViewWidgetState extends State<TodayTrendsViewWidget> {
                           minHeight: 5,
                           value: _progressValue,
                           valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.25),
+                          backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.25),
                         ),
                       ),
                     ),

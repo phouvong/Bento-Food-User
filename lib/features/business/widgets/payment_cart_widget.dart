@@ -23,7 +23,7 @@ class PaymentCartWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               border: businessController.paymentIndex == index ? Border.all(color: Theme.of(context).primaryColor, width: 1) : null,
               boxShadow: businessController.paymentIndex != index ? [BoxShadow(color: Colors.grey[300]!, blurRadius: 10)] : null,
-              color: businessController.paymentIndex == index ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
+              color: businessController.paymentIndex == index ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Theme.of(context).cardColor,
             ),
             alignment: Alignment.centerLeft,
             width: context.width,

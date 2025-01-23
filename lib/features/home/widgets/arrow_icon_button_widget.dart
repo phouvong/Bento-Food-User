@@ -18,7 +18,7 @@ class ArrowIconButtonWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 2),
+          border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), width: 2),
         ),
         child: Icon(
           isLeft == true ? Icons.arrow_back : Icons.arrow_forward,  size: 20,

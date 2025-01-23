@@ -19,6 +19,7 @@ import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.
 import 'package:stackfood_multivendor/features/location/controllers/location_controller.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
 import 'package:stackfood_multivendor/helper/auth_helper.dart';
+import 'package:stackfood_multivendor/helper/custom_validator.dart';
 import 'package:stackfood_multivendor/helper/date_converter.dart';
 import 'package:stackfood_multivendor/helper/price_converter.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
@@ -37,7 +38,8 @@ import 'package:flutter/material.dart';
 class CheckoutScreen extends StatefulWidget {
   final List<CartModel>? cartList;
   final bool fromCart;
-  const CheckoutScreen({super.key, required this.fromCart, required this.cartList});
+  final bool fromDineInPage;
+  const CheckoutScreen({super.key, required this.fromCart, required this.cartList, this.fromDineInPage = false});
 
   @override
   CheckoutScreenState createState() => CheckoutScreenState();
@@ -70,7 +72,11 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   final FocusNode guestNumberNode = FocusNode();
   final FocusNode guestEmailNode = FocusNode();
 
+  final TextEditingController estimateArrivalDateController = TextEditingController();
+  final TextEditingController estimateArrivalTimeController = TextEditingController();
+
   final ScrollController scrollController = ScrollController();
+  final ScrollController deliveryOptionScrollController = ScrollController();
 
   double badWeatherChargeForToolTip = 0;
   double extraChargeForToolTip = 0;
@@ -95,10 +101,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     Get.find<CheckoutController>().setCustomDate(null, false, canUpdate: false);
 
     Get.find<CheckoutController>().getOfflineMethodList();
-
-    if(Get.find<CheckoutController>().isPartialPay){
-      Get.find<CheckoutController>().changePartialPayment(isUpdate: false);
-    }
+    Get.find<CheckoutController>().initDineInSetup();
 
     Get.find<LocationController>().getZone(
       AddressHelper.getAddressFromSharedPref()!.latitude,
@@ -106,7 +109,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     );
 
     if(isLoggedIn){
-      if(Get.find<ProfileController>().userInfoModel == null) {
+      if(Get.find<ProfileController>().userInfoModel == null && Get.find<ProfileController>().userInfoModel!.userInfo == null) {
         Get.find<ProfileController>().getUserInfo();
       }
 
@@ -141,6 +144,65 @@ class CheckoutScreenState extends State<CheckoutScreen> {
 
     setSinglePaymentActive();
 
+    Future.delayed(const Duration(milliseconds: 500), () {
+
+      if(!Get.find<SplashController>().configModel!.homeDelivery! && Get.find<SplashController>().configModel!.takeAway!) {
+        Get.find<CheckoutController>().setOrderType('take_away', notify: true);
+      }
+
+      if(Get.find<CheckoutController>().isPartialPay){
+        Get.find<CheckoutController>().changePartialPayment(isUpdate: false);
+      }
+
+      if(widget.fromDineInPage) {
+        _selectDineIn();
+      }
+    });
+
+    if(AuthHelper.isLoggedIn()) {
+      String phone = await _splitPhoneNumber(Get.find<ProfileController>().userInfoModel?.userInfo?.phone ?? '');
+
+      guestContactPersonNameController.text = '${Get.find<ProfileController>().userInfoModel?.userInfo?.fName ?? ''} ${Get.find<ProfileController>().userInfoModel?.userInfo?.lName ?? ''}';
+      guestContactPersonNumberController.text = phone;
+      guestEmailController.text = Get.find<ProfileController>().userInfoModel?.userInfo?.email ?? '';
+    }
+
+
+  }
+
+  Future<void> _selectDineIn() async {
+
+    Future.delayed(Duration(milliseconds: 800), () {
+      Get.find<CheckoutController>().setOrderType('dine_in', notify: true);
+      Future.delayed(Duration(milliseconds: 500), () {
+        if(Get.find<CheckoutController>().restaurant != null && Get.find<CheckoutController>().distance != null) {
+          Get.find<CheckoutController>().setOrderType('dine_in', notify: true);
+          _animateDeliverySection();
+        } else {
+          Future.delayed(Duration(seconds: 3), () {
+            Get.find<CheckoutController>().setOrderType('dine_in', notify: true);
+            _animateDeliverySection();
+          });
+        }
+      });
+    });
+
+  }
+
+  _animateDeliverySection() {
+    if(deliveryOptionScrollController.hasClients) {
+      deliveryOptionScrollController.animateTo(
+        deliveryOptionScrollController.position.maxScrollExtent, // Scroll to the end
+        duration: Duration(milliseconds: 500), // Set the duration of the animation
+        curve: Curves.easeOut, // Set the curve for the animation
+      );
+    }
+  }
+
+  Future<String> _splitPhoneNumber(String number) async {
+    PhoneValid phoneNumber = await CustomValidator.isPhoneValid(number);
+    Get.find<CheckoutController>().countryDialCode = '+${phoneNumber.countryCode}';
+    return phoneNumber.phone.replaceFirst('+${phoneNumber.countryCode}', '');
   }
 
   void setSinglePaymentActive() {
@@ -192,7 +254,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                 charge = _getDeliveryCharge(restaurant: checkoutController.restaurant, checkoutController: checkoutController, returnDeliveryCharge: false)!;
                 maxCodOrderAmount = _getDeliveryCharge(restaurant: checkoutController.restaurant, checkoutController: checkoutController, returnMaxCodOrderAmount: true);
 
-                if(checkoutController.orderType != 'take_away') {
+                if(checkoutController.orderType != 'take_away' && checkoutController.orderType != 'dine_in') {
                   _deliveryChargeForView = (checkoutController.orderType == 'delivery' ? checkoutController.restaurant!.freeDelivery! : true) ? 'free'.tr
                       : deliveryCharge != -1 ? PriceConverter.convertPrice(deliveryCharge) : 'calculating'.tr;
                 }
@@ -222,7 +284,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
 
                 subscriptionQty = _getSubscriptionQty(checkoutController: checkoutController, restaurantSubscriptionActive: restaurantSubscriptionActive);
 
-                if (checkoutController.orderType == 'take_away' || checkoutController.restaurant!.freeDelivery!
+                if (checkoutController.orderType == 'take_away' || checkoutController.orderType == 'dine_in' || checkoutController.restaurant!.freeDelivery!
                     || (Get.find<SplashController>().configModel!.freeDeliveryOver != null && orderAmount
                         >= Get.find<SplashController>().configModel!.freeDeliveryOver!) || couponController.freeDelivery) {
                   deliveryCharge = 0;
@@ -270,6 +332,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                 guestNumberNode: guestNumberNode, isOfflinePaymentActive: _isOfflinePaymentActive, loginTooltipController: loginTooltipController,
                                 callBack: () => initCall(), deliveryChargeForView: _deliveryChargeForView, deliveryFeeTooltipController: deliveryFeeTooltipController,
                                 badWeatherCharge: badWeatherChargeForToolTip, extraChargeForToolTip: extraChargeForToolTip,
+                                deliveryOptionScrollController: deliveryOptionScrollController,
                               )),
                               const SizedBox(width: Dimensions.paddingSizeLarge),
 
@@ -303,6 +366,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                               guestNumberNode: guestNumberNode, isOfflinePaymentActive: _isOfflinePaymentActive, loginTooltipController: loginTooltipController,
                               callBack: () => initCall(), deliveryChargeForView: _deliveryChargeForView, deliveryFeeTooltipController: deliveryFeeTooltipController,
                               badWeatherCharge: badWeatherChargeForToolTip, extraChargeForToolTip: extraChargeForToolTip,
+                              deliveryOptionScrollController: deliveryOptionScrollController,
                             ),
 
                             BottomSectionWidget(
@@ -327,7 +391,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                   ResponsiveHelper.isDesktop(context) ? const SizedBox() : Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
-                      boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.1), blurRadius: 10)],
+                      boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), blurRadius: 10)],
                     ),
                     child: Column(
                       children: [
@@ -589,8 +653,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   double _calculateExtraPackagingCharge(CheckoutController checkoutController) {
-    if((checkoutController.restaurant != null && checkoutController.restaurant!.isExtraPackagingActive! && !checkoutController.restaurant!.extraPackagingStatusIsMandatory! && Get.find<CartController>().needExtraPackage)
-        || (checkoutController.restaurant != null && checkoutController.restaurant!.isExtraPackagingActive! && checkoutController.restaurant!.extraPackagingStatusIsMandatory!)) {
+    if(((checkoutController.restaurant != null && checkoutController.restaurant!.isExtraPackagingActive! && !checkoutController.restaurant!.extraPackagingStatusIsMandatory! && Get.find<CartController>().needExtraPackage)
+        || (checkoutController.restaurant != null && checkoutController.restaurant!.isExtraPackagingActive! && checkoutController.restaurant!.extraPackagingStatusIsMandatory!)) && checkoutController.orderType != 'dine_in') {
       return checkoutController.restaurant?.extraPackagingAmount ?? 0;
     }
     return 0;

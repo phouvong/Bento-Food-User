@@ -161,9 +161,7 @@ class _SignInViewState extends State<SignInView> {
           },
         );
 
-      default:
-        return const SizedBox();
-    }
+      }
   }
 
 

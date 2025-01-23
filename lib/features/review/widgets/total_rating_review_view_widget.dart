@@ -16,11 +16,11 @@ class TotalRatingReviewViewWidget extends StatelessWidget {
         padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
         margin: ResponsiveHelper.isDesktop(context) ? EdgeInsets.only(left: isRating ? 50 : 10, right: isRating ? 10 : 50) : null,
         decoration: BoxDecoration(
-          color: Theme.of(context).hintColor.withOpacity(0.2),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
         ),
         child: Text('$totalNumber ${isRating ? 'ratings'.tr : 'reviews'.tr}', textAlign: TextAlign.center,
-          style: robotoRegular.copyWith(fontSize:  ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeSmall : 8, color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.6)),
+          style: robotoRegular.copyWith(fontSize:  ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeSmall : 8, color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.6)),
         ),
       ),
     );

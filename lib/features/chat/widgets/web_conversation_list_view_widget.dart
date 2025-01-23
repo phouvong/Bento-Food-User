@@ -75,13 +75,15 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                 type = widget.conversation?.conversations![index]!.senderType;
               }
 
+              String? lastMessage = _lastMessage(widget.conversation?.conversations![index]);
+
               return Column(
                 children: [
 
                   Container(
                     decoration: BoxDecoration(
-                      color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
-                      border: Border.all(color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withOpacity(0.5) : Theme.of(context).disabledColor.withOpacity(.5)),
+                      color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Theme.of(context).cardColor,
+                      border: Border.all(color: (widget.chatController.selectedIndex == index && widget.chatController.type == type) ? Theme.of(context).primaryColor.withValues(alpha: 0.5) : Theme.of(context).disabledColor.withValues(alpha: .5)),
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     ),
                     child: CustomInkWellWidget(
@@ -129,7 +131,7 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                         }
 
                       },
-                      highlightColor: Theme.of(context).colorScheme.surface.withOpacity(0.1),
+                      highlightColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
                       radius: Dimensions.radiusSmall,
                       child: Column(children: [
                         Padding(
@@ -149,7 +151,7 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               widget.conversation!.conversations![index]!.lastMessage != null ? Text(
-                                widget.conversation!.conversations![index]!.lastMessage!.message ?? '',
+                                lastMessage ?? 'start_conversation'.tr,
                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                               ) : const SizedBox(),
                             ])),
@@ -187,7 +189,7 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
                     ),
                   ),
 
-                  index + 1 == widget.conversation!.conversations!.length ? const SizedBox() : Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+                  index + 1 == widget.conversation!.conversations!.length ? const SizedBox() : Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 
                 ],
               );
@@ -200,6 +202,18 @@ class _WebConversationListViewWidgetState extends State<WebConversationListViewW
         Text('no_conversation_found'.tr),
         const SizedBox(height: 100),
       ]) : const ConversationShimmer();
+  }
+
+  String? _lastMessage(Conversation? conversation) {
+    if(conversation != null && conversation.lastMessage != null) {
+      if(conversation.lastMessage!.message != null) {
+        return conversation.lastMessage!.message;
+      }
+      else if(conversation.lastMessage!.filesFullUrl!.isNotEmpty) {
+        return '${conversation.lastMessage!.filesFullUrl!.length} ${'attachment'.tr}';
+      }
+    }
+    return null;
   }
 }
 
@@ -242,7 +256,7 @@ class ConversationShimmer extends StatelessWidget {
                     ])),
                   ]),
 
-                  Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+                  Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 
                 ],
               ),

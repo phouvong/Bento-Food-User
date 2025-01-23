@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_restaurants_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/repositories/cuisine_repository_interface.dart';
@@ -8,8 +9,8 @@ class CuisineService implements CuisineServiceInterface {
   CuisineService({required this.cuisineRepositoryInterface});
 
   @override
-  Future<CuisineModel> getCuisineList() async {
-    return await cuisineRepositoryInterface.getList();
+  Future<CuisineModel?> getCuisineList({DataSourceEnum? source}) async {
+    return await cuisineRepositoryInterface.getList(source: source!);
   }
 
   @override

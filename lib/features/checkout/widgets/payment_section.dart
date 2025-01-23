@@ -24,7 +24,7 @@ class PaymentSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ),
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.isDesktop(context) ? 0 : Dimensions.fontSizeDefault),
       padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeDefault),
@@ -59,7 +59,7 @@ class PaymentSection extends StatelessWidget {
           decoration: ResponsiveHelper.isDesktop(context) ? BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             color: Theme.of(context).cardColor,
-            border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.3), width: 1),
+            border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), width: 1),
           ) : const BoxDecoration(),
           padding: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.radiusDefault) : EdgeInsets.zero,
           child: checkoutController.paymentMethodIndex == 0 ? Row(children: [

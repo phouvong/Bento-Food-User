@@ -24,7 +24,7 @@ class OfflinePaymentButton extends StatelessWidget {
       child: Container(
         width: 550,
         decoration: BoxDecoration(
-          color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           border: Border.all(color: Theme.of(context).disabledColor, width: 0.3),
         ),
@@ -111,7 +111,7 @@ class OfflinePaymentButton extends StatelessWidget {
                 onTap: () => checkoutController.selectOfflineBank(index),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.8) : Theme.of(context).cardColor,
+                    color: isSelected ? Theme.of(context).textTheme.bodyMedium!.color!.withValues(alpha: 0.8) : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                   ),
                   child: Center(child: Text(offlineMethodList![index].methodName!,

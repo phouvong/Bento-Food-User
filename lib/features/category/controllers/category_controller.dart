@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/category/domain/models/category_model.dart';
@@ -26,9 +27,6 @@ class CategoryController extends GetxController implements GetxService {
   List<Restaurant>? _searchRestaurantList = [];
   List<Restaurant>? get searchRestaurantList => _searchRestaurantList;
 
-  // List<bool>? _interestCategorySelectedList;
-  // List<bool>? get interestCategorySelectedList => _interestCategorySelectedList;
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -56,16 +54,29 @@ class CategoryController extends GetxController implements GetxService {
   int _offset = 1;
   int get offset => _offset;
 
-  // String? _restResultText = '';
-  // String? _foodResultText = '';
-
-
-  Future<void> getCategoryList(bool reload) async {
-    if(_categoryList == null || reload) {
-      _categoryList = await categoryServiceInterface.getCategoryList(reload, _categoryList);
-      // _interestCategorySelectedList = categoryServiceInterface.processCategorySelectedList(_categoryList);
-      update();
+  Future<void> getCategoryList(bool reload, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
+    if(_categoryList == null || reload || fromRecall) {
+      if(!fromRecall) {
+        _categoryList = null;
+      }
+      List<CategoryModel>? categoryList;
+      if(dataSource == DataSourceEnum.local) {
+        categoryList = await categoryServiceInterface.getCategoryList(source: DataSourceEnum.local);
+        _prepareCategoryList(categoryList);
+        getCategoryList(false, dataSource: DataSourceEnum.client, fromRecall: true);
+      }else {
+        categoryList = await categoryServiceInterface.getCategoryList(source: DataSourceEnum.client);
+        _prepareCategoryList(categoryList);
+      }
     }
+  }
+
+  _prepareCategoryList(List<CategoryModel>? categoryList) {
+    if(categoryList != null) {
+      _categoryList = [];
+      _categoryList!.addAll(categoryList);
+    }
+    update();
   }
 
   void getSubCategoryList(String? categoryID) async {
@@ -137,7 +148,7 @@ class CategoryController extends GetxController implements GetxService {
   }
 
   void searchData(String? query, String? categoryID, String type) async {
-    if((_isRestaurant && query!.isNotEmpty /*&& query != _restResultText*/) || (!_isRestaurant && query!.isNotEmpty/* && query != _foodResultText*/)) {
+    if((_isRestaurant && query!.isNotEmpty) || (!_isRestaurant && query!.isNotEmpty)) {
       _searchText = query;
       _type = type;
       if (_isRestaurant) {
@@ -158,11 +169,9 @@ class CategoryController extends GetxController implements GetxService {
           }
         } else {
           if (_isRestaurant) {
-            // _restResultText = query;
             _searchRestaurantList = [];
             _searchRestaurantList!.addAll(RestaurantModel.fromJson(response.body).restaurants!);
           } else {
-            // _foodResultText = query;
             _searchProductList = [];
             _searchProductList!.addAll(ProductModel.fromJson(response.body).products!);
           }
@@ -185,20 +194,6 @@ class CategoryController extends GetxController implements GetxService {
     _isLoading = true;
     update();
   }
-
-  // Future<bool> saveInterest(List<int?> interests) async {
-  //   _isLoading = true;
-  //   update();
-  //   bool isSuccess = await categoryServiceInterface.saveUserInterests(interests);
-  //   _isLoading = false;
-  //   update();
-  //   return isSuccess;
-  // }
-
-  // void addInterestSelection(int index) {
-  //   _interestCategorySelectedList![index] = !_interestCategorySelectedList![index];
-  //   update();
-  // }
 
   void setRestaurant(bool isRestaurant) {
     _isRestaurant = isRestaurant;

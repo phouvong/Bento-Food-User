@@ -30,7 +30,7 @@ class OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin 
 
   void initCall(){
     if(AuthHelper.isLoggedIn()) {
-      Get.find<OrderController>().getRunningOrders(1, notify: false);
+      Get.find<OrderController>().getRunningOrders(1, limit: 10, notify: false);
       Get.find<OrderController>().getRunningSubscriptionOrders(1, notify: false);
       Get.find<OrderController>().getHistoryOrders(1, notify: false);
       // Get.find<OrderController>().getSubscriptions(1, notify: false);
@@ -48,7 +48,7 @@ class OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin 
           return Column(children: [
 
             Container(
-              color: ResponsiveHelper.isDesktop(context) ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+              color: ResponsiveHelper.isDesktop(context) ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
               child: Column(children: [
 
                 ResponsiveHelper.isDesktop(context) ? Center(child: Padding(

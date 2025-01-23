@@ -109,7 +109,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: isDesktop ? 250 : Dimensions.paddingSizeDefault),
                         child: DottedBorder(
-                          color: isDesktop ? Theme.of(context).primaryColor.withOpacity(0.7) : Colors.blue.withOpacity(0.3),
+                          color: isDesktop ? Theme.of(context).primaryColor.withValues(alpha: 0.7) : Colors.blue.withValues(alpha: 0.3),
                           strokeWidth: 1,
                           strokeCap: StrokeCap.butt,
                           dashPattern: const [5, 5],
@@ -181,7 +181,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Theme.of(context).cardColor,
-                              boxShadow: [BoxShadow(color: Theme.of(context).disabledColor.withOpacity(0.2), blurRadius: 5)],
+                              boxShadow: [BoxShadow(color: Theme.of(context).disabledColor.withValues(alpha: 0.2), blurRadius: 5)],
                             ),
                             padding: const EdgeInsets.all(7),
                             child: const Icon(Icons.share),
@@ -209,7 +209,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
         }),
 
         key: key,
-        persistentHeader: ResponsiveHelper.isDesktop(context) ? null : InkWell(
+        persistentHeader: !isLoggedIn || ResponsiveHelper.isDesktop(context) ? null :  InkWell(
           onTap: (){
             if(key.currentState?.expansionStatus == ExpansionStatus.expanded){
               setState(() {
@@ -226,32 +226,41 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
             constraints: const BoxConstraints.expand(height: 60),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.paddingSizeExtraLarge), topRight: Radius.circular(Dimensions.paddingSizeExtraLarge)),
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(context).cardColor,
               border: Border(
                 top: BorderSide(color: Theme.of(context).primaryColor, width: 0.3),
               ),
             ),
-            child: Column(children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
-                  height: 3, width: 40,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
-                  ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                borderRadius : const BorderRadius.only(
+                  topLeft: Radius.circular(Dimensions.paddingSizeExtraLarge),
+                  topRight : Radius.circular(Dimensions.paddingSizeExtraLarge),
                 ),
               ),
+              child: Column(children: [
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
+                    height: 3, width: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+                    ),
+                  ),
+                ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault, top: Dimensions.paddingSizeSmall, right: Dimensions.paddingSizeDefault),
-                child: Row(children: [
-                  const Icon(Icons.error_outline, size: 16),
-                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                  Text('how_it_works'.tr , style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault), textAlign: TextAlign.center),
-                ]),
-              ),
-            ]),
+                Padding(
+                  padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault, top: Dimensions.paddingSizeSmall, right: Dimensions.paddingSizeDefault),
+                  child: Row(children: [
+                    const Icon(Icons.error_outline, size: 16),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                    Text('how_it_works'.tr , style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault), textAlign: TextAlign.center),
+                  ]),
+                ),
+              ]),
+            ),
           ),
         ),
         expandableContent: isDesktop || !isLoggedIn ? const SizedBox() : const BottomSheetViewWidget(),

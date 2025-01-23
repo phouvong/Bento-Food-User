@@ -114,7 +114,7 @@ class _SubscriptionPauseDialogState extends State<SubscriptionPauseDialog> {
                     maxLines: 3,
                     inputType: TextInputType.multiline,
                     inputAction: TextInputAction.newline,
-                   // fillColor: Theme.of(context).disabledColor.withOpacity(0.1),
+                   // fillColor: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                   ),
                   const SizedBox(height: Dimensions.paddingSizeLarge),
 
@@ -123,7 +123,7 @@ class _SubscriptionPauseDialogState extends State<SubscriptionPauseDialog> {
                       Expanded(child: TextButton(
                         onPressed: () => Get.back(),
                         style: TextButton.styleFrom(
-                          backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: const Size(Dimensions.webMaxWidth, 50), padding: EdgeInsets.zero,
+                          backgroundColor: Theme.of(context).disabledColor.withValues(alpha: 0.3), minimumSize: const Size(Dimensions.webMaxWidth, 50), padding: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
                         ),
                         child: Text(

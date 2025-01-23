@@ -73,7 +73,7 @@ class _HtmlViewerScreenState extends State<HtmlViewerScreen> {
                       HtmlWidget(
                         htmlController.htmlText ?? '',
                         key: Key(widget.htmlType.toString()),
-                        textStyle: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6)),
+                        textStyle: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.6)),
                         onTapUrl: (String url){
                           return launchUrlString(url);
                         },

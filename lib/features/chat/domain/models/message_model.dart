@@ -73,7 +73,14 @@ class Message {
     conversationId = json['conversation_id'];
     senderId = json['sender_id'];
     message = json['message'];
-    filesFullUrl = json['file_full_url'].cast<String>();
+    if (json['file_full_url'] != null) {
+      filesFullUrl = <String>[];
+      json['file_full_url'].forEach((v) {
+        if(v != null) {
+          filesFullUrl!.add(v);
+        }
+      });
+    }
     isSeen = json['is_seen'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];

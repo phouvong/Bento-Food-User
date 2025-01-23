@@ -23,7 +23,8 @@ class OrderSuccessfulScreen extends StatefulWidget {
   final int status;
   final double? totalAmount;
   final String? contactPersonNumber;
-  const OrderSuccessfulScreen({super.key, required this.orderID, required this.status, required this.totalAmount, this.contactPersonNumber});
+  final bool isDeliveryOrder;
+  const OrderSuccessfulScreen({super.key, required this.orderID, required this.status, required this.totalAmount, this.contactPersonNumber, this.isDeliveryOrder = false});
 
   @override
   State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
@@ -94,7 +95,7 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
                 child: Text(
-                  success ? 'your_order_is_placed_successfully'.tr : 'your_order_is_failed_to_place_because'.tr,
+                  success ? widget.isDeliveryOrder ? 'your_order_is_placed_successfully'.tr : 'your_order_is_placed_successfully_dine_in_and_takeaway'.tr : 'your_order_is_failed_to_place_because'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                   textAlign: TextAlign.center,
                 ),

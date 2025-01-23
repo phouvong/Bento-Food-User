@@ -40,7 +40,7 @@ class CouponViewWidget extends StatelessWidget {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-                      color: Theme.of(context).primaryColor.withOpacity(0.07),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.07),
                     ),
                     padding: EdgeInsets.all(Dimensions.paddingSizeSmall - (scrollingRate * (isDesktop ? 2 : Dimensions.paddingSizeSmall))),
                     margin: const EdgeInsets.only(right: Dimensions.paddingSizeDefault),
@@ -100,7 +100,7 @@ class CouponViewWidget extends StatelessWidget {
                 int index = couponController.couponList!.indexOf(bnr);
                 return TabPageSelectorIndicator(
                   backgroundColor: index == couponController.currentIndex ? Theme.of(context).primaryColor
-                      : Theme.of(context).primaryColor.withOpacity(0.5),
+                      : Theme.of(context).primaryColor.withValues(alpha: 0.5),
                   borderColor: Theme.of(context).colorScheme.surface,
                   size: index == couponController.currentIndex ? 7 - (scrollingRate * (isDesktop ? 2 : 7)) : 5 - (scrollingRate * (isDesktop ? 2 : 5)),
                 );

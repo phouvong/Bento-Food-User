@@ -35,7 +35,7 @@ class AccountDeletionBottomSheet extends StatelessWidget {
         ResponsiveHelper.isDesktop(context) ? const SizedBox() : Container(
           height: 5, width: 35,
           decoration: BoxDecoration(
-            color: Theme.of(context).disabledColor.withOpacity(0.2),
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(5),
           ),
         ),
@@ -44,7 +44,7 @@ class AccountDeletionBottomSheet extends StatelessWidget {
         Stack(clipBehavior: Clip.none, children: [
           ClipOval(child: CustomImageWidget(
             placeholder: Images.guestIconLight,
-            imageColor: Theme.of(context).colorScheme.error.withOpacity(0.3),
+            imageColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
             image: '${(profileController.userInfoModel != null && isLoggedIn) ? profileController.userInfoModel!.imageFullUrl : ''}',
             height: 70, width: 70, fit: BoxFit.cover,
           )),
@@ -72,7 +72,7 @@ class AccountDeletionBottomSheet extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: isRunningOrderAvailable ? 70 : 50, right: isRunningOrderAvailable ? 70 : 50, bottom: 20),
           child: isRunningOrderAvailable ? CustomButtonWidget(
-            buttonText: 'order_request'.tr,
+            buttonText: 'view_orders'.tr,
             height: 40,
             color: Theme.of(context).primaryColor,
             fontSize: Dimensions.fontSizeDefault,
@@ -87,7 +87,7 @@ class AccountDeletionBottomSheet extends StatelessWidget {
                 Expanded(child: CustomButtonWidget(
                   buttonText: 'cancel'.tr,
                   height: 40,
-                  color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
                   fontSize: Dimensions.fontSizeDefault,
                   textColor: Theme.of(context).textTheme.bodyLarge!.color,
                   onPressed: () => Get.back(),

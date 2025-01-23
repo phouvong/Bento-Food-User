@@ -86,6 +86,7 @@ class OrderModel {
   OfflinePayment? offlinePayment;
   double? extraPackagingAmount;
   double? referrerBonusAmount;
+  OrderReference? orderReference;
 
   OrderModel({
     this.id,
@@ -140,6 +141,7 @@ class OrderModel {
     this.offlinePayment,
     this.extraPackagingAmount,
     this.referrerBonusAmount,
+    this.orderReference,
   });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -210,6 +212,9 @@ class OrderModel {
     offlinePayment = json['offline_payment'] != null ? OfflinePayment.fromJson(json['offline_payment']) : null;
     extraPackagingAmount = json['extra_packaging_amount']?.toDouble();
     referrerBonusAmount = json['ref_bonus_amount']?.toDouble();
+    orderReference = json['order_reference'] != null
+        ? OrderReference.fromJson(json['order_reference'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -277,6 +282,9 @@ class OrderModel {
     }
     data['extra_packaging_amount'] = extraPackagingAmount;
     data['ref_bonus_amount'] = referrerBonusAmount;
+    if (orderReference != null) {
+      data['order_reference'] = orderReference!.toJson();
+    }
     return data;
   }
 }
@@ -296,6 +304,7 @@ class DeliveryMan {
   String? lat;
   String? lng;
   String? location;
+  int? restaurantId;
 
   DeliveryMan({
     this.id,
@@ -312,6 +321,7 @@ class DeliveryMan {
     this.lat,
     this.lng,
     this.location,
+    this.restaurantId,
   });
 
   DeliveryMan.fromJson(Map<String, dynamic> json) {
@@ -329,6 +339,7 @@ class DeliveryMan {
     lat = json['lat'];
     lng = json['lng'];
     location = json['location'];
+    restaurantId = json['restaurant_id'] != null ? int.parse(json['restaurant_id'].toString()) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -347,6 +358,7 @@ class DeliveryMan {
     data['lat'] = lat;
     data['lng'] = lng;
     data['location'] = location;
+    data['restaurant_id'] = restaurantId;
     return data;
   }
 }
@@ -571,6 +583,42 @@ class SubscriptionModel {
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
     }
+    return data;
+  }
+}
+
+class OrderReference {
+  int? id;
+  int? orderId;
+  String? tokenNumber;
+  String? tableNumber;
+  String? createdAt;
+  String? updatedAt;
+
+  OrderReference({this.id,
+        this.orderId,
+        this.tokenNumber,
+        this.tableNumber,
+        this.createdAt,
+        this.updatedAt});
+
+  OrderReference.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    orderId = json['order_id'];
+    tokenNumber = json['token_number'];
+    tableNumber = json['table_number'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_id'] = orderId;
+    data['token_number'] = tokenNumber;
+    data['table_number'] = tableNumber;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

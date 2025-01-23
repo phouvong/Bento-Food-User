@@ -30,7 +30,8 @@ import 'package:get/get.dart';
 class CartScreen extends StatefulWidget {
   final bool fromNav;
   final bool fromReorder;
-  const CartScreen({super.key, required this.fromNav, this.fromReorder = false});
+  final bool fromDineIn;
+  const CartScreen({super.key, required this.fromNav, this.fromReorder = false, this.fromDineIn = false});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -136,7 +137,7 @@ class _CartScreenState extends State<CartScreen> {
                       child: Container(
                         constraints: const BoxConstraints.expand(height: 30),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).disabledColor.withOpacity(0.5),
+                          color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
                           borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
                         ),
                         child: Icon(Icons.drag_handle, color: Theme.of(context).hintColor, size: 25),
@@ -165,7 +166,7 @@ class _CartScreenState extends State<CartScreen> {
                                           decoration: isDesktop ? BoxDecoration(
                                             borderRadius: const  BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
                                             color: Theme.of(context).cardColor,
-                                            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                            boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                                           ) : const BoxDecoration(),
                                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                             WebConstrainedBox(
@@ -191,7 +192,7 @@ class _CartScreenState extends State<CartScreen> {
 
                                                   padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                                                     borderRadius: const BorderRadius.only(
                                                       topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault),
                                                     ),
@@ -222,7 +223,7 @@ class _CartScreenState extends State<CartScreen> {
                                                           decoration: BoxDecoration(
                                                             color: Theme.of(context).cardColor,
                                                             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                                                            border: Border.all(width: 1, color: Theme.of(context).disabledColor.withOpacity(0.3)),
+                                                            border: Border.all(width: 1, color: Theme.of(context).disabledColor.withValues(alpha: 0.3)),
                                                           ),
                                                           child: !cartController.isClearCartLoading ? Row(mainAxisSize: MainAxisSize.min, children: [
 
@@ -231,7 +232,7 @@ class _CartScreenState extends State<CartScreen> {
 
                                                             Text(
                                                               cartController.cartList.length > 1 ? 'remove_all_from_cart'.tr : 'remove_from_cart'.tr,
-                                                              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.7)),
+                                                              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.7)),
                                                             ),
 
                                                           ]) : const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
@@ -274,7 +275,7 @@ class _CartScreenState extends State<CartScreen> {
                                                         decoration: BoxDecoration(
                                                           color: Theme.of(context).cardColor,
                                                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                                                          border: Border.all(width: 1, color: Theme.of(context).disabledColor.withOpacity(0.3)),
+                                                          border: Border.all(width: 1, color: Theme.of(context).disabledColor.withValues(alpha: 0.3)),
                                                         ),
                                                         child: !cartController.isClearCartLoading ? Row(mainAxisSize: MainAxisSize.min, children: [
 
@@ -291,13 +292,13 @@ class _CartScreenState extends State<CartScreen> {
 
                                                 // !isDesktop ? const SizedBox(height: Dimensions.paddingSizeLarge): const SizedBox(),
 
-                                                // !isDesktop ? Container(height: 1, color: Theme.of(context).disabledColor.withOpacity(0.3)) : const SizedBox(),
+                                                // !isDesktop ? Container(height: 1, color: Theme.of(context).disabledColor.withValues(alpha: 0.3)) : const SizedBox(),
 
                                                 SizedBox(height: isDesktop ? 40 : 0),
 
                                                 Container(
                                                   alignment: Alignment.center,
-                                                  color: Theme.of(context).cardColor.withOpacity(0.6),
+                                                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
                                                   child: TextButton.icon(
                                                     onPressed: (){
                                                       if(isRestaurantOpen) {
@@ -323,7 +324,7 @@ class _CartScreenState extends State<CartScreen> {
                                             ),
                                             const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                                            !isDesktop ? PricingViewWidget(cartController: cartController, isRestaurantOpen: isRestaurantOpen,) : const SizedBox(),
+                                            !isDesktop ? PricingViewWidget(cartController: cartController, isRestaurantOpen: isRestaurantOpen, fromDineIn: widget.fromDineIn,) : const SizedBox(),
                                           ]),
                                         ),
                                         const SizedBox(height: Dimensions.paddingSizeSmall),
@@ -333,7 +334,7 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     SizedBox(width: isDesktop ? Dimensions.paddingSizeLarge : 0),
 
-                                    isDesktop ? Expanded(flex: 4, child: PricingViewWidget(cartController: cartController, isRestaurantOpen: isRestaurantOpen,)) : const SizedBox(),
+                                    isDesktop ? Expanded(flex: 4, child: PricingViewWidget(cartController: cartController, isRestaurantOpen: isRestaurantOpen, fromDineIn: widget.fromDineIn)) : const SizedBox(),
 
                                   ]),
 
@@ -424,7 +425,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
 
-              isDesktop ? const SizedBox.shrink() : CheckoutButtonWidget(cartController: cartController, availableList: cartController.availableList, isRestaurantOpen: isRestaurantOpen),
+              isDesktop ? const SizedBox.shrink() : CheckoutButtonWidget(cartController: cartController, availableList: cartController.availableList, isRestaurantOpen: isRestaurantOpen, fromDineIn: widget.fromDineIn),
 
             ],
           ) : SingleChildScrollView(child: FooterViewWidget(child: NoDataScreen(isEmptyCart: true, title: 'you_have_not_add_to_cart_yet'.tr)));

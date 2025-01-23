@@ -8,7 +8,6 @@ import 'package:stackfood_multivendor/features/splash/controllers/splash_control
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
 import 'package:stackfood_multivendor/features/favourite/controllers/favourite_controller.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/deep_link_body.dart';
-import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/helper/notification_helper.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
@@ -52,13 +51,14 @@ Future<void> main() async {
   if(GetPlatform.isWeb) {
     await Firebase.initializeApp(options: const FirebaseOptions(
       apiKey: 'AIzaSyCHZCBLcVJf2NqZYsd37TzUxqzVcDI-2JU',
-      appId: '1:299589180044:web:b575785f8db4c9d93f79a9',
+      appId: '1:299589180044:android:c6ec8218155b9f2e3f79a9',
       messagingSenderId: '299589180044',
       projectId: 'bento-food',
     ));
     MetaSEO().config();
   }else if(GetPlatform.isAndroid) {
     await Firebase.initializeApp(
+      name: 'bentofood',
       options: const FirebaseOptions(
         apiKey: 'AIzaSyCHZCBLcVJf2NqZYsd37TzUxqzVcDI-2JU',
         appId: '1:299589180044:android:c6ec8218155b9f2e3f79a9',
@@ -123,20 +123,7 @@ class _MyAppState extends State<MyApp> {
       if(Get.find<AuthController>().isLoggedIn() || Get.find<AuthController>().isGuestLoggedIn()) {
         Get.find<CartController>().getCartDataOnline();
       }
-      Get.find<SplashController>().getConfigData().then((bool isSuccess) async {
-        if (isSuccess) {
-          if(GetPlatform.isWeb) {
-            Timer(const Duration(seconds: 1), () async {
-              bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
-
-              if (isInMaintenance) {
-                Get.offNamed(RouteHelper.getUpdateRoute(false));
-              }
-            });
-          }
-
-        }
-      });
+      Get.find<SplashController>().getConfigData(fromMainFunction: true);
       if (Get.find<AuthController>().isLoggedIn()) {
         Get.find<AuthController>().updateToken();
         await Get.find<FavouriteController>().getFavouriteList();

@@ -88,7 +88,7 @@ class _PaginatedListViewWidgetState extends State<PaginatedListViewWidget> {
               padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.paddingSizeLarge),
               margin: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.only(top: Dimensions.paddingSizeSmall) : null,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 color: Theme.of(context).primaryColor,
               ),
               child: Text('view_more'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)),

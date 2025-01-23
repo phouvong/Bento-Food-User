@@ -10,7 +10,8 @@ class VegFilterWidget extends StatelessWidget {
   final String? type;
   final bool fromAppBar;
   final Function(String value)? onSelected;
-  const VegFilterWidget({super.key, required this.type, required this.onSelected, this.fromAppBar = false});
+  final Color? iconColor;
+  const VegFilterWidget({super.key, required this.type, required this.onSelected, this.fromAppBar = false, this.iconColor});
 
 
   @override
@@ -31,10 +32,10 @@ class VegFilterWidget extends StatelessWidget {
           decoration: fromAppBar ? const BoxDecoration() : BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               color: Theme.of(context).cardColor,
-              border: Border.all(color: Theme.of(context).textTheme.bodyMedium!.color!, width: 0.5)
+              border: Border.all(color: iconColor ?? Theme.of(context).textTheme.bodyMedium!.color!, width: 0.5)
           ),
           padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-          child: Icon(Icons.tune_sharp, size: 24, color: Theme.of(context).textTheme.bodyMedium!.color),
+          child: Icon(Icons.tune_sharp, size: 24, color: iconColor ?? Theme.of(context).textTheme.bodyMedium!.color),
         ),
       ),
     ) : const SizedBox();

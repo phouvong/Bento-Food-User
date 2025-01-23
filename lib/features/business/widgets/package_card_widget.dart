@@ -63,7 +63,7 @@ class PackageCardWidget extends StatelessWidget {
 
             Text('${packages.validity}' 'days'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
 
-            Divider(color: Theme.of(context).disabledColor.withOpacity(0.5), indent: 70, endIndent: 70, thickness: 1),
+            Divider(color: Theme.of(context).disabledColor.withValues(alpha: 0.5), indent: 70, endIndent: 70, thickness: 1),
             const SizedBox(height: Dimensions.paddingSizeDefault),
 
 

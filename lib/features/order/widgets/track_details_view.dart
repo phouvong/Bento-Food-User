@@ -87,7 +87,7 @@ class TrackDetailsView extends StatelessWidget {
           ]),
         ),
 
-        Divider(color: Theme.of(context).disabledColor.withOpacity(0.3), thickness: 1, height: 30),
+        Divider(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), thickness: 1, height: 30),
 
         takeAway ? InkWell(
           onTap: () async {
@@ -132,7 +132,7 @@ class TrackDetailsView extends StatelessWidget {
           Flexible(
             child: Text(
               takeAway ? track.deliveryAddress!.address! : track.deliveryMan!.location!,
-              style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7)),
+              style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withValues(alpha: 0.7)),
               maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -143,7 +143,7 @@ class TrackDetailsView extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Container(
             margin: const EdgeInsets.only(left: 3),
-            color: Theme.of(context).disabledColor.withOpacity(0.3),
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.3),
             height: 20, width: 3,
           ),
         ),
@@ -161,7 +161,7 @@ class TrackDetailsView extends StatelessWidget {
 
           Flexible(
             child: takeAway ? Text(track.restaurant != null ? track.restaurant!.address! : '',
-              style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7)),
+              style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withValues(alpha: 0.7)),
               maxLines: 2, overflow: TextOverflow.ellipsis,
             ) : AddressDetailsWidget(addressDetails: track.deliveryAddress),
           ),
@@ -173,7 +173,7 @@ class TrackDetailsView extends StatelessWidget {
           width: context.width,
           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
           ),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

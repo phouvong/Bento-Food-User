@@ -168,7 +168,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                               ),
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                               child: Align(alignment: Alignment.center, child: Column(children: [
@@ -187,7 +187,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                                       width: 150, height: 140,
                                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                                        Icon(CupertinoIcons.camera_fill, size: 40, color: Theme.of(context).disabledColor.withOpacity(0.7)),
+                                        Icon(CupertinoIcons.camera_fill, size: 40, color: Theme.of(context).disabledColor.withValues(alpha: 0.7)),
                                         const SizedBox(height: Dimensions.paddingSizeSmall),
 
                                         Padding(
@@ -238,7 +238,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
 
                                 Text(
                                   'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                  style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: Dimensions.fontSizeSmall),
+                                  style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: Dimensions.fontSizeSmall),
                                   textAlign: TextAlign.center,
                                 ),
 
@@ -250,7 +250,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                               ),
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                               child: Column(children: [
@@ -375,7 +375,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                              boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                              boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                             child: Column(children: [
@@ -551,14 +551,14 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                                         child: SizedBox(
                                           height: 130, width: double.infinity,
                                           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                            Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withOpacity(0.8), size: 40),
+                                            Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withValues(alpha: 0.8), size: 40),
                                             const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                                             Text('upload_identity_image'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall)),
                                             const SizedBox(height: Dimensions.paddingSizeSmall),
                                             Text(
                                               'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                              style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: Dimensions.fontSizeExtraSmall),
+                                              style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: Dimensions.fontSizeExtraSmall),
                                               textAlign: TextAlign.center,
                                             ),
                                           ]),
@@ -644,7 +644,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
       return Container(
         decoration: ResponsiveHelper.isDesktop(context) ? null : BoxDecoration(
           color: Theme.of(context).cardColor,
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ),
         child: CustomButtonWidget(
           radius: Dimensions.radiusSmall,

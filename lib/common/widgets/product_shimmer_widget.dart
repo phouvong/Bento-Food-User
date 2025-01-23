@@ -19,8 +19,8 @@ class ProductShimmer extends StatelessWidget {
         padding: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.all(Dimensions.paddingSizeSmall) : null,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-          color: Theme.of(context).cardColor.withOpacity(0.5),
-          border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.2), width: 1),
+          color: Theme.of(context).cardColor.withValues(alpha: 0.5),
+          border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.2), width: 1),
         ),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Expanded(

@@ -10,7 +10,6 @@ import 'package:stackfood_multivendor/features/favourite/controllers/favourite_c
 import 'package:stackfood_multivendor/features/product/controllers/product_controller.dart';
 import 'package:stackfood_multivendor/helper/price_converter.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
-import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
 import 'package:stackfood_multivendor/util/images.dart';
 import 'package:stackfood_multivendor/util/styles.dart';
@@ -185,14 +184,12 @@ class ItemCardWidget extends StatelessWidget {
                                       if (success) {
                                         await Get.find<CartController>().addToCartOnline(onlineCart);
                                         Get.back();
-                                        _showCartSnackBar();
                                       }
                                     });
                                   },
                                 ), barrierDismissible: false);
                               } else {
                                 Get.find<CartController>().addToCartOnline(onlineCart);
-                                _showCartSnackBar();
                               }
 
                             } else {
@@ -228,7 +225,7 @@ class ItemCardWidget extends StatelessWidget {
               padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
               child: Column(
                 crossAxisAlignment: isBestItem == true ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: product.ratingCount! > 0 ? MainAxisAlignment.spaceBetween : MainAxisAlignment.spaceEvenly,
                 children: [
                 Text(
                   product.restaurantName ?? '', style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
@@ -247,7 +244,7 @@ class ItemCardWidget extends StatelessWidget {
                   ],
                 ),
 
-                Row(
+                product.ratingCount! > 0 ? Row(
                   mainAxisAlignment: isBestItem == true ? MainAxisAlignment.center : MainAxisAlignment.start,
                   children: [
                     Text(product.avgRating!.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
@@ -258,7 +255,7 @@ class ItemCardWidget extends StatelessWidget {
 
                     Text('(${product.ratingCount})', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor)),
                   ],
-                ),
+                ) : const SizedBox(),
 
                 Wrap(
                   alignment: isBestItem == true ? WrapAlignment.center : WrapAlignment.start,
@@ -280,29 +277,7 @@ class ItemCardWidget extends StatelessWidget {
       ),
     );
   }
-
-  void _showCartSnackBar() {
-    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-      dismissDirection: DismissDirection.horizontal,
-      margin: ResponsiveHelper.isDesktop(Get.context) ?  EdgeInsets.only(
-        right: Get.context!.width * 0.7,
-        left: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall,
-      ) : const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      duration: const Duration(seconds: 3),
-      backgroundColor: Colors.green,
-      action: SnackBarAction(label: 'view_cart'.tr, textColor: Colors.white, onPressed: () {
-        Get.toNamed(RouteHelper.getCartRoute());
-      }),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
-      content: Text(
-        'item_added_to_cart'.tr,
-        style: robotoMedium.copyWith(color: Colors.white),
-      ),
-    ));
-  }
 }
-
 
 class ItemCardShimmer extends StatelessWidget {
   final bool? isPopularNearbyItem;

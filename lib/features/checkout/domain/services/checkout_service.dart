@@ -108,6 +108,11 @@ class CheckoutService implements CheckoutServiceInterface {
     }
     for(int index=0; index<slots.length; index++) {
       if (day == slots[index].day && (isToday ? slots[index].endTime!.isAfter(DateTime.now()) : true)) {
+        slots[index] = TimeSlotModel(
+          day: slots[index].day,
+          startTime: DateTime(date.year, date.month, date.day, slots[index].startTime!.hour, slots[index].startTime!.minute, slots[index].startTime!.second),
+          endTime: DateTime(date.year, date.month, date.day, slots[index].endTime!.hour, slots[index].endTime!.minute, slots[index].endTime!.second),
+        );
         timeSlots.add(slots[index]);
       }
     }

@@ -48,7 +48,7 @@ class BottomViewWidget extends StatelessWidget {
           width: Dimensions.webMaxWidth + 20,
           child: Row(children: [
             ((!subscription || (order.subscription!.status != 'canceled' && order.subscription!.status != 'completed')) && ((pending && !digitalPay) || accepted || confirmed
-            || processing || order.orderStatus == 'handover'|| pickedUp)) ? Expanded(
+            || processing || order.orderStatus == 'handover'|| pickedUp)) && order.orderType == 'delivery' ? Expanded(
               child: CustomButtonWidget(
                 buttonText: subscription ? 'track_subscription'.tr : 'track_order'.tr,
                 margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),

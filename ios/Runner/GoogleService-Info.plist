@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>62740247193-q9nqhlhrqr3e0lgisjb1l6dhnn65vukm.apps.googleusercontent.com</string>
+	<string>491987943015-8enep3h58pfk6da9oc17rv2iqostjvln.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.62740247193-q9nqhlhrqr3e0lgisjb1l6dhnn65vukm</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>62740247193-9tuko45g4jbbd7k2leegsdlokesvqfaa.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.491987943015-8enep3h58pfk6da9oc17rv2iqostjvln</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD7VvOEvolP-fq_g8SoThWi5utjW9aWF0k</string>
+	<string>AIzaSyBzHWIQp_RVmD4zN5lSCnBy1SPkvfHrIMQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>62740247193</string>
+	<string>491987943015</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.sixamtech.stackfoodUserApp</string>
+	<string>com.sixamtech.stackfood</string>
 	<key>PROJECT_ID</key>
-	<string>stackfoodtest-30553</string>
+	<string>stackmart-500c7</string>
 	<key>STORAGE_BUCKET</key>
-	<string>stackfoodtest-30553.appspot.com</string>
+	<string>stackmart-500c7.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:62740247193:ios:f8f312832d68f5339a7e08</string>
+	<string>1:491987943015:ios:a52cf155c77290d78f1ec2</string>
 </dict>
 </plist>

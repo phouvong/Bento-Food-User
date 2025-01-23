@@ -20,13 +20,14 @@ class TimeSlotSection extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     bool isGuestLoggedIn = Get.find<AuthController>().isGuestLoggedIn();
+    bool isDineIn = checkoutController.orderType == 'dine_in';
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      (!isGuestLoggedIn && fromCart && !checkoutController.subscriptionOrder && checkoutController.restaurant!.scheduleOrder!) ?  Container(
+      (!isGuestLoggedIn && fromCart && !checkoutController.subscriptionOrder && checkoutController.restaurant!.scheduleOrder! && !isDineIn) ?  Container(
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ),
         margin: EdgeInsets.symmetric(horizontal: isDesktop ? 0 : Dimensions.fontSizeDefault),
         padding: EdgeInsets.symmetric(horizontal: isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
@@ -112,7 +113,7 @@ class TimeSlotSection extends StatelessWidget {
         ]),
       ) : const SizedBox(),
 
-      SizedBox(height: (fromCart && !checkoutController.subscriptionOrder && checkoutController.restaurant!.scheduleOrder!) ? Dimensions.paddingSizeSmall : 0),
+      SizedBox(height: (fromCart && !checkoutController.subscriptionOrder && checkoutController.restaurant!.scheduleOrder! && !isDineIn) ? Dimensions.paddingSizeSmall : 0),
 
     ]);
   }

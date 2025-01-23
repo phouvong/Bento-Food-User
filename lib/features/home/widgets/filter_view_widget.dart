@@ -43,6 +43,15 @@ class FilterViewWidget extends StatelessWidget {
               ),
             ),
             PopupMenuItem(
+              value: 'dine_in',
+              child: Text(
+                'dine_in'.tr,
+                style: robotoMedium.copyWith(
+                  color: restaurant.restaurantType == 'dine_in' ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+                ),
+              ),
+            ),
+            PopupMenuItem(
               value: 'latest',
               child: Text(
                 'latest'.tr,
@@ -69,7 +78,7 @@ class FilterViewWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+            border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
           ),
           child: Icon(Icons.tune, color: Theme.of(context).primaryColor, size: 20),
         ),

@@ -6,7 +6,9 @@ class CustomCheckBoxWidget extends StatelessWidget {
   final String title;
   final bool value;
   final Function onClick;
-  const CustomCheckBoxWidget({super.key, required this.title, required this.value, required this.onClick});
+  final bool isRating;
+  final List<String>? ratingList;
+  const CustomCheckBoxWidget({super.key, required this.title, required this.value, required this.onClick, this.isRating = false, this.ratingList});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,24 @@ class CustomCheckBoxWidget extends StatelessWidget {
       child: InkWell(
         onTap: onClick as void Function()?,
         child: Row(children: [
-          SizedBox(
+          Text(title, style: robotoRegular),
+          Spacer(),
+
+          isRating ? Container(
+            height: 20, width: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).cardColor,
+              border: Border.all(color: value ? Theme.of(context).primaryColor : Theme.of(context).disabledColor, width: 2),
+            ),
+            padding: EdgeInsets.all(2),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: value ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
+              ),
+            ),
+          ) : SizedBox(
             height: 24, width: 24,
             child: Checkbox(
               value: value,
@@ -25,8 +44,6 @@ class CustomCheckBoxWidget extends StatelessWidget {
               activeColor: Theme.of(context).primaryColor,
             ),
           ),
-          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-          Text(title, style: robotoRegular),
         ]),
       ),
     );

@@ -7,13 +7,14 @@ class Images {
   static const String bengali = 'assets/image/bangla.png';
   static const String call = 'assets/image/call.png';
   static const String checked = 'assets/image/checked.png';
-  static const String english = 'assets/image/eng.png';
-  static const String lao = 'assets/image/lao.png';
+  static const String english = 'assets/image/en.png';
+  static const String lao = 'assets/image/lo.png';
   static const String locationMarker = 'assets/image/location_marker.png';
   static const String lock = 'assets/image/lock.png';
   static const String mail = 'assets/image/mail.png';
   static const String map = 'assets/image/map.png';
   static const String restaurantMarker = 'assets/image/nearby_restaurants.png';
+  static const String restaurantIconMarker = 'assets/image/restaurant_icon_merker.png';
   static const String deliveryManMarker = 'assets/image/delivery_man_marker.png';
   static const String nearbyRestaurantMarkerSvg = 'assets/image/nearby_restaurants.svg';
   static const String nearbyRestaurantMarker = 'assets/image/nearby_restaurants.png';
@@ -37,7 +38,7 @@ class Images {
   static const String digitalPayment = 'assets/image/digital_payment.png';
   static const String route = 'assets/image/route.png';
   static const String update = 'assets/image/update.png';
-  static const String deliveryLocation = 'assets/image/delivery_location.png';
+  //static const String deliveryLocation = 'assets/image/delivery_location.png';
   static const String forgot = 'assets/image/forgot.png';
   static const String pickMarker = 'assets/image/pick_marker.png';
   static const String house = 'assets/image/house.png';
@@ -178,11 +179,11 @@ class Images {
   static const String facebookIcon = 'assets/image/facebook_icon.png';
   static const String note = 'assets/image/note.png';
   static const String couponIcon1 = 'assets/image/coupon_icon1.png';
-  static const String nearbyRestaurant = 'assets/image/nearby_restaurant.png';
-  static const String nearbyLocation = 'assets/image/nearby_location.png';
+  //static const String nearbyRestaurant = 'assets/image/nearby_restaurant.png';
+  //static const String nearbyLocation = 'assets/image/nearby_location.png';
   static const String enjoyOff = 'assets/image/enjoy_off.png';
   static const String referBg = 'assets/image/refer_bg.png';
-  static const String cuisineBg = 'assets/image/cuisine_bg.png';
+  static const String cuisineBgPng = 'assets/image/cuisine_bg.png';
   static const String deliveryIcon = 'assets/image/delivery_icon.png';
   static const String distanceKm = 'assets/image/distance_km.png';
   static const String itemCount = 'assets/image/items_count.png';
@@ -216,6 +217,13 @@ class Images {
   static const String cancelGif = 'assets/image/cancel.gif';
   static const String calender = 'assets/image/calender.png';
   static const String highlightIcon = 'assets/image/highlight_icon.png';
+  static const String fileIcon = 'assets/image/file.png';
+  static const String unVerifiedIcon = 'assets/image/unverified.png';
+  static const String verifiedIcon = 'assets/image/verified.png';
+  static const String otpVerification = 'assets/image/otp_verification.png';
+  static const String emailOrPhone = 'assets/image/email_or_phone.png';
+  static const String dineInUser = 'assets/image/dine_in_user.png';
+  static const String dineInMap = 'assets/image/dine_in_map.png';
 
   static const String onboarding_1 = 'assets/image/onboard_1.svg';
   static const String onboarding_2 = 'assets/image/onboard_2.svg';
@@ -255,9 +263,14 @@ class Images {
   static const String referPersonIcon = 'assets/image/refer_person_icon.svg';
   static const String referEarnIcon = 'assets/image/refer_earn_icon.svg';
   static const String highlightBg = 'assets/image/highlight_bg.svg';
-  static const String fileIcon = 'assets/image/file.png';
-  static const String unVerifiedIcon = 'assets/image/unverified.png';
-  static const String verifiedIcon = 'assets/image/verified.png';
-  static const String otpVerification = 'assets/image/otp_verification.png';
-  static const String emailOrPhone = 'assets/image/email_or_phone.png';
+  static const String nearbyRestaurant = 'assets/image/nearby_restaurant.svg';
+  static const String nearbyLocation = 'assets/image/nearby_location.svg';
+  static const String cuisineBg = 'assets/image/cuisine_bg.svg';
+  static const String deliveryLocation = 'assets/image/delivery_location.svg';
+
+  static const String confirmDineIn = 'assets/image/confirm_dine_in.gif';
+  static const String cookingDineIn = 'assets/image/cooking_gif.gif';
+  static const String pendingDineIn = 'assets/image/pending_dine_in.gif';
+  static const String servedDineIn = 'assets/image/served_dine_in.gif';
+  static const String successAnimationDineIn = 'assets/image/success_animation.gif';
 }

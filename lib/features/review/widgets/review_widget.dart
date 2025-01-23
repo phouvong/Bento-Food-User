@@ -42,7 +42,7 @@ class ReviewWidget extends StatelessWidget {
 
             isDesktop ? ReadMoreText(
               review.comment ?? '',
-              style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.7)),
+              style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.7)),
               trimMode: TrimMode.Line,
               trimLines: 3,
               colorClickableText: Theme.of(context).primaryColor,
@@ -73,7 +73,7 @@ class ReviewWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                border: Border.all(color: Theme.of(context).hintColor.withOpacity(0.2)),
+                border: Border.all(color: Theme.of(context).hintColor.withValues(alpha: 0.2)),
               ),
               child:  ClipRRect(
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -105,7 +105,7 @@ class ReviewWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-              border: Border.all(color: Theme.of(context).hintColor.withOpacity(0.2)),
+              border: Border.all(color: Theme.of(context).hintColor.withValues(alpha: 0.2)),
             ),
             child: Row(children: [
 
@@ -133,7 +133,7 @@ class ReviewWidget extends StatelessWidget {
 
       isDesktop ? const SizedBox() : ReadMoreText(
         review.comment ?? '',
-        style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.7)),
+        style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.7)),
         trimMode: TrimMode.Line,
         trimLines: 3,
         colorClickableText: Theme.of(context).primaryColor,
@@ -147,7 +147,7 @@ class ReviewWidget extends StatelessWidget {
       review.reply != null ? Container(
         padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault, horizontal: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
-          color: Theme.of(context).hintColor.withOpacity(0.1),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -163,7 +163,7 @@ class ReviewWidget extends StatelessWidget {
 
           ReadMoreText(
             review.reply ?? '',
-            style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withOpacity(0.7)),
+            style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color?.withValues(alpha: 0.7)),
             trimMode: TrimMode.Line,
             trimLines: 3,
             colorClickableText: Theme.of(context).primaryColor,
@@ -178,7 +178,7 @@ class ReviewWidget extends StatelessWidget {
 
       hasDivider ? Divider(
         height: 40, thickness: 1,
-        color: Theme.of(context).disabledColor.withOpacity(0.5),
+        color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
       ) : const SizedBox(),
 
     ]);

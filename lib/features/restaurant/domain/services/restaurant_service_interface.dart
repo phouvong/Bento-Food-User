@@ -1,4 +1,5 @@
 
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -11,11 +12,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 abstract class RestaurantServiceInterface {
   double getRestaurantDistanceFromUser(LatLng restaurantLatLng);
   String filterRestaurantLinkUrl(String slug, int? restaurantId, int? restaurantZoneId);
-  Future<RestaurantModel?> getRestaurantList(int offset, String filterBy, int topRated, int discount, int veg, int nonVeg, {bool fromMap = false});
-  Future<List<Restaurant>?> getOrderAgainRestaurantList();
-  Future<List<Restaurant>?> getRecentlyViewedRestaurantList(String type);
-  Future<List<Restaurant>?> getPopularRestaurantList(String type);
-  Future<List<Restaurant>?> getLatestRestaurantList(String type);
+  Future<RestaurantModel?> getRestaurantList(int offset, String filterBy, int topRated, int discount, int veg, int nonVeg, {bool fromMap = false, DataSourceEnum? source});
+  Future<List<Restaurant>?> getOrderAgainRestaurantList({DataSourceEnum? source});
+  Future<List<Restaurant>?> getRecentlyViewedRestaurantList(String type, {DataSourceEnum? source});
+  Future<List<Restaurant>?> getPopularRestaurantList(String type, {DataSourceEnum? source});
+  Future<List<Restaurant>?> getLatestRestaurantList(String type, {DataSourceEnum? source});
   Future<RecommendedProductModel?> getRestaurantRecommendedItemList(int? restaurantId);
   int setTopRated(int rated);
   int setDiscounted(int discounted);

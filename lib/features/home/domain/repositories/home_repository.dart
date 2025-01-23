@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/banner_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/cashback_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/repositories/home_repository_interface.dart';
@@ -10,28 +13,56 @@ class HomeRepository implements HomeRepositoryInterface {
   HomeRepository({required this.apiClient});
 
   @override
-  Future<BannerModel?> getList({int? offset}) async {
-    return await _getBannerList();
+  Future<BannerModel?> getList({int? offset, DataSourceEnum? source}) async {
+    return await _getBannerList(source: source!);
   }
 
-  Future<BannerModel?> _getBannerList() async {
+  Future<BannerModel?> _getBannerList({required DataSourceEnum source}) async {
     BannerModel? bannerModel;
-    Response response = await apiClient.getData(AppConstants.bannerUri);
-    if(response.statusCode == 200) {
-      bannerModel = BannerModel.fromJson(response.body);
+    String cacheId = AppConstants.bannerUri;
+
+    switch(source) {
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.bannerUri);
+        if(response.statusCode == 200) {
+          bannerModel = BannerModel.fromJson(response.body);
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          bannerModel = BannerModel.fromJson(jsonDecode(cacheResponseData));
+        }
     }
+
     return bannerModel;
   }
 
   @override
-  Future<List<CashBackModel>?> getCashBackOfferList() async {
+  Future<List<CashBackModel>?> getCashBackOfferList({DataSourceEnum? source}) async {
     List<CashBackModel>? cashBackModelList;
-    Response response = await apiClient.getData(AppConstants.cashBackOfferListUri);
-    if(response.statusCode == 200) {
-      cashBackModelList = [];
-      response.body.forEach((data) {
-        cashBackModelList!.add(CashBackModel.fromJson(data));
-      });
+    String cacheId = AppConstants.cashBackOfferListUri;
+
+    switch(source!) {
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.cashBackOfferListUri);
+        if(response.statusCode == 200) {
+          cashBackModelList = [];
+          response.body.forEach((data) {
+            cashBackModelList!.add(CashBackModel.fromJson(data));
+          });
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          cashBackModelList = [];
+          jsonDecode(cacheResponseData).forEach((data) {
+            cashBackModelList!.add(CashBackModel.fromJson(data));
+          });
+        }
     }
     return cashBackModelList;
   }

@@ -59,7 +59,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                   margin: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Theme.of(context).disabledColor.withOpacity(0.3),
+                    color: Theme.of(context).disabledColor.withValues(alpha: 0.3),
                     border: Border.all(color: Theme.of(context).cardColor),
                   ),
                   child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
@@ -77,7 +77,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(scrollingRate < 0.8 ? Dimensions.radiusLarge : 0),
-                        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                       ),
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
 
@@ -97,7 +97,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                                     padding: const EdgeInsets.all(2),
                                     margin: EdgeInsets.zero,
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor.withOpacity(0.5),
+                                      color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(50),
                                     ),
                                     child: ClipRRect(
@@ -154,7 +154,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                             margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                             decoration: BoxDecoration(
-                              color: scrollingRate < 0.8 ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+                              color: scrollingRate < 0.8 ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(Dimensions.radiusSmall),
                                 bottomRight: Radius.circular(Dimensions.radiusSmall),

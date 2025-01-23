@@ -91,11 +91,11 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
                         contentPadding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor.withValues(alpha: 0.3), width: 1),
                         ),
                         suffixIcon: IconButton(
                           icon: const Icon(CupertinoIcons.search, size: 25),
@@ -161,9 +161,9 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).disabledColor.withOpacity(0.2),
+                              color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                              border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                              border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.6)),
                             ),
                             child: Row(mainAxisSize: MainAxisSize.min, children: [
                               InkWell(
@@ -178,7 +178,7 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
                                   padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                                   child: Text(
                                     historyData,
-                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5)),
+                                    style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withValues(alpha: 0.5)),
                                     maxLines: 1, overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -203,7 +203,7 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
                     (restaurantController.categoryList != null) ? Padding(
                       padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault),
                       child: Text(
-                        'popular'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
+                        'popular_categories'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                       ),
                     ) : const SizedBox(),
 
@@ -224,7 +224,7 @@ class _RestaurantProductSearchScreenState extends State<RestaurantProductSearchS
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                                border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                                border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.6)),
                               ),
                               child: Text(
                                 category.name!,

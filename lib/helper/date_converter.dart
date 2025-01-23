@@ -69,6 +69,10 @@ class DateConverter {
     return DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime);
   }
 
+  static DateTime dateStringToDate(String dateTime) {
+    return DateFormat('yyyy-MM-dd').parse(dateTime);
+  }
+
   static DateTime isoStringToLocalDate(String dateTime) {
     return DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(dateTime);
   }
@@ -154,8 +158,12 @@ class DateConverter {
     return Get.find<SplashController>().configModel!.timeformat == '24' ? 'HH:mm' : 'hh:mm a';
   }
 
-  static int differenceInMinute(String? deliveryTime, String? orderTime, int? processingTime, String? scheduleAt) {
+  static int differenceInMinute(String? deliveryTime, String? orderTime, int? processingTime, String? scheduleAt, {bool fromDineIn = false, String? processing}) {
     // 'min', 'hours', 'days'
+    if(fromDineIn && processingTime != null && processing != null) {
+      DateTime deliveryTime0 = dateTimeStringToDate(processing).add(Duration(minutes: processingTime));
+      return deliveryTime0.difference(DateTime.now()).inMinutes;
+    }
     int minTime = processingTime ?? 0;
     if(deliveryTime != null && deliveryTime.isNotEmpty && processingTime == null) {
       try {
@@ -255,5 +263,35 @@ class DateConverter {
   static String convertRestaurantOpenTime(String time) {
     return DateFormat('hh:mm a').format(DateFormat('HH:mm:ss').parse(time).toLocal());
   }
+
+  static DateTime formattingDineInDateTime(TimeOfDay pickedTime, DateTime selectedDineInDate) {
+    String formattedTime = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+    List<String> times = formattedTime.split(':');
+
+    return DateTime(selectedDineInDate.year, selectedDineInDate.month, selectedDineInDate.day, int.parse(times[0]), int.parse(times[1]));
+
+  }
+
+  static bool isToday(DateTime date1) {
+    DateTime date2 = DateTime.now();
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+  static bool isTomorrow(DateTime date1) {
+    DateTime date2 = DateTime.now().add(Duration(days: 1));
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  static String convertMinutesToDayHourMinute(int minutes) {
+    int days = minutes ~/ 1440; // 1 day = 1440 minutes
+    int hours = (minutes % 1440) ~/ 60; // Remaining hours
+    int remainingMinutes = minutes % 60; // Remaining minutes
+    return '${days != 0 ? '${days}d' : ''} ${hours != 0 ? '${hours}hr' : ''} ${remainingMinutes != 0 ? '${remainingMinutes}min' : ''}'; // Format as "Xd Yh Zm"
+  }
+
+
 
 }

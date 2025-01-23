@@ -1,5 +1,6 @@
 import 'package:stackfood_multivendor/features/home/screens/home_screen.dart';
 import 'package:stackfood_multivendor/features/home/widgets/bad_weather_widget.dart';
+import 'package:stackfood_multivendor/features/home/widgets/dine_in_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/enjoy_off_banner_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/filter_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/highlight_widget_view.dart';
@@ -149,6 +150,7 @@ class Theme1HomeScreen extends StatelessWidget {
               isLogin ? const PopularStoreWidget1(isOrderAgainViewed: true, isPopular: false) : const SizedBox(),
               isLogin ? const OrderAgainViewWidget() : const SizedBox(),
               configModel.mostReviewedFoods == 1 ? const BestReviewedItemWidget1() : const SizedBox(),
+              configModel.dineInOrderOption! ? DineInWidget() : const SizedBox(),
               const ReferBannerViewWidget(fromTheme1: true),
               isLogin ? const PopularStoreWidget1(isPopular: false, isRecentlyViewed: true) : const SizedBox(),
               const CuisinesWidget1(),

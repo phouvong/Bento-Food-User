@@ -130,7 +130,12 @@ class OrderPlaceButton extends StatelessWidget {
       DateTime date = checkoutController.selectedDateSlot == 0 ? DateTime.now()
           : checkoutController.selectedDateSlot == 1 ? DateTime.now().add(const Duration(days: 1)) : checkoutController.selectedCustomDate?? DateTime.now();
       DateTime startTime = checkoutController.timeSlots![checkoutController.selectedTimeSlot!].startTime!;
-      scheduleStartDate = DateTime(date.year, date.month, date.day, startTime.hour, startTime.minute+1);
+
+      if(checkoutController.orderType == 'dine_in') {
+        scheduleStartDate = checkoutController.orderPlaceDineInDateTime ?? DateTime.now();
+      } else {
+        scheduleStartDate = DateTime(date.year, date.month, date.day, startTime.hour, startTime.minute + 1);
+      }
     }
     return scheduleStartDate;
   }
@@ -141,7 +146,11 @@ class OrderPlaceButton extends StatelessWidget {
       DateTime date = checkoutController.selectedDateSlot == 0 ? DateTime.now()
           : checkoutController.selectedDateSlot == 1 ? DateTime.now().add(const Duration(days: 1)) : checkoutController.selectedCustomDate?? DateTime.now();
       DateTime endTime = checkoutController.timeSlots![checkoutController.selectedTimeSlot!].endTime!;
-      scheduleEndDate = DateTime(date.year, date.month, date.day, endTime.hour, endTime.minute+1);
+      if(checkoutController.orderType == 'dine_in') {
+        scheduleEndDate = checkoutController.orderPlaceDineInDateTime?.add(const Duration(minutes: 1)) ?? DateTime.now().add(const Duration(minutes: 1));
+      } else {
+        scheduleEndDate = DateTime(date.year, date.month, date.day, endTime.hour, endTime.minute + 1);
+      }
     }
     return scheduleEndDate;
   }
@@ -168,13 +177,19 @@ class OrderPlaceButton extends StatelessWidget {
   }
 
   bool _showsWarningMessage(BuildContext context, bool isGuestLogIn, bool datePicked, bool isAvailable) {
-    if(isGuestLogIn && checkoutController.guestAddress == null && checkoutController.orderType != 'take_away'){
+    if(isGuestLogIn && checkoutController.guestAddress == null && checkoutController.orderType != 'take_away'&& checkoutController.orderType != 'dine_in'){
       showCustomSnackBar('please_setup_your_delivery_address_first'.tr);
       return true;
-    } else if(isGuestLogIn && checkoutController.orderType == 'take_away' && guestNameTextEditingController.text.isEmpty){
+    } else if(checkoutController.orderType == 'dine_in' && checkoutController.selectedDineInDate == null){
+      showCustomSnackBar('please_select_your_dine_in_date'.tr);
+      return true;
+    } else if(checkoutController.orderType == 'dine_in' && checkoutController.estimateDineInTime == null){
+      showCustomSnackBar('please_select_your_dine_in_time'.tr);
+      return true;
+    } else if(((isGuestLogIn && checkoutController.orderType == 'take_away') || checkoutController.orderType == 'dine_in') && guestNameTextEditingController.text.isEmpty){
       showCustomSnackBar('please_enter_contact_person_name'.tr);
       return true;
-    } else if(isGuestLogIn && checkoutController.orderType == 'take_away' && guestNumberTextEditingController.text.isEmpty){
+    } else if(((isGuestLogIn && checkoutController.orderType == 'take_away') || checkoutController.orderType == 'dine_in') && guestNumberTextEditingController.text.isEmpty){
       showCustomSnackBar('please_enter_contact_person_number'.tr);
       return true;
     } else if(!isCashOnDeliveryActive && !isDigitalPaymentActive && !isWalletActive) {
@@ -211,7 +226,7 @@ class OrderPlaceButton extends StatelessWidget {
     }else if(checkoutController.subscriptionOrder && !datePicked) {
       showCustomSnackBar('select_at_least_one_day_for_subscription'.tr);
       return true;
-    }else if((checkoutController.selectedDateSlot == 0 && todayClosed) || (checkoutController.selectedDateSlot == 1 && tomorrowClosed) || (checkoutController.selectedDateSlot == 2 && checkoutController.customDateRestaurantClose)) {
+    }else if(((checkoutController.selectedDateSlot == 0 && todayClosed) || (checkoutController.selectedDateSlot == 1 && tomorrowClosed) || (checkoutController.selectedDateSlot == 2 && checkoutController.customDateRestaurantClose)) && checkoutController.orderType != 'dine_in') {
       showCustomSnackBar('restaurant_is_closed'.tr);
       return true;
     }else if(checkoutController.paymentMethodIndex == 0 && Get.find<SplashController>().configModel!.cashOnDelivery! && maxCodOrderAmount != null && (total > maxCodOrderAmount!)){
@@ -242,7 +257,7 @@ class OrderPlaceButton extends StatelessWidget {
   AddressModel? _processFinalAddress(bool isGuestLogIn) {
     AddressModel? finalAddress = isGuestLogIn ? checkoutController.guestAddress : checkoutController.address[checkoutController.addressIndex];
 
-    if(isGuestLogIn && checkoutController.orderType == 'take_away') {
+    if(isGuestLogIn && checkoutController.orderType == 'take_away' || checkoutController.orderType == 'dine_in') {
       String number = checkoutController.countryDialCode! + guestNumberTextEditingController.text;
       finalAddress = AddressModel(contactPersonName: guestNameTextEditingController.text, contactPersonNumber: number,
         address: AddressHelper.getAddressFromSharedPref()!.address!, latitude: AddressHelper.getAddressFromSharedPref()!.latitude,
@@ -312,7 +327,8 @@ class OrderPlaceButton extends StatelessWidget {
     return PlaceOrderBodyModel(
       cart: carts, couponDiscountAmount: Get.find<CouponController>().discount, distance: checkoutController.distance,
       couponDiscountTitle: Get.find<CouponController>().discount! > 0 ? Get.find<CouponController>().coupon!.title : null,
-      scheduleAt: !checkoutController.restaurant!.scheduleOrder! ? null : (checkoutController.selectedDateSlot == 0
+      scheduleAt: checkoutController.orderType == 'dine_in' ? checkoutController.orderPlaceDineInDateTime.toString()
+          : !checkoutController.restaurant!.scheduleOrder! ? null : (checkoutController.selectedDateSlot == 0
           && checkoutController.selectedTimeSlot == 0) ? null : DateConverter.dateToDateAndTime(scheduleStartDate),
       orderAmount: total, orderNote: checkoutController.noteController.text, orderType: checkoutController.orderType,
       paymentMethod: checkoutController.paymentMethodIndex == 0 ? 'cash_on_delivery'

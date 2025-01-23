@@ -63,7 +63,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     }
 
     browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: maxCodOrderAmount, addFundUrl: widget.addFundUrl,
-        subscriptionUrl: widget.subscriptionUrl, contactNumber: widget.contactNumber, restaurantId: widget.restaurantId, packageId: widget.packageId);
+        subscriptionUrl: widget.subscriptionUrl, contactNumber: widget.contactNumber, restaurantId: widget.restaurantId, packageId: widget.packageId, isDeliveryOrder: widget.orderModel.orderType == 'delivery');
 
     if(!GetPlatform.isIOS) {
       await InAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -143,8 +143,9 @@ class MyInAppBrowser extends InAppBrowser {
   final String? contactNumber;
   final int? restaurantId;
   final int? packageId;
+  final bool isDeliveryOrder;
   MyInAppBrowser({required this.orderID, required this.orderAmount, required this.maxCodOrderAmount, this.contactNumber, super.windowId,
-    super.initialUserScripts, this.addFundUrl, this.subscriptionUrl, this.restaurantId, this.packageId});
+    super.initialUserScripts, this.addFundUrl, this.subscriptionUrl, this.restaurantId, this.packageId, this.isDeliveryOrder = false});
 
   bool _canRedirect = true;
 
@@ -259,9 +260,9 @@ class MyInAppBrowser extends InAppBrowser {
     if (isSuccess) {
       double total = ((orderAmount! / 100) * Get.find<SplashController>().configModel!.loyaltyPointItemPurchasePoint!);
       Get.find<LoyaltyController>().saveEarningPoint(total.toStringAsFixed(0));
-      Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'success', orderAmount, contactNumber));
+      Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'success', orderAmount, contactNumber, isDeliveryOrder: isDeliveryOrder));
     } else if (isFailed || isCancel) {
-      Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'fail', orderAmount, contactNumber));
+      Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'fail', orderAmount, contactNumber, isDeliveryOrder: isDeliveryOrder));
     }
   }
 

@@ -1,13 +1,17 @@
 class ProductModel {
   int? totalSize;
+  double? minPrice;
+  double? maxPrice;
   String? limit;
   int? offset;
   List<Product>? products;
 
-  ProductModel({this.totalSize, this.limit, this.offset, this.products});
+  ProductModel({this.totalSize, this.minPrice, this.maxPrice, this.limit, this.offset, this.products});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
+    minPrice = json['min_price']?.toDouble();
+    maxPrice = json['max_price']?.toDouble();
     limit = json['limit'].toString();
     offset = (json['offset'] != null && json['offset'].toString().trim().isNotEmpty) ? int.parse(json['offset'].toString()) : null;
     if (json['products'] != null) {
@@ -23,6 +27,8 @@ class ProductModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['total_size'] = totalSize;
+    data['min_price'] = minPrice;
+    data['max_price'] = maxPrice;
     data['limit'] = limit;
     data['offset'] = offset;
     if (products != null) {

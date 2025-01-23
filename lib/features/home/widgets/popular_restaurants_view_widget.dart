@@ -107,7 +107,7 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                           child: Container(
                                             decoration: BoxDecoration(
                                               borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
-                                              color: Colors.black.withOpacity(0.3),
+                                              color: Colors.black.withValues(alpha: 0.3),
                                             ),
                                           ),
                                         ) : const SizedBox(),
@@ -118,7 +118,7 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
 
                                 !isAvailable ? Positioned(top: 30, left: 60, child: Container(
                                   decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                                      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(Dimensions.radiusLarge)
                                   ),
                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.fontSizeExtraLarge, vertical: Dimensions.paddingSizeExtraSmall),
@@ -137,12 +137,13 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                     children: [
                                       SizedBox(height: characteristics == '' ? Dimensions.paddingSizeSmall : 0),
 
-                                      Text(restaurantList[index].name!,
-                                          overflow: TextOverflow.ellipsis, maxLines: 1, style: robotoBold),
+                                      Text(restaurantList[index].name!, overflow: TextOverflow.ellipsis, maxLines: 1, style: robotoBold),
 
-                                      Text(characteristics,
-                                          overflow: TextOverflow.ellipsis, maxLines: 1,
-                                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                      Text(
+                                        characteristics,
+                                        overflow: TextOverflow.ellipsis, maxLines: 1,
+                                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -153,12 +154,13 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      IconWithTextRowWidget(
+
+                                      restaurantList[index].ratingCount! > 0 ? IconWithTextRowWidget(
                                         icon: Icons.star,
                                         text: restaurantList[index].avgRating!.toStringAsFixed(1),
                                         style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
-                                      ),
-                                      const SizedBox(width: Dimensions.paddingSizeDefault),
+                                      ) : const SizedBox(),
+                                      SizedBox(width: restaurantList[index].ratingCount! > 0 ? Dimensions.paddingSizeDefault : 0),
 
                                       restaurantList[index].freeDelivery! ? ImageWithTextRowWidget(
                                         widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),
@@ -216,7 +218,7 @@ class PopularRestaurantsViewWidget extends StatelessWidget {
                                     height: 65, width: 65,
                                     decoration:  BoxDecoration(
                                       color: Theme.of(context).cardColor,
-                                      border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.1), width: 3),
+                                      border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.1), width: 3),
                                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     ),
                                     child: ClipRRect(

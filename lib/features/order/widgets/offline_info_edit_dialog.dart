@@ -85,7 +85,7 @@ class _OfflineInfoEditDialogState extends State<OfflineInfoEditDialog> {
 
                       CustomButtonWidget(
                         width: 100,
-                        color: Theme.of(context).disabledColor.withOpacity(0.5),
+                        color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
                         textColor: Theme.of(context).textTheme.bodyMedium!.color,
                         buttonText: 'cancel'.tr,
                         onPressed: () => Get.back(),

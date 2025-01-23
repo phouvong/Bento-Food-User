@@ -26,7 +26,7 @@ class RunningOrderViewWidget extends StatelessWidget {
             topLeft: Radius.circular(Dimensions.paddingSizeExtraLarge),
             topRight : Radius.circular(Dimensions.paddingSizeExtraLarge),
           ),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ),
         child: SingleChildScrollView(
           child: Column(children: [
@@ -136,7 +136,7 @@ class RunningOrderViewWidget extends StatelessWidget {
 
                           Container(
                             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                            decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.1), shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
                             child: isFirstOrder ? !(reversOrder.length < 2) ? InkWell(
                               onTap: onMoreClick,
                               child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -160,6 +160,6 @@ class RunningOrderViewWidget extends StatelessWidget {
 
   Widget trackView(BuildContext context, {required bool status}) {
     return Container(height: 5, decoration: BoxDecoration(color: status ? Theme.of(context).primaryColor
-        : Theme.of(context).disabledColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.radiusDefault)));
+        : Theme.of(context).disabledColor.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(Dimensions.radiusDefault)));
   }
 }

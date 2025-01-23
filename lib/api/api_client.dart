@@ -56,6 +56,8 @@ class ApiClient extends GetxService {
     return header;
   }
 
+  Map<String, String> getHeader() => _mainHeaders;
+
   Future<Response> getData(String uri, {Map<String, dynamic>? query, Map<String, String>? headers, bool handleError = true, bool showToaster = false}) async {
     try {
       if(kDebugMode) {
@@ -203,7 +205,11 @@ class ApiClient extends GetxService {
       response0 = Response(statusCode: 0, statusText: noInternetMessage);
     }
     if(kDebugMode) {
-      debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response0.body}');
+      if(response0.statusCode == 500) {
+        debugPrint('====> API Response: [${response0.statusCode}] $uri\n${(response0.body.toString().substring(0, 500))}');
+      } else {
+        debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response0.body}');
+      }
     }
     if(handleError) {
       if(response0.statusCode == 200) {

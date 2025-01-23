@@ -13,6 +13,7 @@ import 'package:stackfood_multivendor/helper/date_converter.dart';
 import 'package:stackfood_multivendor/helper/price_converter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:stackfood_multivendor/helper/route_helper.dart';
 
 class CartController extends GetxController implements GetxService {
   final CartServiceInterface cartServiceInterface;
@@ -202,9 +203,11 @@ class CartController extends GetxController implements GetxService {
       if(!fromDirectlyAdd) {
         Get.back();
       }
-      showCartSnackBarWidget();
+      if(!Get.currentRoute.contains(RouteHelper.restaurant)) {
+        showCartSnackBarWidget();
+      }
     } else if(response.statusCode == 403 && response.body['errors'][0]['code'] == 'stock_out') {
-      showCustomSnackBar(response.body['errors'][0]['message'], showToaster: true);
+      showCustomSnackBar(response.body['errors'][0]['message']);
       Get.find<ProductController>().getProductDetails(onlineCart.itemId!, existCartData);
     } else {
       ApiChecker.checkApi(response);
@@ -241,9 +244,11 @@ class CartController extends GetxController implements GetxService {
       _cartList.addAll(cartServiceInterface.formatOnlineCartToLocalCart(onlineCartModel: onlineCartList));
       calculationCart();
       Get.back();
-      showCartSnackBarWidget();
+      if(!Get.currentRoute.contains(RouteHelper.restaurant)) {
+        showCartSnackBarWidget();
+      }
     } else if(response.statusCode == 403 && response.body['errors'][0]['code'] == 'stock_out') {
-      showCustomSnackBar(response.body['errors'][0]['message'], showToaster: true);
+      showCustomSnackBar(response.body['errors'][0]['message']);
       Get.find<ProductController>().getProductDetails(onlineCart.itemId!, existCartData);
     } else {
       ApiChecker.checkApi(response);

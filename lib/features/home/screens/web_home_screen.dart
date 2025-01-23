@@ -10,6 +10,7 @@ import 'package:stackfood_multivendor/features/home/widgets/popular_restaurants_
 import 'package:stackfood_multivendor/features/home/widgets/today_trends_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/web/web_banner_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/web/web_cuisine_view_widget.dart';
+import 'package:stackfood_multivendor/features/home/widgets/web/web_dine_in_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/web/web_highlight_widget_view.dart';
 import 'package:stackfood_multivendor/features/home/widgets/web/web_loaction_and_refer_banner_view_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/web/web_new_on_stackfood_view_widget.dart';
@@ -77,6 +78,8 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
 
                 _configModel!.popularFood == 1 ?  const BestReviewItemViewWidget(isPopular: false) : const SizedBox(),
 
+                _configModel!.dineInOrderOption! ? WebDineInWidget() : const SizedBox(),
+
                 const WebCuisineViewWidget(),
 
                 const PopularRestaurantsViewWidget(),
@@ -112,6 +115,7 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
             const SizedBox(height: Dimensions.paddingSizeLarge),
 
             FooterViewWidget(
+              minHeight: 0.3,
               child: AllRestaurantsWidget(scrollController: widget.scrollController),
             ),
           ],

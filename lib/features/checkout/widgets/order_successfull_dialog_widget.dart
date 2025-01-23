@@ -14,7 +14,8 @@ import 'package:get/get.dart';
 class OrderSuccessfulDialogWidget extends StatefulWidget {
   final String? orderID;
   final String? contactNumber;
-  const OrderSuccessfulDialogWidget({super.key, required this.orderID, this.contactNumber});
+  final bool isDeliveryOrder;
+  const OrderSuccessfulDialogWidget({super.key, required this.orderID, this.contactNumber, this.isDeliveryOrder = false});
 
   @override
   State<OrderSuccessfulDialogWidget> createState() => _OrderSuccessfulDialogWidgetState();
@@ -86,7 +87,7 @@ class _OrderSuccessfulDialogWidgetState extends State<OrderSuccessfulDialogWidge
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
                   child: Text(
-                    success ? 'your_order_is_placed_successfully'.tr : 'your_order_is_failed_to_place_because'.tr,
+                    success ? widget.isDeliveryOrder ? 'your_order_is_placed_successfully'.tr : 'your_order_is_placed_successfully_dine_in_and_takeaway'.tr : 'your_order_is_failed_to_place_because'.tr,
                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                     textAlign: TextAlign.center,
                   ),

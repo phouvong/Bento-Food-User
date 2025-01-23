@@ -37,7 +37,7 @@ class WebRestaurantWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.5)),
+            border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.5)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(1),

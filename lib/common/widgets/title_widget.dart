@@ -38,7 +38,7 @@ class TitleWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle, color: Theme.of(context).cardColor,
-              boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.05), spreadRadius: 1, blurRadius: 5)],
+              boxShadow: [BoxShadow(color: Colors.black12.withValues(alpha: 0.05), spreadRadius: 1, blurRadius: 5)],
             ),
             padding: const EdgeInsets.all(5),
             child: Icon(Icons.arrow_forward_ios_sharp, size: 14, color: Theme.of(context).primaryColor),

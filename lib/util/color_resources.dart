@@ -8,6 +8,6 @@ class ColorResources {
   }
 
   static Color getLeftBubbleColor() {
-    return Get.isDarkMode ? const Color(0xA2B7B7BB): Theme.of(Get.context!).disabledColor.withOpacity(0.2);
+    return Get.isDarkMode ? const Color(0xA2B7B7BB): Theme.of(Get.context!).disabledColor.withValues(alpha: 0.2);
   }
 }

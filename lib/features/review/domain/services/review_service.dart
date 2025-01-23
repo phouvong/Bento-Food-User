@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/common/models/review_model.dart';
@@ -10,8 +11,8 @@ class ReviewService implements ReviewServiceInterface {
   ReviewService({required this.reviewRepositoryInterface});
 
   @override
-  Future<List<Product>?> getReviewedProductList({required String type}) async {
-    return await reviewRepositoryInterface.getList(type: type);
+  Future<List<Product>?> getReviewedProductList({required String type, DataSourceEnum? source}) async {
+    return await reviewRepositoryInterface.getList(type: type, source: source);
   }
 
   @override

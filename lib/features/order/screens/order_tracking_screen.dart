@@ -12,6 +12,7 @@ import 'package:stackfood_multivendor/features/order/domain/models/order_model.d
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/conversation_model.dart';
 import 'package:stackfood_multivendor/features/location/controllers/location_controller.dart';
+import 'package:stackfood_multivendor/features/order/widgets/dine_in_restaurants_card_widget.dart';
 import 'package:stackfood_multivendor/features/order/widgets/track_details_view.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
@@ -122,13 +123,8 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> with WidgetsBi
 
             _isLoading ? const Center(child: CircularProgressIndicator()) : const SizedBox(),
 
-            /*Positioned(
-              top: Dimensions.paddingSizeSmall, left: Dimensions.paddingSizeSmall, right: Dimensions.paddingSizeSmall,
-              child: TrackingStepperWidget(status: track.orderStatus, takeAway: track.orderType == 'take_away'),
-            ),*/
-
             Positioned(
-              right: 15, bottom: track.orderType != 'take_away' && track.deliveryMan == null ? 150 : 190,
+              right: 15, bottom: track.orderType != 'take_away' /*&& (track.orderType != 'dine_in')*/ && track.deliveryMan == null ? 150 : 190,
               child: InkWell(
                 onTap: () => _checkPermission(() async {
                   AddressModel address = await Get.find<LocationController>().getCurrentLocation(false, mapController: _controller);
@@ -154,7 +150,7 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> with WidgetsBi
           ]),
 
           persistentContentHeight: 170,
-          expandableContent: Padding(
+          expandableContent: track.orderType == 'dine_in' ? DineInRestaurantsCardWidget(restaurant: track.restaurant!) : Padding(
             padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall, right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
             child: TrackDetailsView(track: track, callback: () async {
               bool takeAway = track?.orderType == 'take_away';

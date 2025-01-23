@@ -35,12 +35,13 @@ class OrderPricingSection extends StatelessWidget {
   Widget build(BuildContext context) {
     bool subscription = order.subscription != null;
     bool taxIncluded = order.taxStatus ?? false;
+    bool isDineIn = order.orderType == 'dine_in';
 
     return Container(
       decoration: ResponsiveHelper.isDesktop(context) ? BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)]
       ) : null,
       child: Column(children: [
         ResponsiveHelper.isDesktop(context) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -79,7 +80,7 @@ class OrderPricingSection extends StatelessWidget {
               Text('(+) ${PriceConverter.convertPrice(addOns)}', style: robotoRegular, textDirection: TextDirection.ltr),
             ]),
 
-            Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+            Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
 
             !subscription ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text('${'subtotal'.tr} ${taxIncluded ? 'tax_included'.tr : ''}', style: robotoMedium),
@@ -123,14 +124,14 @@ class OrderPricingSection extends StatelessWidget {
             ]) : const SizedBox(),
             SizedBox(height: taxIncluded ? 0 : Dimensions.paddingSizeSmall),
 
-            (!subscription && order.orderType != 'take_away' && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? Row(
+            (!subscription && !isDineIn && order.orderType != 'take_away' && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('delivery_man_tips'.tr, style: robotoRegular),
                 Text('(+) ${PriceConverter.convertPrice(dmTips)}', style: robotoRegular, textDirection: TextDirection.ltr),
               ],
             ) : const SizedBox(),
-            SizedBox(height: (order.orderType != 'take_away' && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? 10 : 0),
+            SizedBox(height: (order.orderType != 'take_away' && !isDineIn && Get.find<SplashController>().configModel!.dmTipsStatus == 1) ? 10 : 0),
 
             (extraPackagingAmount > 0) ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,21 +142,21 @@ class OrderPricingSection extends StatelessWidget {
             ) : const SizedBox(),
             SizedBox(height: extraPackagingAmount > 0 ? 10 : 0),
 
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            !isDineIn && order.orderType != 'take_away' ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text('delivery_fee'.tr, style: robotoRegular),
               deliveryCharge > 0 ? Text(
                 '(+) ${PriceConverter.convertPrice(deliveryCharge)}', style: robotoRegular, textDirection: TextDirection.ltr,
               ) : Text('free'.tr, style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
-            ]),
+            ]) : const SizedBox(),
 
             Padding(
               padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-              child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+              child: Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
             ),
 
             order.paymentMethod == 'partial_payment' ? Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.05),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               ),
               child: DottedBorder(
@@ -219,7 +220,7 @@ class OrderPricingSection extends StatelessWidget {
               ]),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-                child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+                child: Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(
@@ -235,6 +236,7 @@ class OrderPricingSection extends StatelessWidget {
 
           ]),
         ),
+        SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeExtraSmall : 0),
 
         ResponsiveHelper.isDesktop(context) ? BottomViewWidget(orderController: orderController, order: order, orderId: orderId, total: total, contactNumber: contactNumber) : const SizedBox(),
 

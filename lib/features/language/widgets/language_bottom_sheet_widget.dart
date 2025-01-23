@@ -31,7 +31,7 @@ class _LanguageBottomSheetWidgetState extends State<LanguageBottomSheetWidget> {
           Container(
             height: 5, width: 35,
             decoration: BoxDecoration(
-              color: Theme.of(context).disabledColor.withOpacity(0.2),
+              color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(5),
             ),
           ),
@@ -69,7 +69,7 @@ class _LanguageBottomSheetWidgetState extends State<LanguageBottomSheetWidget> {
             padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault, horizontal: Dimensions.paddingSizeExtraLarge),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 10, spreadRadius: 0)],
+              boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 10, spreadRadius: 0)],
             ),
             margin: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
             child: CustomButtonWidget(

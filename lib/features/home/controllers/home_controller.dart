@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/banner_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/cashback_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/services/home_service_interface.dart';
@@ -27,35 +28,49 @@ class HomeController extends GetxController implements GetxService {
   bool _showFavButton = true;
   bool get showFavButton => _showFavButton;
 
-  Future<void> getBannerList(bool reload) async {
-    if(_bannerImageList == null || reload) {
-      BannerModel? responseBanner = await homeServiceInterface.getBannerList();
-      if (responseBanner != null) {
-        _bannerImageList = [];
-        _bannerDataList = [];
-        for (var campaign in responseBanner.campaigns!) {
-          _bannerImageList!.add(campaign.imageFullUrl);
-          _bannerDataList!.add(campaign);
+  Future<void> getBannerList(bool reload, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
+    if(_bannerImageList == null || reload || fromRecall) {
+      if(!fromRecall) {
+        _bannerImageList = null;
+      }
+      BannerModel? bannerModel;
+      if(dataSource == DataSourceEnum.local){
+        bannerModel = await homeServiceInterface.getBannerList(source: DataSourceEnum.local);
+        _prepareBannerList(bannerModel);
+        getBannerList(false, dataSource: DataSourceEnum.client, fromRecall: true);
+      }else{
+        bannerModel = await homeServiceInterface.getBannerList(source: DataSourceEnum.client);
+        _prepareBannerList(bannerModel);
+      }
+    }
+  }
+
+  _prepareBannerList(BannerModel? bannerModel){
+    if (bannerModel != null) {
+      _bannerImageList = [];
+      _bannerDataList = [];
+      for (var campaign in bannerModel.campaigns!) {
+        _bannerImageList!.add(campaign.imageFullUrl);
+        _bannerDataList!.add(campaign);
+      }
+      for (var banner in bannerModel.banners!) {
+        if(_bannerImageList!.contains(banner.imageFullUrl)){
+          _bannerImageList!.add('${banner.imageFullUrl}${bannerModel.banners!.indexOf(banner)}');
+        }else {
+          _bannerImageList!.add(banner.imageFullUrl);
         }
-        for (var banner in responseBanner.banners!) {
-          if(_bannerImageList!.contains(banner.imageFullUrl)){
-            _bannerImageList!.add('${banner.imageFullUrl}${responseBanner.banners!.indexOf(banner)}');
-          }else {
-            _bannerImageList!.add(banner.imageFullUrl);
-          }
-          if(banner.food != null) {
-            _bannerDataList!.add(banner.food);
-          }else {
-            _bannerDataList!.add(banner.restaurant);
-          }
-        }
-        if(ResponsiveHelper.isDesktop(Get.context) && _bannerImageList!.length % 3 != 0){
-          _bannerImageList!.add(_bannerImageList![0]);
-          _bannerDataList!.add(_bannerDataList![0]);
+        if(banner.food != null) {
+          _bannerDataList!.add(banner.food);
+        }else {
+          _bannerDataList!.add(banner.restaurant);
         }
       }
-      update();
+      if(ResponsiveHelper.isDesktop(Get.context) && _bannerImageList!.length % 3 != 0){
+        _bannerImageList!.add(_bannerImageList![0]);
+        _bannerDataList!.add(_bannerDataList![0]);
+      }
     }
+    update();
   }
 
   void setCurrentIndex(int index, bool notify) {
@@ -66,9 +81,25 @@ class HomeController extends GetxController implements GetxService {
   }
 
 
-  Future<void> getCashBackOfferList() async {
+  Future<void> getCashBackOfferList({DataSourceEnum dataSource = DataSourceEnum.local}) async {
     _cashBackOfferList = null;
-    _cashBackOfferList = await homeServiceInterface.getCashBackOfferList();
+    List<CashBackModel>? cashBackOfferList;
+
+    if(dataSource == DataSourceEnum.local){
+      cashBackOfferList = await homeServiceInterface.getCashBackOfferList(source: DataSourceEnum.local);
+      _prepareCashBackOfferList(cashBackOfferList);
+      getCashBackOfferList(dataSource: DataSourceEnum.client);
+    }else{
+      cashBackOfferList = await homeServiceInterface.getCashBackOfferList(source: DataSourceEnum.client);
+      _prepareCashBackOfferList(cashBackOfferList);
+    }
+  }
+
+  _prepareCashBackOfferList(List<CashBackModel>? cashBackOfferList){
+    if(cashBackOfferList != null) {
+      _cashBackOfferList = [];
+      _cashBackOfferList!.addAll(cashBackOfferList);
+    }
     update();
   }
 

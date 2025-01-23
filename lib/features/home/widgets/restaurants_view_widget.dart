@@ -91,7 +91,7 @@ class RestaurantView extends StatelessWidget {
         color: Theme.of(context).cardColor,
         border: isSelected ? Border.all(color: Theme.of(context).primaryColor, width: 1) : null,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Get.isDarkMode? Colors.black.withOpacity(0.2) : Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Get.isDarkMode? Colors.black.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.2), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ),
       child: CustomInkWellWidget(
         onTap: onTap ?? () {
@@ -122,14 +122,14 @@ class RestaurantView extends StatelessWidget {
             !isAvailable ? Positioned(child: Container(
               height: 110, width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
               ),
             )) : const SizedBox(),
 
             !isAvailable ? Positioned(top: 10, left: 10, child: Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(Dimensions.radiusLarge)
               ),
               padding: EdgeInsets.symmetric(horizontal: Dimensions.fontSizeExtraLarge, vertical: Dimensions.paddingSizeExtraSmall),
@@ -153,7 +153,7 @@ class RestaurantView extends StatelessWidget {
                     decoration:  BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.3), width: 2.5),
+                      border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), width: 2.5),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(3.5),
@@ -186,20 +186,19 @@ class RestaurantView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconWithTextRowWidget(
+
+                      restaurant.ratingCount! > 0 ? IconWithTextRowWidget(
                         icon: Icons.star, text: restaurant.avgRating!.toStringAsFixed(1),
                         style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
-                      ),
-
-                      restaurant.freeDelivery! ? Padding(
-                        padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault),
-                        child: ImageWithTextRowWidget(
-                          widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),
-                          text: 'free'.tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
-                        ),
                       ) : const SizedBox(),
-                      const SizedBox(width: Dimensions.paddingSizeDefault),
+                      SizedBox(width: restaurant.ratingCount! > 0 ? Dimensions.paddingSizeDefault : 0),
+
+                      restaurant.freeDelivery! ? ImageWithTextRowWidget(
+                        widget: Image.asset(Images.deliveryIcon, height: 20, width: 20),
+                        text: 'free'.tr,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
+                      ) : const SizedBox(),
+                      SizedBox(width: restaurant.freeDelivery! ? Dimensions.paddingSizeDefault : 0),
 
                       IconWithTextRowWidget(
                         icon: Icons.access_time_outlined, text: '${restaurant.deliveryTime}',
@@ -249,7 +248,8 @@ class RestaurantView extends StatelessWidget {
 }
 
 class WebRestaurantShimmer extends StatelessWidget {
-  const WebRestaurantShimmer({super.key, });
+  final bool isDineInRestaurant;
+  const WebRestaurantShimmer({super.key, this.isDineInRestaurant = false});
 
   @override
   Widget build(BuildContext context) {
@@ -283,15 +283,16 @@ class WebRestaurantShimmer extends StatelessWidget {
             ),
 
             Positioned(
-              top: 60, left: 10, right: 0,
+              top: 60, left: 10, right: isDineInRestaurant ? null : 0,
               child: Column(
+                crossAxisAlignment: isDineInRestaurant ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(2),
                     height: 70, width: 70,
                     decoration:  BoxDecoration(
                       color: Theme.of(context).shadowColor,
-                      border: Border.all(color: Colors.black.withOpacity(0.05)),
+                      border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     ),
                   ),

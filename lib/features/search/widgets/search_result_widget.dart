@@ -17,11 +17,26 @@ class SearchResultWidget extends StatefulWidget {
 class SearchResultWidgetState extends State<SearchResultWidget> with TickerProviderStateMixin {
   TabController? _tabController;
 
+  ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
 
+    search.SearchController searchController = Get.find<search.SearchController>();
+
     _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
+          && searchController.totalSize != null && searchController.pageOffset != null) {
+        int totalPage = (searchController.totalSize! / 10).ceil();
+        if(searchController.pageOffset! < totalPage){
+          searchController.searchData1(searchController.searchText, searchController.pageOffset!+1);
+          searchController.pageOffset = searchController.pageOffset!+1;
+        }
+      }
+    });
   }
 
   @override
@@ -39,7 +54,7 @@ class SearchResultWidgetState extends State<SearchResultWidget> with TickerProvi
         }else {
           isNull = searchController.searchProductList == null;
           if(!isNull) {
-            length = searchController.searchProductList!.length;
+            length = searchController.totalSize??0;
           }
         }
         return isNull ? const SizedBox() : Center(child: SizedBox(width: Dimensions.webMaxWidth, child: Padding(
@@ -80,6 +95,11 @@ class SearchResultWidgetState extends State<SearchResultWidget> with TickerProvi
               unselectedLabelColor: Theme.of(context).disabledColor,
               unselectedLabelStyle: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
               labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
+              onTap: (int index) {
+                Get.find<search.SearchController>().setRestaurant(index == 1);
+                Get.find<search.SearchController>().searchData1(widget.searchText, 1);
+              },
+
               tabs: [
                 Tab(text: 'food'.tr),
                 Tab(text: 'restaurants'.tr),
@@ -89,22 +109,31 @@ class SearchResultWidgetState extends State<SearchResultWidget> with TickerProvi
         ),
       )),
 
-      Expanded(child: NotificationListener(
-        onNotification: (dynamic scrollNotification) {
-          if (scrollNotification is ScrollEndNotification) {
-            Get.find<search.SearchController>().setRestaurant(_tabController!.index == 1);
-            Get.find<search.SearchController>().searchData(widget.searchText);
-          }
-          return false;
-        },
-        child: TabBarView(
-          controller: _tabController,
-          children: const [
-            ItemViewWidget(isRestaurant: false),
-            ItemViewWidget(isRestaurant: true),
-          ],
-        ),
-      )),
+      Expanded(child: TabBarView(
+        controller: _tabController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          ItemViewWidget(isRestaurant: false, scrollController: scrollController),
+          ItemViewWidget(isRestaurant: true, scrollController: scrollController),
+        ],
+      ),),
+
+      // Expanded(child: NotificationListener(
+      //   onNotification: (dynamic scrollNotification) {
+      //     if (scrollNotification is ScrollEndNotification) {
+      //       Get.find<search.SearchController>().setRestaurant(_tabController!.index == 1);
+      //       Get.find<search.SearchController>().searchData1(widget.searchText, 1);
+      //     }
+      //     return false;
+      //   },
+      //   child: TabBarView(
+      //     controller: _tabController,
+      //     children: [
+      //       ItemViewWidget(isRestaurant: false, scrollController: scrollController),
+      //       ItemViewWidget(isRestaurant: true, scrollController: scrollController),
+      //     ],
+      //   ),
+      // )),
 
     ]);
   }

@@ -170,6 +170,41 @@ class CheckoutController extends GetxController implements GetxService {
   bool _isLoadingUpdate = false;
   bool get isLoadingUpdate => _isLoadingUpdate;
 
+  // String? _estimateDate;
+  // String? get estimateDate => _estimateDate;
+
+  String? _estimateDineInTime;
+  String? get estimateDineInTime => _estimateDineInTime;
+
+  DateTime? _selectedDineInDate;
+  DateTime? get selectedDineInDate => _selectedDineInDate;
+
+  DateTime? _orderPlaceDineInDateTime;
+  DateTime? get orderPlaceDineInDateTime => _orderPlaceDineInDateTime;
+
+  void setSelectedDineInDate(DateTime? date, {bool willUpdate = true}) {
+    _estimateDineInTime = null;
+    _selectedDineInDate = date;
+    if(willUpdate) {
+      update();
+    }
+  }
+
+  void setOrderPlaceDineInDateTime(DateTime? value) {
+    _orderPlaceDineInDateTime = value;
+  }
+
+  void setEstimateDineInTime(String? value) {
+    _estimateDineInTime = value;
+    update();
+  }
+
+  void initDineInSetup() {
+    _estimateDineInTime = null;
+    _selectedDineInDate = null;
+    _orderPlaceDineInDateTime = null;
+  }
+
   void showTipsField(){
     _canShowTipsField = !_canShowTipsField;
     update();
@@ -555,6 +590,7 @@ class CheckoutController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       String? message = response.body['message'];
       orderID = response.body['order_id'].toString();
+      noteController.clear();
 
       Response notificationResponse = await checkoutServiceInterface.sendNotificationRequest(orderID, Get.find<AuthController>().isLoggedIn() ? null : Get.find<AuthController>().getGuestId());
       bool reloadHome = notificationResponse.body['reload_home'];
@@ -564,7 +600,7 @@ class CheckoutController extends GetxController implements GetxService {
       }
 
       if(!isOfflinePay) {
-        _callback(true, message, orderID, zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber);
+        _callback(true, message, orderID, zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber, placeOrderBody.orderType == 'dine_in', placeOrderBody.orderType == 'delivery');
       } else {
         Get.find<CartController>().getCartDataOnline();
       }
@@ -573,7 +609,7 @@ class CheckoutController extends GetxController implements GetxService {
       }
     } else {
       if(!isOfflinePay){
-        _callback(false, response.statusText, '-1', zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber);
+        _callback(false, response.statusText, '-1', zoneID, amount, maximumCodOrderAmount, fromCart, isCashOnDeliveryActive, placeOrderBody.contactPersonNumber, placeOrderBody.orderType == 'dine_in' , placeOrderBody.orderType == 'delivery');
       }else{
         showCustomSnackBar(response.statusText);
       }
@@ -582,8 +618,8 @@ class CheckoutController extends GetxController implements GetxService {
     return orderID;
   }
 
-  void _callback(bool isSuccess, String? message, String orderID, int? zoneID, double amount,
-      double? maximumCodOrderAmount, bool fromCart, bool isCashOnDeliveryActive, String? contactNumber) async {
+  void _callback(bool isSuccess, String? message, String orderID, int? zoneID, double amount, double? maximumCodOrderAmount, bool fromCart, bool isCashOnDeliveryActive,
+      String? contactNumber, bool isDineInOrder, bool isDeliveryOrder) async {
     if(isSuccess) {
       // Get.find<OrderController>().getRunningOrders(1, notify: false);
       if(fromCart) {
@@ -594,11 +630,13 @@ class CheckoutController extends GetxController implements GetxService {
       if(paymentMethodIndex == 0 || paymentMethodIndex == 1) {
         double total = ((amount / 100) * Get.find<SplashController>().configModel!.loyaltyPointItemPurchasePoint!);
         Get.find<LoyaltyController>().saveEarningPoint(total.toStringAsFixed(0));
-        if(ResponsiveHelper.isDesktop(Get.context)) {
+        if(isDineInOrder) {
+          Get.offNamed(RouteHelper.getOrderDetailsRoute(int.parse(orderID), fromDineIn: true, contactNumber: contactNumber));
+        } else if(ResponsiveHelper.isDesktop(Get.context)) {
           Get.offNamed(RouteHelper.getInitialRoute());
-          Future.delayed(const Duration(seconds: 2) , () => Get.dialog(Center(child: SizedBox(height: 350, width : 500, child: OrderSuccessfulDialogWidget(orderID: orderID, contactNumber: contactNumber)))));
+          Future.delayed(const Duration(seconds: 2) , () => Get.dialog(Center(child: SizedBox(height: 350, width : 500, child: OrderSuccessfulDialogWidget(orderID: orderID, contactNumber: contactNumber, isDeliveryOrder: isDeliveryOrder)))));
         } else {
-          Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'success', amount, contactNumber));
+          Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, 'success', amount, contactNumber, isDeliveryOrder: isDeliveryOrder));
         }
 
       }else {
@@ -653,4 +691,8 @@ class CheckoutController extends GetxController implements GetxService {
     update();
     return success;
   }
+
+  ///Dine in feature
+
+
 }

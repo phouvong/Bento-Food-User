@@ -58,7 +58,7 @@ class _GuestTrackOrderScreenState extends State<GuestTrackOrderScreen> {
                 margin: isDesktop ? EdgeInsets.symmetric(horizontal: (width - 1170) / 2, vertical: 50) : null,
                 decoration: isDesktop ? BoxDecoration(
                   color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 5, spreadRadius: 1)],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 5, spreadRadius: 1)],
                 ) : null,
                 child: SingleChildScrollView(
                   physics: isDesktop ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),

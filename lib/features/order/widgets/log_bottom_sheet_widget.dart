@@ -51,7 +51,7 @@ class _LogBottomSheetWidgetState extends State<LogBottomSheetWidget> {
         Container(
           height: 5, width: 40,
           decoration: BoxDecoration(
-            color: Theme.of(context).disabledColor.withOpacity(0.3),
+            color: Theme.of(context).disabledColor.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(5),
           ),
         ),
@@ -88,9 +88,9 @@ class _LogBottomSheetWidgetState extends State<LogBottomSheetWidget> {
                       child: Container(
                         padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                         decoration: BoxDecoration(
-                          color: widget.isDeliveryLog ? Theme.of(context).cardColor : Theme.of(context).disabledColor.withOpacity(0.1),
+                          color: widget.isDeliveryLog ? Theme.of(context).cardColor : Theme.of(context).disabledColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          boxShadow: widget.isDeliveryLog ? [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))] : null,
+                          boxShadow: widget.isDeliveryLog ? [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))] : null,
                         ),
                         child: widget.isDeliveryLog ? Column(children: [
 
@@ -119,8 +119,8 @@ class _LogBottomSheetWidgetState extends State<LogBottomSheetWidget> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                               decoration: BoxDecoration(
-                                color: logData.orderStatus == 'pending' ? Colors.blue.withOpacity(0.1) : logData.orderStatus == 'delivered' ? Colors.green.withOpacity(0.1)
-                                  : Theme.of(context).primaryColor.withOpacity(0.1),
+                                color: logData.orderStatus == 'pending' ? Colors.blue.withValues(alpha: 0.1) : logData.orderStatus == 'delivered' ? Colors.green.withValues(alpha: 0.1)
+                                  : Theme.of(context).primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                               child: Text(

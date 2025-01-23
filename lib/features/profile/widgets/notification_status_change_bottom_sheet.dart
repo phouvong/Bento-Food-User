@@ -28,7 +28,7 @@ class NotificationStatusChangeBottomSheet extends StatelessWidget {
               Align(alignment: Alignment.topRight, child: IconButton(onPressed: ()=> Get.back(), icon: const Icon(Icons.clear))) : Container(
             height: 5, width: 50,
             decoration: BoxDecoration(
-              color: Theme.of(context).hintColor.withOpacity(0.2),
+              color: Theme.of(context).hintColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             ),
           ),
@@ -45,7 +45,8 @@ class NotificationStatusChangeBottomSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
             child: Text(
-              !authController.notification ? 'you_want_to_enable_notification'.tr : 'you_want_to_disable_notification'.tr,
+              authController.notification ? 'if_you_disable_this_option_you_will_not_receive_system_notifications'.tr
+                  : 'when_you_enable_this_option_you_will_be_notified_with_the_system_notifications'.tr,
               style: robotoRegular.copyWith(color: Theme.of(context).hintColor), textAlign: TextAlign.center,
             ),
           ),
@@ -71,7 +72,7 @@ class NotificationStatusChangeBottomSheet extends StatelessWidget {
                   Get.back();
                 },
                 buttonText: 'no'.tr,
-                color: Theme.of(context).disabledColor.withOpacity(0.5),
+                color: Theme.of(context).disabledColor.withValues(alpha: 0.5),
                 textColor: Theme.of(context).textTheme.bodyLarge!.color,
               ),
             ),

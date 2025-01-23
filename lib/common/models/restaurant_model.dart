@@ -48,6 +48,7 @@ class Restaurant {
   String? coverPhotoFullUrl;
   bool? delivery;
   bool? takeAway;
+  bool? isDineInActive;
   bool? scheduleOrder;
   double? avgRating;
   double? tax;
@@ -90,6 +91,11 @@ class Restaurant {
   int? reviewsCommentsCount;
   List<String>? characteristics;
   bool? isExtraPackagingActive;
+  int? scheduleAdvanceDineInBookingDuration;
+  String? scheduleAdvanceDineInBookingDurationTimeFormat;
+  bool? isActiveDineIn;
+  int? dineInBookingDuration;
+  String? dineInBookingDurationTimeFormat;
 
   Restaurant({
     this.id,
@@ -107,6 +113,7 @@ class Restaurant {
     this.coverPhotoFullUrl,
     this.delivery,
     this.takeAway,
+    this.isDineInActive,
     this.scheduleOrder,
     this.avgRating,
     this.tax,
@@ -149,6 +156,11 @@ class Restaurant {
     this.reviewsCommentsCount,
     this.characteristics,
     this.isExtraPackagingActive,
+    this.scheduleAdvanceDineInBookingDuration,
+    this.scheduleAdvanceDineInBookingDurationTimeFormat,
+    this.isActiveDineIn,
+    this.dineInBookingDuration,
+    this.dineInBookingDurationTimeFormat,
   });
 
   Restaurant.fromJson(Map<String, dynamic> json) {
@@ -167,6 +179,7 @@ class Restaurant {
     coverPhotoFullUrl = json['cover_photo_full_url'] ?? '';
     delivery = json['delivery'];
     takeAway = json['take_away'];
+    isDineInActive = json['is_dine_in_active'];
     scheduleOrder = json['schedule_order'];
     avgRating = json['avg_rating']?.toDouble();
     tax = json['tax']?.toDouble();
@@ -239,6 +252,11 @@ class Restaurant {
       });
     }
     isExtraPackagingActive = json['is_extra_packaging_active'];
+    scheduleAdvanceDineInBookingDuration = json['schedule_advance_dine_in_booking_duration'];
+    scheduleAdvanceDineInBookingDurationTimeFormat = json['schedule_advance_dine_in_booking_duration_time_format'];
+    isActiveDineIn = json['is_dine_in_active'] ?? false;
+    dineInBookingDuration = json['schedule_advance_dine_in_booking_duration'] ?? 0;
+    dineInBookingDurationTimeFormat = json['schedule_advance_dine_in_booking_duration_time_format'];
   }
 
   Map<String, dynamic> toJson() {
@@ -258,6 +276,7 @@ class Restaurant {
     data['cover_photo_full_url'] = coverPhotoFullUrl;
     data['delivery'] = delivery;
     data['take_away'] = takeAway;
+    data['is_dine_in_active'] = isDineInActive;
     data['schedule_order'] = scheduleOrder;
     data['avg_rating'] = avgRating;
     data['tax'] = tax;
@@ -304,6 +323,11 @@ class Restaurant {
       data['characteristics'] = characteristics!.map((v) => v).toList();
     }
     data['is_extra_packaging_active'] = isExtraPackagingActive;
+    data['schedule_advance_dine_in_booking_duration'] = scheduleAdvanceDineInBookingDuration;
+    data['schedule_advance_dine_in_booking_duration_time_format'] = scheduleAdvanceDineInBookingDurationTimeFormat;
+    data['is_dine_in_active'] = isActiveDineIn;
+    data['schedule_advance_dine_in_booking_duration'] = dineInBookingDuration;
+    data['schedule_advance_dine_in_booking_duration_time_format'] = dineInBookingDurationTimeFormat;
     return data;
   }
 }

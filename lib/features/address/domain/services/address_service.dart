@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/features/address/controllers/address_controller.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -27,8 +28,8 @@ class AddressService implements AddressServiceInterface{
   }
 
   @override
-  Future<List<AddressModel>?> getList({bool isLocal = false}) async {
-    return await addressRepoInterface.getList();
+  Future<List<AddressModel>?> getList({bool isLocal = false, DataSourceEnum? source}) async {
+    return await addressRepoInterface.getList(source: source);
   }
 
   @override

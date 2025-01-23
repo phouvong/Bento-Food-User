@@ -28,7 +28,7 @@ class CouponCardWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-        boxShadow: [BoxShadow(color: Get.isDarkMode ? Colors.black.withOpacity(0.2) : Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Get.isDarkMode ? Colors.black.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.2), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ),
       child: Stack(children: [
 
@@ -69,10 +69,10 @@ class CouponCardWidget extends StatelessWidget {
                 const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                 couponList![index].restaurant == null ?  Flexible(child: Text(
-                  couponList![index].couponType == 'store_wise' ?
+                  couponList![index].couponType == 'restaurant_wise' ?
                   '${'on'.tr} ${couponList![index].data}' : 'on_all_store'.tr,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
-                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                 )) : Flexible(child: Text(
                   couponList![index].couponType == 'default' ?
                   '${couponList![index].restaurant!.name}' : '',

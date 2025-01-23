@@ -69,7 +69,7 @@ class ProductWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           color: Theme.of(context).cardColor,
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ),
         child: CustomInkWellWidget(
           onTap: () {
@@ -165,7 +165,7 @@ class ProductWidget extends StatelessWidget {
                         maxLines: 1, overflow: TextOverflow.ellipsis,
                       ) : const SizedBox(),
 
-                      isRestaurant ? Row(children: [
+                      isRestaurant && restaurant!.ratingCount! > 0 ? Row(children: [
                         Icon(Icons.star, size: 16, color: Theme.of(context).primaryColor),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
@@ -183,7 +183,7 @@ class ProductWidget extends StatelessWidget {
                       //   rating: isRestaurant ? restaurant!.avgRating : product!.avgRating, size: desktop ? 15 : 12,
                       //   ratingCount: isRestaurant ? restaurant!.ratingCount : product!.ratingCount,
                       // ) : const SizedBox(),
-                      !isRestaurant ? Row(children: [
+                      !isRestaurant && product!.ratingCount! > 0 ? Row(children: [
                         Icon(Icons.star, size: 16, color: Theme.of(context).primaryColor),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
@@ -255,7 +255,7 @@ class ProductWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                               height: 30, width: 80,
                               decoration:  BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(50),
                               ),
                               child: Row(
@@ -360,7 +360,7 @@ class ProductWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               shape: BoxShape.circle,
-                              boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                              boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                             ),
                             child: Icon(Icons.add, size: desktop ? 30 : 25, color: Theme.of(context).primaryColor),
                           ),

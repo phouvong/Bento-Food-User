@@ -50,7 +50,7 @@ class _CustomFavouriteWidgetState extends State<CustomFavouriteWidget> with Sing
         if(AuthHelper.isLoggedIn()) {
           _decideWished(widget.isWished, Get.find<FavouriteController>());
         }else {
-          showCustomSnackBar('you_are_not_logged_in'.tr, showToaster: true);
+          showCustomSnackBar('you_are_not_logged_in'.tr);
         }
         _controller.reverse().then((value) => _controller.forward());
       },

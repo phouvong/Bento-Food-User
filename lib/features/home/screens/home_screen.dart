@@ -1,8 +1,10 @@
 import 'package:flutter/rendering.dart';
 import 'package:stackfood_multivendor/common/widgets/menu_drawer_widget.dart';
+import 'package:stackfood_multivendor/features/dine_in/controllers/dine_in_controller.dart';
 import 'package:stackfood_multivendor/features/home/controllers/advertisement_controller.dart';
 import 'package:stackfood_multivendor/features/home/widgets/cashback_dialog_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/cashback_logo_widget.dart';
+import 'package:stackfood_multivendor/features/home/widgets/dine_in_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/highlight_widget_view.dart';
 import 'package:stackfood_multivendor/features/home/widgets/refer_bottom_sheet_widget.dart';
 import 'package:stackfood_multivendor/features/product/controllers/campaign_controller.dart';
@@ -60,6 +62,7 @@ class HomeScreen extends StatefulWidget {
     Get.find<CategoryController>().getCategoryList(reload);
     Get.find<CuisineController>().getCuisineList();
     Get.find<AdvertisementController>().getAdvertisementList();
+    Get.find<DineInController>().getDineInRestaurantList(1, reload);
     if(Get.find<SplashController>().configModel!.popularRestaurant == 1) {
       Get.find<RestaurantController>().getPopularRestaurantList(reload, 'all', false);
     }
@@ -274,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: GetBuilder<NotificationController>(builder: (notificationController) {
                                         return Container(
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).cardColor.withOpacity(0.9),
+                                            color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                                             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                                           ),
                                           padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
@@ -331,13 +334,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(25),
-                                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                               ),
                               child: Row(children: [
                                 Image.asset(Images.searchIcon, width: 25, height: 25),
                                 const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Expanded(child: Text('are_you_hungry'.tr, style: robotoRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                  fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor.withValues(alpha: 0.6),
                                 ))),
                               ]),
                             ),
@@ -367,6 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _isLogin ? const OrderAgainViewWidget() : const SizedBox(),
 
                         _configModel!.mostReviewedFoods == 1 ?  const BestReviewItemViewWidget(isPopular: false) : const SizedBox(),
+
+                        _configModel.dineInOrderOption! ? DineInWidget() : const SizedBox(),
 
                         const CuisineViewWidget(),
 

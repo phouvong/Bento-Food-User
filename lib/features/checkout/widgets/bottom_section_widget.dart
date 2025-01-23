@@ -74,7 +74,7 @@ class BottomSectionWidget extends StatelessWidget {
       decoration: isDesktop ? BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
 
       ) : null,
       padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
@@ -175,7 +175,7 @@ class BottomSectionWidget extends StatelessWidget {
       decoration: !isDesktop ? BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ) : null,
       padding: !isDesktop ? const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeSmall) : EdgeInsets.zero,
       child: Theme(
@@ -190,7 +190,7 @@ class BottomSectionWidget extends StatelessWidget {
           children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-              Divider(thickness: 0.5, color: Theme.of(context).hintColor.withOpacity(0.5)),
+              Divider(thickness: 0.5, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
 
               SizedBox(height: !isDesktop ? Dimensions.paddingSizeSmall : 0),
 
@@ -250,7 +250,7 @@ class BottomSectionWidget extends StatelessWidget {
               ]),
               const SizedBox(height: Dimensions.paddingSizeSmall),
 
-              (checkoutController.orderType != 'take_away' && Get.find<SplashController>().configModel!.dmTipsStatus == 1 && !checkoutController.subscriptionOrder) ? Row(
+              (checkoutController.orderType != 'take_away' && checkoutController.orderType != 'dine_in' && Get.find<SplashController>().configModel!.dmTipsStatus == 1 && !checkoutController.subscriptionOrder) ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('delivery_man_tips'.tr, style: robotoRegular),
@@ -261,7 +261,7 @@ class BottomSectionWidget extends StatelessWidget {
                   // Text('(+) ${PriceConverter.convertPrice(checkoutController.tips)}', style: robotoRegular, textDirection: TextDirection.ltr),
                 ],
               ) : const SizedBox.shrink(),
-              SizedBox(height: checkoutController.orderType != 'take_away' && Get.find<SplashController>().configModel!.dmTipsStatus == 1 && !checkoutController.subscriptionOrder ? Dimensions.paddingSizeSmall : 0.0),
+              SizedBox(height: checkoutController.orderType != 'take_away' && checkoutController.orderType != 'dine_in' && Get.find<SplashController>().configModel!.dmTipsStatus == 1 && !checkoutController.subscriptionOrder ? Dimensions.paddingSizeSmall : 0.0),
 
               (extraPackagingAmount > 0) ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,7 +272,7 @@ class BottomSectionWidget extends StatelessWidget {
               ) : const SizedBox.shrink(),
               SizedBox(height: extraPackagingAmount > 0 ? Dimensions.paddingSizeSmall : 0),
 
-              checkoutController.orderType != 'take_away' ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              checkoutController.orderType != 'take_away' && checkoutController.orderType != 'dine_in' ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text('delivery_fee'.tr, style: robotoRegular),
                 checkoutController.distance == -1 ? Text(
                   'calculating'.tr, style: robotoRegular.copyWith(color: Colors.red),
@@ -285,7 +285,7 @@ class BottomSectionWidget extends StatelessWidget {
                   )
                 ]),
               ]) : const SizedBox(),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
+              SizedBox(height: checkoutController.orderType != 'take_away' && checkoutController.orderType != 'dine_in' ? Dimensions.paddingSizeSmall : 0),
 
               Get.find<SplashController>().configModel!.additionalChargeStatus! ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Row(children: [
@@ -305,7 +305,7 @@ class BottomSectionWidget extends StatelessWidget {
 
               (isDesktop || checkoutController.isPartialPay) && checkoutController.subscriptionOrder ? Column(
                 children: [
-                  Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+                  Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text(
@@ -328,7 +328,7 @@ class BottomSectionWidget extends StatelessWidget {
                 ]),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-                  child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+                  child: Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
                 ),
 
               ]) : const SizedBox(),
@@ -353,7 +353,7 @@ class BottomSectionWidget extends StatelessWidget {
 
               isDesktop && !checkoutController.subscriptionOrder ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-                child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
+                child: Divider(thickness: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.5)),
               ) : const SizedBox(),
 
             ]),

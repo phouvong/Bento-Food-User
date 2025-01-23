@@ -20,7 +20,7 @@ class BottomSheetViewWidget extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
           border: ResponsiveHelper.isDesktop(context) ? Border.all(color: Theme.of(context).primaryColor, width: 0.3) : null,
           borderRadius : ResponsiveHelper.isDesktop(context) ? BorderRadius.circular(Dimensions.radiusSmall) : null,
         ),

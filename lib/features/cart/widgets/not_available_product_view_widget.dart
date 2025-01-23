@@ -17,7 +17,7 @@ class NotAvailableProductViewWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-        border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.5), width: 0.5),
+        border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.5), width: 0.5),
       ),
       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
       margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),

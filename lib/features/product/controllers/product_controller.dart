@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/cart/controllers/cart_controller.dart';
 import 'package:stackfood_multivendor/features/checkout/domain/models/place_order_body_model.dart';
 import 'package:stackfood_multivendor/features/cart/domain/models/cart_model.dart';
@@ -72,7 +73,7 @@ class ProductController extends GetxController implements GetxService {
     return _product;
   }
 
-  Future<void> getPopularProductList(bool reload, String type, bool notify) async {
+  Future<void> getPopularProductList(bool reload, String type, bool notify, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
     _popularType = type;
     if(reload) {
       _popularProductList = null;
@@ -80,10 +81,27 @@ class ProductController extends GetxController implements GetxService {
     if(notify) {
       update();
     }
-    if(_popularProductList == null || reload) {
-      _popularProductList = await productServiceInterface.getPopularProductList(type: type);
-      update();
+    if(_popularProductList == null || reload || fromRecall) {
+      _popularProductList = null;
+
+      List<Product>? popularProductList;
+      if(dataSource == DataSourceEnum.local) {
+        popularProductList = await productServiceInterface.getPopularProductList(type: type, source: DataSourceEnum.local);
+        _preparePopularProductList(popularProductList);
+        getPopularProductList(false, type, false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        popularProductList = await productServiceInterface.getPopularProductList(type: type, source: DataSourceEnum.client);
+        _preparePopularProductList(popularProductList);
+      }
     }
+  }
+
+  _preparePopularProductList(List<Product>? popularProductList) {
+    if(popularProductList != null) {
+      _popularProductList = [];
+      _popularProductList!.addAll(popularProductList);
+    }
+    update();
   }
 
   void showBottomLoader() {
@@ -221,6 +239,7 @@ class ProductController extends GetxController implements GetxService {
           onYesPressed: () {
             Get.find<CartController>().clearCartOnline().then((success) async {
               if (success) {
+                Get.back();
                 await Get.find<CartController>().addToCartOnline(onlineCart, fromDirectlyAdd: true);
               }
             });

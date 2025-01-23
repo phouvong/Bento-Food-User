@@ -28,7 +28,7 @@ class SupportButtonWidget extends StatelessWidget {
             height: 40, width: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
             ),
             child: Icon(icon, color: color, size: 20),
           ),

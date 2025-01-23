@@ -139,7 +139,7 @@ class _CouponBottomSheetState extends State<CouponBottomSheet> {
                             if (discount! > 0) {
                               showCustomSnackBar(
                                 '${'you_got_discount_of'.tr} ${PriceConverter.convertPrice(discount)}',
-                                isError: false, showToaster: true,
+                                isError: false,
                               );
                               if(widget.checkoutController.isPartialPay || widget.checkoutController.paymentMethodIndex == 1) {
                                 totalPrice = totalPrice - discount;

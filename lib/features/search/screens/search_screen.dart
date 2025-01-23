@@ -31,6 +31,7 @@ class SearchScreen extends StatefulWidget {
 
 class SearchScreenState extends State<SearchScreen> {
   final ScrollController scrollController = ScrollController();
+  final GlobalKey _searchBarKey = GlobalKey();
 
   late bool _isLoggedIn;
   final TextEditingController _searchTextEditingController = TextEditingController();
@@ -79,27 +80,38 @@ class SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDesktop = ResponsiveHelper.isDesktop(context);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         _actionOnBackButton();
       },
       child: Scaffold(
-        appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+        backgroundColor: Theme.of(context).cardColor,
+        appBar: isDesktop ? const WebMenuBar() : null,
         endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,
         body: SafeArea(child: GetBuilder<search.SearchController>(builder: (searchController) {
           return Column(children: [
 
             Container(
-              height: ResponsiveHelper.isDesktop(context) ? 130 : 80,
-              color: ResponsiveHelper.isDesktop(context) ? Theme.of(context).primaryColor.withOpacity(0.1) : Colors.transparent,
+              height: isDesktop ? 100 : 80,
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                boxShadow: isDesktop ? null : [BoxShadow(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), blurRadius: 5, offset: Offset(-2, 5))]
+              ),
+              // padding: EdgeInsets.only(bottom: isDesktop ? 0 : Dimensions.paddingSizeExtraSmall),
               child: Center(child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ResponsiveHelper.isDesktop(context) ? Text('search_food_and_restaurant'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)) : const SizedBox(),
+                  // isDesktop ? Text('search_food_and_restaurant'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)) : const SizedBox(),
 
                   SizedBox(width: Dimensions.webMaxWidth, child: Row(children: [
                     SizedBox(width: ResponsiveHelper.isMobile(context) ? Dimensions.paddingSizeSmall : Dimensions.paddingSizeExtraSmall),
+
+                    !isDesktop ? IconButton(
+                      onPressed: ()=> _actionOnBackButton(),
+                      icon: const Icon(Icons.arrow_back_ios),
+                    ) : const SizedBox(),
 
                     Expanded(child: Container(
                       width: double.infinity,
@@ -109,11 +121,8 @@ class SearchScreenState extends State<SearchScreen> {
                         borderRadius: BorderRadius.circular(50),
                         border: Border.all(color: Theme.of(context).primaryColor, width: 0.3),
                       ),
+                      padding: EdgeInsets.only(left: Dimensions.paddingSizeDefault),
                       child: Row(children: [
-                        IconButton(
-                          onPressed: ()=> _actionOnBackButton(),
-                          icon: const Icon(Icons.arrow_back),
-                        ),
 
                         Expanded(child: SearchFieldWidget(
                           controller: _searchTextEditingController,
@@ -131,6 +140,7 @@ class SearchScreenState extends State<SearchScreen> {
                         )),
 
                         IconButton(
+                          key: _searchBarKey,
                           onPressed: (){
                             _actionSearch(context, searchController, false);
                           },
@@ -139,7 +149,8 @@ class SearchScreenState extends State<SearchScreen> {
 
                       ]),
                     )),
-                    SizedBox(width: ResponsiveHelper.isMobile(context) ? Dimensions.paddingSizeSmall : 0),
+                    SizedBox(width: isDesktop ? 0 : 30),
+                    // SizedBox(width: ResponsiveHelper.isMobile(context) ? Dimensions.paddingSizeSmall : 0),
                   ])),
                 ],
               )),
@@ -150,7 +161,7 @@ class SearchScreenState extends State<SearchScreen> {
             ) : SingleChildScrollView(
               controller: scrollController,
               physics: const BouncingScrollPhysics(),
-              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+              padding: isDesktop ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
               child: FooterViewWidget(
                 child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -170,45 +181,74 @@ class SearchScreenState extends State<SearchScreen> {
                   ]) : const SizedBox(),
 
                   SizedBox(height: searchController.historyList.isNotEmpty ? Dimensions.paddingSizeExtraSmall : 0),
-                  Wrap(
-                    children: searchController.historyList.map((historyData) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+
+                  SizedBox(
+                    // height: isDesktop ? 36 : null,
+                    child: ListView.builder(
+                      itemCount: searchController.historyList.length > 10 ? 10 : searchController.historyList.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      // scrollDirection: isDesktop ? Axis.horizontal : Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return /*isDesktop ?
+                        Container(
+                          margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
+                          padding: const EdgeInsets.symmetric(horizontal : Dimensions.paddingSizeDefault),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).disabledColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                            border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
+                            border: Border.all(color: Theme.of(context).primaryColor),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                           ),
-                          child: Row(mainAxisSize: MainAxisSize.min, children: [
-                            InkWell(
-                              onTap: () {
-                                _searchTextEditingController.text = historyData;
-                                searchController.searchData(historyData);
-                              },
+                          child: InkWell(
+                            onTap: () {
+                              _searchTextEditingController.text = searchController.historyList[index];
+                              searchController.searchData1(searchController.historyList[index], 1);
+                            },
+                            child: Row(
+                              children: [
+                                Text(searchController.historyList[index], style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                const SizedBox(width: Dimensions.paddingSizeSmall),
+
+                                InkWell(
+                                  onTap: () => searchController.removeHistory(index),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+                                    child: Icon(Icons.close, color: Theme.of(context).primaryColor, size: 16),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ) : */InkWell(
+                          onTap: () {
+                            _searchTextEditingController.text = searchController.historyList[index];
+                            searchController.searchData1(searchController.historyList[index], 1);
+                          },
+                          child: Row(children: [
+
+                            Icon(CupertinoIcons.search, size: 18, color: Theme.of(context).disabledColor),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
+
+                            Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+                                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
                                 child: Text(
-                                  historyData,
-                                  style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5)),
-                                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                                  searchController.historyList[index],
+                                  style: robotoRegular, maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: Dimensions.paddingSizeSmall),
-
                             InkWell(
-                              onTap: () => searchController.removeHistory(searchController.historyList.indexOf(historyData)),
+                              onTap: () => searchController.removeHistory(index),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                                 child: Icon(Icons.close, color: Theme.of(context).disabledColor, size: 20),
                               ),
                             )
                           ]),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      },
+                    ),
                   ),
 
                   SizedBox(height: searchController.historyList.isNotEmpty && _isLoggedIn ? Dimensions.paddingSizeLarge : 0),
@@ -227,14 +267,14 @@ class SearchScreenState extends State<SearchScreen> {
                         child: InkWell(
                           onTap: () {
                             _searchTextEditingController.text = product.name!;
-                            searchController.searchData(product.name!);
+                            searchController.searchData1(product.name!, 1);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                              border: Border.all(color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                              border: Border.all(color: Theme.of(context).disabledColor.withValues(alpha: 0.6)),
                             ),
                             child: Text(
                               product.name!,
@@ -273,10 +313,10 @@ class SearchScreenState extends State<SearchScreen> {
                         (cuisineController.cuisineModel != null) ? cuisineController.cuisineModel!.cuisines!.isNotEmpty ? GetBuilder<CuisineController>(builder: (cuisineController) {
                           return cuisineController.cuisineModel != null ? GridView.builder(
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : ResponsiveHelper.isTab(context) ? 6 : 4,
+                              crossAxisCount: isDesktop ? 8 : ResponsiveHelper.isTab(context) ? 6 : 4,
                               mainAxisSpacing: 15,
-                              crossAxisSpacing: ResponsiveHelper.isDesktop(context) ? 35 : 15,
-                              childAspectRatio: ResponsiveHelper.isDesktop(context) ? 1 : 1,
+                              crossAxisSpacing: isDesktop ? 35 : 15,
+                              childAspectRatio: isDesktop ? 1 : 1,
                             ),
                             shrinkWrap: true,
                             itemCount: cuisineController.cuisineModel!.cuisines!.length,
@@ -314,7 +354,7 @@ class SearchScreenState extends State<SearchScreen> {
           ]);
         })),
         bottomNavigationBar: GetBuilder<CartController>(builder: (cartController) {
-          return cartController.cartList.isNotEmpty && !ResponsiveHelper.isDesktop(context) ? const BottomCartWidget() : const SizedBox();
+          return cartController.cartList.isNotEmpty && !isDesktop ? const BottomCartWidget() : const SizedBox();
         }),
       ),
     );
@@ -328,6 +368,7 @@ class SearchScreenState extends State<SearchScreen> {
           child: foodsAndRestaurants.isNotEmpty ? ListView.builder(
             itemCount: foodsAndRestaurants.length,
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(foodsAndRestaurants[index]),
@@ -356,24 +397,47 @@ class SearchScreenState extends State<SearchScreen> {
   void _actionSearch(BuildContext context, search.SearchController searchController, bool isSubmit) {
     if(searchController.isSearchMode || isSubmit) {
       if(_searchTextEditingController.text.trim().isNotEmpty) {
-        searchController.searchData(_searchTextEditingController.text.trim());
+        searchController.searchData1(_searchTextEditingController.text.trim(), 1);
       }else {
         showCustomSnackBar('search_food_or_restaurant'.tr);
       }
     } else {
-      List<double?> prices = [];
-      if(!searchController.isRestaurant) {
-        for (var product in searchController.allProductList!) {
-          prices.add(product.price);
-        }
-        prices.sort();
-      }
-      double? maxValue = prices.isNotEmpty ? prices[prices.length-1] : 1000;
-      ResponsiveHelper.isMobile(context) ? Get.bottomSheet(FilterWidget(maxValue: maxValue, isRestaurant: searchController.isRestaurant), isScrollControlled: true)
-      : Get.dialog(Dialog(
-        insetPadding: const EdgeInsets.all(30),
-        child: FilterWidget(maxValue: maxValue, isRestaurant: searchController.isRestaurant),
-      ));
+      double? maxValue = searchController.upperValue > 0 ? searchController.upperValue : 1000;
+      double? minValue = searchController.lowerValue;
+      ResponsiveHelper.isMobile(context) ? Get.bottomSheet(FilterWidget(maxValue: maxValue, minValue: minValue, isRestaurant: searchController.isRestaurant), isScrollControlled: true)
+      : /*Get.dialog(Dialog(
+        // insetPadding: const EdgeInsets.all(30),
+        child: FilterWidget(maxValue: maxValue, minValue: minValue, isRestaurant: searchController.isRestaurant),
+      )) */ _showSearchDialog(maxValue, minValue, searchController.isRestaurant);
     }
   }
+
+
+  Future<void> _showSearchDialog(double? maxValue, double? minValue, bool isRestaurant) async {
+    RenderBox renderBox = _searchBarKey.currentContext!.findRenderObject() as RenderBox;
+    final searchBarPosition = renderBox.localToGlobal(Offset.zero);
+
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (context) => Stack(children: [
+        Positioned(
+          top: searchBarPosition.dy + 40,
+          left: searchBarPosition.dx - 400,
+          width: renderBox.size.width + 400,
+          height: renderBox.size.height + MediaQuery.of(context).size.height * 0.6,
+          child: Material(
+            color: Theme.of(context).cardColor,
+            // color: Provider.of<ThemeProvider>(context, listen: false).darkTheme ? Theme.of(context).cardColor : null,
+            elevation: 0,
+            borderRadius: BorderRadius.circular(30),
+            child: FilterWidget(maxValue: maxValue, minValue: minValue, isRestaurant: isRestaurant),
+          ),
+          ),
+
+      ]),
+    );
+
+  }
+
 }

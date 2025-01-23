@@ -46,7 +46,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                           Container(
                             height: 15, width: 150,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).disabledColor.withOpacity(0.2),
+                              color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                             ),
                           ),
@@ -56,7 +56,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -64,7 +64,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -76,7 +76,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -84,26 +84,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                              ),
-                            ),
-                          ]),
-                          const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            Container(
-                              height: 15, width: 150,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                              ),
-                            ),
-
-                            Container(
-                              height: 15, width: 150,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -114,7 +95,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -122,7 +103,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -133,7 +114,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -141,7 +122,26 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 150,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                              ),
+                            ),
+                          ]),
+                          const SizedBox(height: Dimensions.paddingSizeSmall),
+
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                            Container(
+                              height: 15, width: 150,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                              ),
+                            ),
+
+                            Container(
+                              height: 15, width: 150,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -166,7 +166,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 80,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -175,7 +175,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 80,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -188,7 +188,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             height: 60,
                             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).disabledColor.withOpacity(0.2),
+                              color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                             ),
                             child: Row(children: [
@@ -233,7 +233,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                             Container(
                               height: 15, width: 120,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),
@@ -244,7 +244,7 @@ class CheckoutScreenShimmerView extends StatelessWidget {
                               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                               alignment: Alignment.centerLeft,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).disabledColor.withOpacity(0.2),
+                                color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               ),
                             ),

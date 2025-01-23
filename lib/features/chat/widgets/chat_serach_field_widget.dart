@@ -28,14 +28,14 @@ class _ChatSearchFieldWidgetState extends State<ChatSearchFieldWidget> {
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context) ? Dimensions.radiusSmall : 60),
-          borderSide: BorderSide(width: 1, color: Theme.of(context).disabledColor.withOpacity(0.3)),
+          borderSide: BorderSide(width: 1, color: Theme.of(context).disabledColor.withValues(alpha: 0.3)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context) ? Dimensions.radiusSmall : 60),
-          borderSide: BorderSide(width: 1, color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          borderSide: BorderSide(width: 1, color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
         ),
         hintText: widget.hint,
-        hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor.withOpacity(0.3)),
+        hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor.withValues(alpha: 0.3)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context) ? Dimensions.radiusSmall : 60),
           borderSide: BorderSide.none,

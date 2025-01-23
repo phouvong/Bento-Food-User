@@ -12,7 +12,7 @@ class WebScreenTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResponsiveHelper.isDesktop(context) ? Container(
       height: 64,
-      color: Theme.of(context).primaryColor.withOpacity(0.10),
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
       child: Center(child: Text(title, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, fontWeight: FontWeight.w600))),
     ) : const SizedBox();
   }

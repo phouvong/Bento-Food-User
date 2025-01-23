@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/models/cuisine_restaurants_model.dart';
 import 'package:stackfood_multivendor/features/cuisine/domain/repositories/cuisine_repository_interface.dart';
@@ -25,12 +28,25 @@ class CuisineRepository implements CuisineRepositoryInterface {
   }
 
   @override
-  Future<CuisineModel?> getList({int? offset}) async {
+  Future<CuisineModel?> getList({int? offset, DataSourceEnum? source}) async {
     CuisineModel? cuisineModel;
-    Response response = await apiClient.getData(AppConstants.cuisineUri);
-    if (response.statusCode == 200) {
-      cuisineModel = CuisineModel.fromJson(response.body);
+    String cacheId = AppConstants.cuisineUri;
+
+    switch(source!){
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.cuisineUri);
+        if(response.statusCode == 200){
+          cuisineModel = CuisineModel.fromJson(response.body);
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          cuisineModel = CuisineModel.fromJson(jsonDecode(cacheResponseData));
+        }
     }
+
     return cuisineModel;
   }
 

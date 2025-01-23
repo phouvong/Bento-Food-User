@@ -29,7 +29,7 @@ class NotificationBottomSheet extends StatelessWidget {
           Container(
             height: 5, width: 35,
             decoration: BoxDecoration(
-              color: Theme.of(context).disabledColor.withOpacity(0.2),
+              color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(5),
             ),
           ),
@@ -38,7 +38,7 @@ class NotificationBottomSheet extends StatelessWidget {
             padding: const EdgeInsets.only(right: Dimensions.paddingSizeDefault),
             child: InkWell(
               onTap: () => Get.back(),
-              child: Icon(Icons.close, color: Theme.of(context).disabledColor.withOpacity(0.4), size: 25),
+              child: Icon(Icons.close, color: Theme.of(context).disabledColor.withValues(alpha: 0.4), size: 25),
             ),
           ),
         ]),

@@ -65,7 +65,7 @@ class CuisineWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         borderSide: BorderSide(style: BorderStyle.solid, width: 0.3, color: Theme.of(context).primaryColor),
                       ),
-                      label: Text('cuisines'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).hintColor.withOpacity(.75))),
+                      label: Text('cuisines'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).hintColor.withValues(alpha: .75))),
                     ),
                   ),
                 );

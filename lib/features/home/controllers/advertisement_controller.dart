@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/home/domain/models/advertisement_model.dart';
 import 'package:stackfood_multivendor/features/home/domain/services/advertisement_service_interface.dart';
 
@@ -16,10 +17,25 @@ class AdvertisementController extends GetxController implements GetxService {
 
   bool autoPlay = true;
 
-  Future<void> getAdvertisementList() async {
-    List<AdvertisementModel>? responseAdvertisement = await advertisementServiceInterface.getAdvertisementList();
-    if (responseAdvertisement != null) {
-      _advertisementList = responseAdvertisement;
+  Future<void> getAdvertisementList({DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
+    if(!fromRecall) {
+      _advertisementList = null;
+    }
+    List<AdvertisementModel>? advertisementList;
+    if(dataSource == DataSourceEnum.local) {
+      advertisementList = await advertisementServiceInterface.getAdvertisementList(source: DataSourceEnum.local);
+      _prepareAdvertisement(advertisementList);
+      getAdvertisementList(dataSource: DataSourceEnum.client, fromRecall: true);
+    } else {
+      advertisementList = await advertisementServiceInterface.getAdvertisementList(source: DataSourceEnum.client);
+      _prepareAdvertisement(advertisementList);
+    }
+  }
+
+  _prepareAdvertisement(List<AdvertisementModel>? advertisementList) {
+    if (advertisementList != null) {
+      _advertisementList = [];
+      _advertisementList = advertisementList;
     }
     update();
   }

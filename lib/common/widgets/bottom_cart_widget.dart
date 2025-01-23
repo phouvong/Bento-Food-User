@@ -11,7 +11,8 @@ import 'package:get/get.dart';
 
 class BottomCartWidget extends StatelessWidget {
   final int? restaurantId;
-  const BottomCartWidget({super.key, this.restaurantId});
+  final bool fromDineIn;
+  const BottomCartWidget({super.key, this.restaurantId, this.fromDineIn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class BottomCartWidget extends StatelessWidget {
           height: GetPlatform.isIOS ? 100 : 70, width: Get.width,
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge),
           decoration: BoxDecoration(
-              color: Theme.of(context).cardColor, boxShadow: [BoxShadow(color: const Color(0xFF2A2A2A).withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -5))],
+            color: Theme.of(context).cardColor, boxShadow: [BoxShadow(color: const Color(0xFF2A2A2A).withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -5))],
           ),
           child: SafeArea(
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -36,7 +37,7 @@ class BottomCartWidget extends StatelessWidget {
               ]),
 
               CustomButtonWidget(buttonText: 'view_cart'.tr, width: 130, height: 45, onPressed: () async {
-                await Get.toNamed(RouteHelper.getCartRoute());
+                await Get.toNamed(RouteHelper.getCartRoute(fromDineIn: fromDineIn));
                 Get.find<RestaurantController>().makeEmptyRestaurant();
                 if(restaurantId != null) {
                   Get.find<RestaurantController>().getRestaurantDetails(Restaurant(id: restaurantId));

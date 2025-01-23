@@ -1,4 +1,5 @@
 import 'package:stackfood_multivendor/common/widgets/web_menu_bar.dart';
+import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:stackfood_multivendor/util/dimensions.dart';
 import 'package:stackfood_multivendor/util/styles.dart';
@@ -15,12 +16,13 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
   final Color? bgColor;
   final Function(String value)? onVegFilterTap;
   final String? type;
+  final List<Widget>? actions;
   const CustomAppBarWidget({super.key, required this.title, this.isBackButtonExist = true, this.onBackPressed,
-    this.showCart = false, this.bgColor, this.onVegFilterTap, this.type});
+    this.showCart = false, this.bgColor, this.onVegFilterTap, this.type, this.actions});
 
   @override
   Widget build(BuildContext context) {
-    return GetPlatform.isDesktop ? const WebMenuBar() : AppBar(
+    return ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : AppBar(
       title: Text(title, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: bgColor == null ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).cardColor)),
       centerTitle: true,
       leading: isBackButtonExist ? IconButton(
@@ -30,7 +32,7 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
       ) : const SizedBox(),
       backgroundColor: bgColor ?? Theme.of(context).cardColor,
       surfaceTintColor: Theme.of(context).cardColor,
-      shadowColor: Theme.of(context).disabledColor.withOpacity(0.5),
+      shadowColor: Theme.of(context).disabledColor.withValues(alpha: 0.5),
       elevation: 2,
       actions: showCart || onVegFilterTap != null ? [
         showCart ? IconButton(
@@ -43,7 +45,7 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
           onSelected: onVegFilterTap,
           fromAppBar: true,
         ) : const SizedBox(),
-      ] : [const SizedBox()],
+      ] : actions ?? [const SizedBox()],
     );
   }
 

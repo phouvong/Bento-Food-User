@@ -79,7 +79,7 @@ class WebCampaignScreen extends StatelessWidget {
                 height: 150, width: 180,
                 padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.05),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 ),
                 child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -131,7 +131,7 @@ class WebCampaignScreen extends StatelessWidget {
 
             ]),
 
-            Divider(height: 50, thickness: 0.5, color: Theme.of(context).disabledColor.withOpacity(0.5)),
+            Divider(height: 50, thickness: 0.5, color: Theme.of(context).disabledColor.withValues(alpha: 0.5)),
 
             Text('restaurants'.tr, style: robotoBold),
             const SizedBox(height: Dimensions.paddingSizeDefault),
@@ -169,7 +169,7 @@ class WebCampaignShimmer extends StatelessWidget {
                   child: Container(
                     height: 190, width: 420,
                     decoration: BoxDecoration(
-                      color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                      color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     ),
                   ),
@@ -182,7 +182,7 @@ class WebCampaignShimmer extends StatelessWidget {
                     Container(
                       height: 15, width: 300,
                       decoration: BoxDecoration(
-                        color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                        color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       ),
                     ),
@@ -191,7 +191,7 @@ class WebCampaignShimmer extends StatelessWidget {
                     Container(
                       height: 15, width: 400,
                       decoration: BoxDecoration(
-                        color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                        color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       ),
                     ),
@@ -200,7 +200,7 @@ class WebCampaignShimmer extends StatelessWidget {
                     Container(
                       height: 15, width: 200,
                       decoration: BoxDecoration(
-                        color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                        color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       ),
                     ),
@@ -216,7 +216,7 @@ class WebCampaignShimmer extends StatelessWidget {
                     height: 140, width: 180,
                     padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                     decoration: BoxDecoration(
-                      color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                      color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     ),
                   ),
@@ -228,7 +228,7 @@ class WebCampaignShimmer extends StatelessWidget {
               Container(
                 height: 15, width: 150,
                 decoration: BoxDecoration(
-                  color: Get.isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.3),
+                  color: Get.isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 ),
               ),

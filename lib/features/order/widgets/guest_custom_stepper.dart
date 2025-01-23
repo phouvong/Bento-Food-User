@@ -49,13 +49,13 @@ class GuestCustomStepper extends StatelessWidget {
           margin: const EdgeInsets.only(left: 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-            color: Theme.of(context).primaryColor.withOpacity(0.2),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
           ),
           child: Padding(
             padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             child: Image.asset(
               statusImage!, width: 30,
-              color: Theme.of(context).primaryColor.withOpacity(isComplete ? 1 : 0.5),
+              color: Theme.of(context).primaryColor.withValues(alpha: isComplete ? 1 : 0.5),
             ),
           ),
         ),

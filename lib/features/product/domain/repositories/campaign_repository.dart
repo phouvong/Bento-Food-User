@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
 import 'package:stackfood_multivendor/features/product/domain/models/basic_campaign_model.dart';
@@ -35,11 +39,11 @@ class CampaignRepository implements CampaignRepositoryInterface {
   }
 
   @override
-  Future<dynamic> getList({int? offset, bool basicCampaign = false}) {
+  Future<dynamic> getList({int? offset, bool basicCampaign = false, DataSourceEnum? source}) {
    if(basicCampaign) {
      return _getBasicCampaignList();
    } else {
-     return _getItemCampaignList();
+     return _getItemCampaignList(source: source);
    }
   }
   Future<List<BasicCampaignModel>?> _getBasicCampaignList() async {
@@ -52,12 +56,26 @@ class CampaignRepository implements CampaignRepositoryInterface {
     return basicCampaignList;
   }
 
-  Future<List<Product>?> _getItemCampaignList() async {
+  Future<List<Product>?> _getItemCampaignList({DataSourceEnum? source}) async {
     List<Product>? itemCampaignList;
-    Response response = await apiClient.getData(AppConstants.itemCampaignUri);
-    if (response.statusCode == 200) {
-      itemCampaignList = [];
-      response.body.forEach((campaign) => itemCampaignList!.add(Product.fromJson(campaign)));
+    String cacheId = AppConstants.itemCampaignUri;
+
+    switch(source!){
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.itemCampaignUri);
+        if(response.statusCode == 200){
+          itemCampaignList = [];
+          response.body.forEach((campaign) => itemCampaignList!.add(Product.fromJson(campaign)));
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          itemCampaignList = [];
+          jsonDecode(cacheResponseData).forEach((campaign) {
+            itemCampaignList!.add(Product.fromJson(campaign));
+          });
+        }
     }
     return itemCampaignList;
   }

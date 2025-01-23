@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
@@ -129,28 +130,57 @@ class RestaurantController extends GetxController implements GetxService {
     return restaurantServiceInterface.filterRestaurantLinkUrl(slug, _restaurant?.id, _restaurant?.zoneId);
   }
 
-  Future<void> getOrderAgainRestaurantList(bool reload) async {
+  Future<void> getOrderAgainRestaurantList(bool reload, {DataSourceEnum dataSource = DataSourceEnum.local}) async {
     if(reload) {
       _orderAgainRestaurantList = null;
       update();
     }
-    _orderAgainRestaurantList = await restaurantServiceInterface.getOrderAgainRestaurantList();
+    List<Restaurant>? orderAgainRestaurantList;
+    if(dataSource == DataSourceEnum.local) {
+      orderAgainRestaurantList = await restaurantServiceInterface.getOrderAgainRestaurantList(source: DataSourceEnum.local);
+      _prepareOrderAgainRestaurantList(orderAgainRestaurantList);
+      getOrderAgainRestaurantList(false, dataSource: DataSourceEnum.client);
+    } else {
+      orderAgainRestaurantList = await restaurantServiceInterface.getOrderAgainRestaurantList(source: DataSourceEnum.client);
+      _prepareOrderAgainRestaurantList(orderAgainRestaurantList);
+    }
+  }
+
+  _prepareOrderAgainRestaurantList(List<Restaurant>? restaurantList) {
+    if (restaurantList != null) {
+      _orderAgainRestaurantList = [];
+      _orderAgainRestaurantList = restaurantList;
+    }
     update();
   }
 
-
-  Future<void> getRecentlyViewedRestaurantList(bool reload, String type, bool notify) async {
+  Future<void> getRecentlyViewedRestaurantList(bool reload, String type, bool notify, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
     _type = type;
-    if(reload){
+    if(reload && !fromRecall){
       _recentlyViewedRestaurantList = null;
     }
     if(notify) {
       update();
     }
-    if(_recentlyViewedRestaurantList == null || reload) {
-      _recentlyViewedRestaurantList = await restaurantServiceInterface.getRecentlyViewedRestaurantList(type);
-      update();
+    List<Restaurant>? recentlyViewedRestaurantList;
+    if(_recentlyViewedRestaurantList == null || reload || fromRecall) {
+      if(dataSource == DataSourceEnum.local) {
+        recentlyViewedRestaurantList = await restaurantServiceInterface.getRecentlyViewedRestaurantList(type, source: DataSourceEnum.local);
+        _prepareRecentlyViewedRestaurantList(recentlyViewedRestaurantList);
+        getRecentlyViewedRestaurantList(false, type, false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        recentlyViewedRestaurantList = await restaurantServiceInterface.getRecentlyViewedRestaurantList(type, source: DataSourceEnum.client);
+        _prepareRecentlyViewedRestaurantList(recentlyViewedRestaurantList);
+      }
     }
+  }
+
+  _prepareRecentlyViewedRestaurantList(List<Restaurant>? restaurantList) {
+    if (restaurantList != null) {
+      _recentlyViewedRestaurantList = [];
+      _recentlyViewedRestaurantList = restaurantList;
+    }
+    update();
   }
 
   Future<void> getRestaurantRecommendedItemList(int? restaurantId, bool reload) async {
@@ -163,12 +193,24 @@ class RestaurantController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getRestaurantList(int offset, bool reload, {bool fromMap = false}) async {
+  Future<void> getRestaurantList(int offset, bool reload, {bool fromMap = false, DataSourceEnum source = DataSourceEnum.local}) async {
     if(reload) {
       _restaurantModel = null;
       update();
     }
-    RestaurantModel? restaurantModel = await restaurantServiceInterface.getRestaurantList(offset, _restaurantType, _topRated, _discount, _veg, _nonVeg, fromMap: fromMap);
+
+    RestaurantModel? restaurantModel;
+    if(source == DataSourceEnum.local && offset == 1) {
+      restaurantModel = await restaurantServiceInterface.getRestaurantList(offset, _restaurantType, _topRated, _discount, _veg, _nonVeg, fromMap: fromMap, source: DataSourceEnum.local);
+      _prepareRestaurantList(restaurantModel, offset);
+      getRestaurantList(1, false, fromMap: fromMap, source: DataSourceEnum.client);
+    } else {
+      restaurantModel = await restaurantServiceInterface.getRestaurantList(offset, _restaurantType, _topRated, _discount, _veg, _nonVeg, fromMap: fromMap, source: DataSourceEnum.client);
+      _prepareRestaurantList(restaurantModel, offset);
+    }
+  }
+
+  _prepareRestaurantList(RestaurantModel? restaurantModel, int offset) {
     if (restaurantModel != null) {
       if (offset == 1) {
         _restaurantModel = restaurantModel;
@@ -206,21 +248,37 @@ class RestaurantController extends GetxController implements GetxService {
     getRestaurantList(1, true);
   }
 
-  Future<void> getPopularRestaurantList(bool reload, String type, bool notify) async {
+  Future<void> getPopularRestaurantList(bool reload, String type, bool notify, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
     _type = type;
-    if(reload){
+    if (reload) {
       _popularRestaurantList = null;
     }
-    if(notify) {
+    if (notify) {
       update();
     }
-    if(_popularRestaurantList == null || reload) {
-      _popularRestaurantList = await restaurantServiceInterface.getPopularRestaurantList(type);
-      update();
+    List<Restaurant>? popularRestaurantList;
+    if (_popularRestaurantList == null || reload || fromRecall) {
+
+      if (dataSource == DataSourceEnum.local) {
+        popularRestaurantList = await restaurantServiceInterface.getPopularRestaurantList(type, source: DataSourceEnum.local);
+        _preparePopularRestaurantList(popularRestaurantList);
+        getPopularRestaurantList(false, type, false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        popularRestaurantList = await restaurantServiceInterface.getPopularRestaurantList(type, source: DataSourceEnum.client);
+        _preparePopularRestaurantList(popularRestaurantList);
+      }
     }
   }
 
-  Future<void> getLatestRestaurantList(bool reload, String type, bool notify) async {
+  _preparePopularRestaurantList(List<Restaurant>? restaurantList) {
+    if (restaurantList != null) {
+      _popularRestaurantList = [];
+      _popularRestaurantList!.addAll(restaurantList);
+    }
+    update();
+  }
+
+  Future<void> getLatestRestaurantList(bool reload, String type, bool notify, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
     _type = type;
     if(reload){
       _latestRestaurantList = null;
@@ -228,10 +286,27 @@ class RestaurantController extends GetxController implements GetxService {
     if(notify) {
       update();
     }
-    if(_latestRestaurantList == null || reload) {
-      _latestRestaurantList = await restaurantServiceInterface.getLatestRestaurantList(type);
-      update();
+
+    List<Restaurant>? latestRestaurantList;
+    if(_latestRestaurantList == null || reload || fromRecall) {
+
+      if(dataSource == DataSourceEnum.local) {
+        latestRestaurantList = await restaurantServiceInterface.getLatestRestaurantList(type, source: DataSourceEnum.local);
+        _prepareLatestRestaurantList(latestRestaurantList);
+        getLatestRestaurantList(false, type, false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        latestRestaurantList = await restaurantServiceInterface.getLatestRestaurantList(type, source: DataSourceEnum.client);
+        _prepareLatestRestaurantList(latestRestaurantList);
+      }
     }
+  }
+
+  _prepareLatestRestaurantList(List<Restaurant>? restaurantList) {
+    if (restaurantList != null) {
+      _latestRestaurantList = [];
+      _latestRestaurantList = restaurantList;
+    }
+    update();
   }
 
   void setCategoryList() {

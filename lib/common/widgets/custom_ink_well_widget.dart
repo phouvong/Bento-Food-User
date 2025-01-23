@@ -17,8 +17,8 @@ class CustomInkWellWidget extends StatelessWidget {
           Future.delayed(const Duration(milliseconds: 100), () => onTap());
         },
         borderRadius: BorderRadius.circular(radius ?? 0.0),
-        highlightColor: highlightColor ?? Theme.of(context).primaryColor.withOpacity(0.1),
-        hoverColor: Theme.of(context).primaryColor.withOpacity(0.05),
+        highlightColor: highlightColor ?? Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        hoverColor: Theme.of(context).primaryColor.withValues(alpha: 0.05),
         child: Padding(
           padding: padding!,
           child: child,

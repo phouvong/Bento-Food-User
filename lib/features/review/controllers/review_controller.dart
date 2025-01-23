@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/common/models/review_model.dart';
@@ -68,18 +69,33 @@ class ReviewController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getReviewedProductList(bool reload, String type, bool notify) async {
+  Future<void> getReviewedProductList(bool reload, String type, bool notify, {DataSourceEnum dataSource = DataSourceEnum.local, bool fromRecall = false}) async {
     _reviewedType = type;
-    if(reload) {
+    if(reload && !fromRecall) {
       _reviewedProductList = null;
     }
     if(notify) {
       update();
     }
-    if(_reviewedProductList == null || reload) {
-      _reviewedProductList = await reviewServiceInterface.getReviewedProductList(type: type);
-      update();
+    List<Product>? reviewedProductList;
+    if(_reviewedProductList == null || reload || fromRecall) {
+      if(dataSource == DataSourceEnum.local) {
+        reviewedProductList = await reviewServiceInterface.getReviewedProductList(type: type, source: DataSourceEnum.local);
+        _prepareReviewedProductList(reviewedProductList);
+        getReviewedProductList(false, type, false, dataSource: DataSourceEnum.client, fromRecall: true);
+      } else {
+        reviewedProductList = await reviewServiceInterface.getReviewedProductList(type: type, source: DataSourceEnum.client);
+        _prepareReviewedProductList(reviewedProductList);
+      }
     }
+  }
+
+  _prepareReviewedProductList(List<Product>? reviewedProductList) {
+    if(reviewedProductList != null) {
+      _reviewedProductList = [];
+      _reviewedProductList = reviewedProductList;
+    }
+    update();
   }
 
   Future<ResponseModel> submitReview(int index, ReviewBodyModel reviewBody) async {

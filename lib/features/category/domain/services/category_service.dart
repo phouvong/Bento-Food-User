@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/features/category/domain/models/category_model.dart';
@@ -11,12 +12,8 @@ class CategoryService implements CategoryServiceInterface {
   CategoryService({required this.categoryRepositoryInterface});
 
   @override
-  Future<List<CategoryModel>?> getCategoryList(bool reload, List<CategoryModel>? fetchedCategoryList) async {
-    if(fetchedCategoryList == null || reload) {
-      return await categoryRepositoryInterface.getList();
-    } else {
-      return fetchedCategoryList;
-    }
+  Future<List<CategoryModel>?> getCategoryList({DataSourceEnum? source}) async {
+    return await categoryRepositoryInterface.getList(source: source);
   }
 
   @override

@@ -22,12 +22,12 @@ class PackageWidget extends StatelessWidget {
           const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Text(title.tr, style: robotoRegular.copyWith(fontSize: isDesktop ? Dimensions.fontSizeExtraSmall : Dimensions.fontSizeSmall, color: isSelect ? Theme.of(context).cardColor
-              : Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7))),
+              : Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7))),
 
         ]),
       ),
 
-      Divider(indent: 20, endIndent: 50, color: Theme.of(Get.context!).disabledColor.withOpacity(0.5), thickness: 1),
+      Divider(indent: 20, endIndent: 50, color: Theme.of(Get.context!).disabledColor.withValues(alpha: 0.5), thickness: 1),
 
     ]);
   }

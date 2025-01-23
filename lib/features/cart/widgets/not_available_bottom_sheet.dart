@@ -59,7 +59,7 @@ class _NotAvailableBottomSheetState extends State<NotAvailableBottomSheet> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.5) : Theme.of(context).cardColor,
+                      color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.5) : Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).disabledColor, width: 0.5),
                     ),

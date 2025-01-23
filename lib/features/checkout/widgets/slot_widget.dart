@@ -21,7 +21,7 @@ class SlotWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: fromCustomDate ? Dimensions.paddingSizeSmall : Dimensions.paddingSizeExtraSmall),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? Theme.of(context).primaryColor : isDesktop || fromCustomDate ? Theme.of(context).disabledColor.withOpacity(0.2) : Theme.of(context).cardColor,
+            color: isSelected ? Theme.of(context).primaryColor : isDesktop || fromCustomDate ? Theme.of(context).disabledColor.withValues(alpha: 0.2) : Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             boxShadow: isDesktop || fromCustomDate ? [] : const [BoxShadow(color: Colors.black12, spreadRadius: 0.5, blurRadius: 0.5)],
           ),

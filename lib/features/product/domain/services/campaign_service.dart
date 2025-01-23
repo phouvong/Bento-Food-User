@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/features/product/domain/models/basic_campaign_model.dart';
 import 'package:stackfood_multivendor/features/product/domain/repositories/campaign_repository_interface.dart';
@@ -14,8 +15,8 @@ class CampaignService implements CampaignServiceInterface {
   }
 
   @override
-  Future<List<Product>?> getItemCampaignList() async {
-    return await campaignRepositoryInterface.getList();
+  Future<List<Product>?> getItemCampaignList({DataSourceEnum? source}) async {
+    return await campaignRepositoryInterface.getList(source: source);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
 import 'package:stackfood_multivendor/features/splash/domain/repositories/splash_repository_interface.dart';
 import 'package:stackfood_multivendor/features/splash/domain/services/splash_service_interface.dart';
@@ -8,9 +9,14 @@ class SplashService implements SplashServiceInterface {
   final SplashRepositoryInterface splashRepositoryInterface;
   SplashService({required this.splashRepositoryInterface});
 
+  /*@override
+  Future<Response> getConfigData({required DataSourceEnum? source}) async {
+    return await splashRepositoryInterface.getConfigData(source: source);
+  }*/
+
   @override
-  Future<Response> getConfigData() async {
-    return await splashRepositoryInterface.getConfigData();
+  Future<Response> getConfigData({required DataSourceEnum? source}) async {
+    return await splashRepositoryInterface.getConfigData(source: source);
   }
 
   @override

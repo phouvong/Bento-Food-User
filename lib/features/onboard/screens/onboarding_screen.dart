@@ -19,7 +19,7 @@ class OnBoardingScreen extends StatelessWidget {
     return GetBuilder<OnBoardingController>(builder: (onBoardingController) {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.05),
+          backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.05),
           actions: [
             onBoardingController.selectedIndex == 2 ? const SizedBox() : InkWell(
               onTap: () {
@@ -110,7 +110,7 @@ class OnBoardingScreen extends StatelessWidget {
                     child: CircularProgressIndicator(
                       value: (onBoardingController.selectedIndex + 1) / onBoardingController.onBoardingList!.length,
                       valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.3),
+                      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -155,7 +155,7 @@ class OnBoardingScreen extends StatelessWidget {
           width: i == onBoardingController.selectedIndex ? 24 : 7, height: 7,
           margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
-            color: i == onBoardingController.selectedIndex ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withOpacity(0.40),
+            color: i == onBoardingController.selectedIndex ? Theme.of(context).primaryColor : Theme.of(context).primaryColor.withValues(alpha: 0.40),
             borderRadius: i == onBoardingController.selectedIndex ? BorderRadius.circular(50) : BorderRadius.circular(25),
           ),
         ),

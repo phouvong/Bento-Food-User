@@ -1,5 +1,7 @@
-import 'package:stackfood_multivendor/common/widgets/custom_photo_view.dart';
 import 'package:stackfood_multivendor/features/chat/controllers/chat_controller.dart';
+import 'package:stackfood_multivendor/features/chat/widgets/chat_video_view.dart';
+import 'package:stackfood_multivendor/features/chat/widgets/image_file_view_widget.dart';
+import 'package:stackfood_multivendor/features/chat/widgets/pdf_view_widget.dart';
 import 'package:stackfood_multivendor/features/language/controllers/localization_controller.dart';
 import 'package:stackfood_multivendor/features/profile/controllers/profile_controller.dart';
 import 'package:stackfood_multivendor/features/chat/domain/models/conversation_model.dart';
@@ -99,7 +101,7 @@ class MessageBubbleWidget extends StatelessWidget {
                     child: Text(
                       currentMessage.message??'',
                       style: robotoRegular.copyWith(
-                        color: !Get.isDarkMode && !isRightMessage ? Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.8) : Colors.white.withOpacity(0.8),
+                        color: !Get.isDarkMode && !isRightMessage ? Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.8) : Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -142,41 +144,17 @@ class MessageBubbleWidget extends StatelessWidget {
 
                   currentMessage.filesFullUrl!.isNotEmpty ? Directionality(
                     textDirection: isRightMessage && isLTR ? TextDirection.rtl : !isLTR && !isRightMessage ? TextDirection.rtl : TextDirection.ltr,
-                    child: SizedBox(width: 300,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: currentMessage.filesFullUrl!.length > 3 ? 4 : currentMessage.filesFullUrl!.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: Dimensions.paddingSizeSmall,
-                          crossAxisSpacing: Dimensions.paddingSizeSmall,
-                        ),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusLarge)),
-                                child: CustomPhotoView(imageUrl: currentMessage.filesFullUrl![index]),
-                              );
-                              },
-                            ),
-                            onLongPress: () => chatController.toggleOnClickImageAndFile(currentMessage.id!),
-                            child: Hero(
-                              tag: currentMessage.filesFullUrl![index],
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-                                child: CustomImageWidget(image: currentMessage.filesFullUrl![index], fit: BoxFit.fill),
-                              ),
-                            ),
-                          );
-
-                        },
-                      ),
+                    child: SizedBox(
+                      width: _isPdf(currentMessage.filesFullUrl![0]) ? 200 : 300,
+                      child: _isVideo(currentMessage.filesFullUrl![0]) ?
+                      InkWell(
+                          onLongPress: () => chatController.toggleOnClickImageAndFile(currentMessage.id!),
+                          child: ChatVideoView(url: currentMessage.filesFullUrl![0])) :
+                      _isPdf(currentMessage.filesFullUrl![0])
+                          ? PdfViewWidget(currentMessage: currentMessage, isRightMessage: isRightMessage)
+                          : ImageFileViewWidget(currentMessage: currentMessage, isRightMessage: isRightMessage),
                     ),
-                  ): const SizedBox(),
+                  ) : const SizedBox(),
 
                   Row(mainAxisSize: MainAxisSize.min, children: [
                     AnimatedContainer(
@@ -229,6 +207,20 @@ class MessageBubbleWidget extends StatelessWidget {
 
   bool _isSameUserWithNextMessage(Message? currentConversation, Message? nextConversation){
     if(currentConversation?.senderId == nextConversation?.senderId && nextConversation?.message != null && currentConversation?.message !=null){
+      return true;
+    }
+    return false;
+  }
+
+  bool _isVideo(String url) {
+    if(url.contains('.mp4') || url.contains('.mov') || url.contains('.avi') || url.contains('.wmv') || url.contains('.flv') || url.contains('.mkv')) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isPdf(String url) {
+    if(url.contains('.pdf')) {
       return true;
     }
     return false;

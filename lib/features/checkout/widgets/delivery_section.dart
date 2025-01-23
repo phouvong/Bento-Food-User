@@ -3,7 +3,7 @@ import 'package:stackfood_multivendor/features/checkout/controllers/checkout_con
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
 import 'package:stackfood_multivendor/features/address/widgets/address_card_widget.dart';
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
-import 'package:stackfood_multivendor/features/checkout/widgets/guest_delivery_address.dart';
+import 'package:stackfood_multivendor/features/checkout/widgets/delivery_info_fields.dart';
 import 'package:stackfood_multivendor/features/location/controllers/location_controller.dart';
 import 'package:stackfood_multivendor/features/location/widgets/permission_dialog.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
@@ -34,23 +34,24 @@ class DeliverySection extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isGuestLoggedIn = Get.find<AuthController>().isGuestLoggedIn();
     bool takeAway = (checkoutController.orderType == 'take_away');
+    bool isDineIn = (checkoutController.orderType == 'dine_in');
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     GlobalKey<CustomDropdownState> dropDownKey = GlobalKey<CustomDropdownState>();
     AddressModel addressModel;
 
     return Column(children: [
-      isGuestLoggedIn  ? GuestDeliveryAddress(
+      isGuestLoggedIn || isDineIn ? DeliveryInfoFields(
         checkoutController: checkoutController, guestNumberNode: guestNumberNode,
         guestNameTextEditingController: guestNameTextEditingController,
         guestNumberTextEditingController: guestNumberTextEditingController,
         guestEmailController: guestEmailController, guestEmailNode: guestEmailNode,
-      ) : !takeAway ? Container(
+      ) : !takeAway && !isDineIn ? Container(
         margin: EdgeInsets.symmetric(horizontal: isDesktop ? 0 : Dimensions.fontSizeDefault),
         padding: EdgeInsets.symmetric(horizontal: isDesktop ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+          boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -147,7 +148,7 @@ class DeliverySection extends StatelessWidget {
             constraints: BoxConstraints(minHeight: ResponsiveHelper.isDesktop(context) ? 90 : 75),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               border: Border.all(color: Theme.of(context).primaryColor, width: 0.3),
             ),
             child: AddressCardWidget(

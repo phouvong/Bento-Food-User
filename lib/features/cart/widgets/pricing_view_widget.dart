@@ -15,7 +15,8 @@ import 'package:get/get.dart';
 class PricingViewWidget extends StatelessWidget {
   final CartController cartController;
   final bool isRestaurantOpen;
-  const PricingViewWidget({super.key, required this.cartController, required this.isRestaurantOpen});
+  final bool fromDineIn;
+  const PricingViewWidget({super.key, required this.cartController, required this.isRestaurantOpen, this.fromDineIn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class PricingViewWidget extends StatelessWidget {
       decoration: isDesktop ? BoxDecoration(
         borderRadius: const  BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
         color: Theme.of(context).cardColor,
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
       ) : BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -43,9 +44,9 @@ class PricingViewWidget extends StatelessWidget {
 
               const SizedBox(height: Dimensions.paddingSizeSmall),
 
-              !isDesktop ? ExtraPackagingWidget(cartController: cartController) : const SizedBox(),
+              !isDesktop && !fromDineIn ? ExtraPackagingWidget(cartController: cartController) : const SizedBox(),
 
-              !isDesktop ? CutleryViewWidget(restaurantController: restaurantController, cartController: cartController) : const SizedBox(),
+              !isDesktop && !fromDineIn ? CutleryViewWidget(restaurantController: restaurantController, cartController: cartController) : const SizedBox(),
 
               !isDesktop ? NotAvailableProductViewWidget(cartController: cartController) : const SizedBox(),
 
@@ -110,9 +111,9 @@ class PricingViewWidget extends StatelessWidget {
                 ]),
               ) : const SizedBox(),
 
-              isDesktop ? ExtraPackagingWidget(cartController: cartController) : const SizedBox(),
+              isDesktop && !fromDineIn ? ExtraPackagingWidget(cartController: cartController) : const SizedBox(),
 
-              isDesktop ? CutleryViewWidget(restaurantController: restaurantController, cartController: cartController) : const SizedBox(),
+              isDesktop && !fromDineIn ? CutleryViewWidget(restaurantController: restaurantController, cartController: cartController) : const SizedBox(),
 
               isDesktop ? NotAvailableProductViewWidget(cartController: cartController) : const SizedBox(),
 
@@ -120,7 +121,7 @@ class PricingViewWidget extends StatelessWidget {
 
               SizedBox(height: isDesktop ? Dimensions.paddingSizeLarge : 0),
 
-              isDesktop ? CheckoutButtonWidget(cartController: cartController, availableList: cartController.availableList, isRestaurantOpen: isRestaurantOpen) : const SizedBox.shrink(),
+              isDesktop ? CheckoutButtonWidget(cartController: cartController, availableList: cartController.availableList, isRestaurantOpen: isRestaurantOpen, fromDineIn: fromDineIn) : const SizedBox.shrink(),
 
             ]);
           }

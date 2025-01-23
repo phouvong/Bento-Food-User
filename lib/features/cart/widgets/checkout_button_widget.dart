@@ -16,7 +16,8 @@ class CheckoutButtonWidget extends StatelessWidget {
   final CartController cartController;
   final List<bool> availableList;
   final bool isRestaurantOpen;
-  const CheckoutButtonWidget({super.key, required this.cartController, required this.availableList, required this.isRestaurantOpen});
+  final bool fromDineIn;
+  const CheckoutButtonWidget({super.key, required this.cartController, required this.availableList, required this.isRestaurantOpen, this.fromDineIn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class CheckoutButtonWidget extends StatelessWidget {
                 const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                 LinearProgressIndicator(
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
+                  backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                   value: percentage,
                 ),
               ]),
@@ -100,7 +101,7 @@ class CheckoutButtonWidget extends StatelessWidget {
       showCustomSnackBar('restaurant_is_close_now'.tr);
     } */else {
       Get.find<CouponController>().removeCouponData(false);
-      Get.toNamed(RouteHelper.getCheckoutRoute('cart'));
+      Get.toNamed(RouteHelper.getCheckoutRoute('cart', fromDineIn: fromDineIn));
     }
   }
 

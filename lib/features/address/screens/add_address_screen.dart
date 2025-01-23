@@ -173,7 +173,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
                   ),
                   child: CustomButtonWidget(
                     radius: Dimensions.paddingSizeSmall,
@@ -206,7 +206,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            border: Border.all(width: 1.5, color: Theme.of(context).primaryColor.withOpacity(0.5)),
+            border: Border.all(width: 1.5, color: Theme.of(context).primaryColor.withValues(alpha: 0.5)),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -315,36 +315,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       color: Theme.of(context).cardColor,
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2)],
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     alignment: Alignment.centerLeft,
                     child: Text('search'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
                   ),
                 ),
-                /*child: InkWell(
-                  onTap: () async {
-                    var p = await Get.dialog(LocationSearchDialog(mapController: locationController.mapController));
-                    Position? position = p;
-                    if (position != null) {
-                      _cameraPosition = CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16);
-                      locationController.mapController!.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition!));
-                      locationController.updatePosition(_cameraPosition, true);
-                    }
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      color: Theme.of(context).cardColor,
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
-                    ),
-                    padding: const EdgeInsets.only(left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: Text('search'.tr, style: robotoRegular.copyWith(color: Theme.of(context).hintColor)),
-                  ),
-                ),*/
               ),
             ]),
           ),
@@ -377,7 +354,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                    color: locationController.addressTypeIndex == index ? Theme.of(context).primaryColor.withOpacity(0.1) : Theme.of(context).cardColor,
+                    color: locationController.addressTypeIndex == index ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).cardColor,
                     border: Border.all(color: locationController.addressTypeIndex == index ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),
                   ),
                   child: Row(children: [
@@ -405,7 +382,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         SizedBox(height: _otherSelect ? Dimensions.paddingSizeOverLarge : 0),
         
         _otherSelect ? CustomTextFieldWidget(
-          hintText: '${'level_name'.tr} (${'optional'.tr})',
+          hintText: 'ex_02'.tr,
           labelText: 'level_name'.tr,
           inputType: TextInputType.text,
           controller: _levelController,
@@ -444,8 +421,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
         CustomTextFieldWidget(
-          hintText: 'contact_person_name'.tr,
-          labelText: 'contact_person_name'.tr,
+          hintText: 'ex_doe'.tr,
+          labelText: 'name'.tr,
           required: true,
           inputType: TextInputType.name,
           controller: _contactPersonNameController,
@@ -457,8 +434,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         const SizedBox(height: Dimensions.paddingSizeOverLarge),
         
         CustomTextFieldWidget(
-          hintText: 'contact_person_number'.tr,
-          labelText: 'contact_person_number'.tr,
+          hintText: 'xxx-xxx-xxxxx',
+          labelText: 'phone'.tr,
           required: true,
           controller: _contactPersonNumberController,
           focusNode: _numberNode,
@@ -473,7 +450,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         const SizedBox(height: Dimensions.paddingSizeOverLarge),
         
         widget.forGuest ? CustomTextFieldWidget(
-          hintText: '${'email'.tr} (${'optional'.tr})',
+          hintText: 'enter_email'.tr,
           labelText: 'email'.tr,
           controller: _emailController,
           focusNode: _emailFocus,
@@ -483,7 +460,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         SizedBox(height: widget.forGuest ? Dimensions.paddingSizeOverLarge : 0),
         
         CustomTextFieldWidget(
-          hintText: '${'street_number'.tr} (${'optional'.tr})',
+          hintText: "ex_02".tr,
           labelText: 'street_number'.tr,
           inputType: TextInputType.streetAddress,
           focusNode: _streetNode,
@@ -495,7 +472,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         Row(children: [
           Expanded(
             child: CustomTextFieldWidget(
-              hintText: '${'house'.tr} (${'optional'.tr})',
+              hintText: 'ex_1005/2'.tr,
               labelText: 'house'.tr,
               inputType: TextInputType.text,
               focusNode: _houseNode,
@@ -507,7 +484,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           
           Expanded(
             child: CustomTextFieldWidget(
-              hintText: '${'floor'.tr} (${'optional'.tr})',
+              hintText: 'ex_02'.tr,
               labelText: 'floor'.tr,
               inputType: TextInputType.text,
               focusNode: _floorNode,
@@ -600,7 +577,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       if (response.isSuccess) {
         Get.back(result: addressModel);
         //Get.offAllNamed(RouteHelper.getAddressRoute());
-        showCustomSnackBar('new_address_added_successfully'.tr, isError: false);
+        showCustomSnackBar(response.message, isError: false);
       } else {
         showCustomSnackBar(response.message);
       }

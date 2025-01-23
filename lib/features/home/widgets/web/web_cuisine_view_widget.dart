@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/widgets/custom_asset_image_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/arrow_icon_button_widget.dart';
 import 'package:stackfood_multivendor/features/home/widgets/cuisine_card_widget.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
@@ -21,12 +22,11 @@ class WebCuisineViewWidget extends StatelessWidget {
         child: Container(
           height: 216, width: Dimensions.webMaxWidth,
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
             borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
           ),
           child: Stack(
             children: [
-              Image.asset(Images.cuisineBg, height: 216, width: Dimensions.webMaxWidth, fit: BoxFit.cover, color: Theme.of(context).primaryColor),
+              CustomAssetImageWidget(Images.cuisineBg, height: 216, width: Dimensions.webMaxWidth, fit: BoxFit.cover, color: Theme.of(context).primaryColor),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

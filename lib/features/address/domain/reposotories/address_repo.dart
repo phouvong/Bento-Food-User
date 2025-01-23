@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
 import 'package:stackfood_multivendor/features/address/domain/reposotories/address_repo_interface.dart';
@@ -11,17 +15,29 @@ class AddressRepo implements AddressRepoInterface<AddressModel> {
   AddressRepo({required this.apiClient});
 
   @override
-  Future<List<AddressModel>?> getList({int? offset, bool isLocal = false}) async {
+  Future<List<AddressModel>?> getList({int? offset, bool isLocal = false, DataSourceEnum? source}) async {
     List<AddressModel>? addressList;
+    String cacheId = AppConstants.addressListUri;
 
-    Response response = await apiClient.getData(AppConstants.addressListUri);
-    if (response.statusCode == 200) {
-      addressList = [];
-      response.body['addresses'].forEach((address) {
-        addressList!.add(AddressModel.fromJson(address));
-      });
+    switch (source!) {
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData(AppConstants.addressListUri);
+        if (response.statusCode == 200) {
+          addressList = [];
+          response.body['addresses'].forEach((address) {
+            addressList!.add(AddressModel.fromJson(address));
+          });
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body['addresses']), apiClient.getHeader());
+        }
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if (cacheResponseData != null) {
+          addressList = [];
+          jsonDecode(cacheResponseData).forEach((address) {
+            addressList!.add(AddressModel.fromJson(address));
+          });
+        }
     }
-
     return addressList;
   }
 

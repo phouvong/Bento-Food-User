@@ -64,7 +64,7 @@ class AddressConfirmDialogueWidget extends StatelessWidget {
                   Expanded(child: CustomButtonWidget(
                     buttonText:  'cancel'.tr, textColor: Theme.of(context).disabledColor,
                     onPressed: () => Get.back(),
-                    radius: Dimensions.radiusDefault, height: 50, color: Theme.of(context).disabledColor.withOpacity(0.2),
+                    radius: Dimensions.radiusDefault, height: 50, color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
                   )),
 
                 ]) : const Center(child: CircularProgressIndicator());

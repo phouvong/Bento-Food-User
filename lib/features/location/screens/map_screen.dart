@@ -1,7 +1,9 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:stackfood_multivendor/common/models/restaurant_model.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/menu_drawer_widget.dart';
 import 'package:stackfood_multivendor/features/address/domain/models/address_model.dart';
+import 'package:stackfood_multivendor/features/home/widgets/google_map_widgets/restaurant_details_sheet_widget.dart';
 import 'package:stackfood_multivendor/features/location/controllers/location_controller.dart';
 import 'package:stackfood_multivendor/features/location/widgets/permission_dialog.dart';
 import 'package:stackfood_multivendor/features/splash/controllers/theme_controller.dart';
@@ -23,7 +25,10 @@ class MapScreen extends StatefulWidget {
   final AddressModel address;
   final bool fromRestaurant;
   final String? restaurantName;
-  const MapScreen({super.key, required this.address, this.fromRestaurant = false, this.restaurantName});
+  final bool fromOrder;
+  final Restaurant? restaurant;
+  final bool fromDineInOrder;
+  const MapScreen({super.key, required this.address, this.fromRestaurant = false, this.restaurantName, this.fromOrder = false, this.restaurant, this.fromDineInOrder = false});
 
   @override
   MapScreenState createState() => MapScreenState();
@@ -44,7 +49,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: widget.fromRestaurant ? widget.restaurantName! : 'location'.tr),
+      appBar: CustomAppBarWidget(title: widget.fromRestaurant || widget.fromOrder ? widget.restaurantName! : 'location'.tr),
       endDrawer: const MenuDrawerWidget(), endDrawerEnableOpenDragGesture: false,
       body: Center(
         child: SizedBox(
@@ -70,7 +75,7 @@ class MapScreenState extends State<MapScreen> {
               child: Column(
                 children: [
 
-                  Align(
+                  widget.fromDineInOrder ? SizedBox() : Align(
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: () => _checkPermission(() async {
@@ -86,7 +91,9 @@ class MapScreenState extends State<MapScreen> {
                   ),
                   const SizedBox(height: Dimensions.paddingSizeLarge),
 
-                  InkWell(
+                  widget.restaurant != null ? RestaurantDetailsSheetWidget(
+                    restaurant: widget.restaurant!, isActive: true, fromOrder: true,
+                  ) : InkWell(
                     onTap: () {
                       if(_mapController != null) {
                         _mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _latLng, zoom: 17)));
@@ -172,7 +179,7 @@ class MapScreenState extends State<MapScreen> {
   void _setMarker({AddressModel? address, bool fromCurrentLocation = false}) async {
     BitmapDescriptor destinationImageData = await MarkerHelper.convertAssetToBitmapDescriptor(
       width: 120,
-      imagePath: widget.fromRestaurant ? Images.restaurantMarker : Images.locationMarker,
+      imagePath: widget.fromRestaurant || widget.fromOrder ? Images.restaurantMarker : Images.locationMarker,
     );
     BitmapDescriptor myLocationMarkerIcon = await MarkerHelper.convertAssetToBitmapDescriptor(
       width: 120,
@@ -193,22 +200,24 @@ class MapScreenState extends State<MapScreen> {
       ));
     });
 
-    if(address == null) {
-      setState(() {
-        _markers.add(Marker(
-          markerId: const MarkerId('id--1'),
-          visible: true,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: const Offset(0.5, 0.5),
-          position: LatLng(
-            double.parse(AddressHelper.getAddressFromSharedPref()!.latitude!),
-            double.parse(AddressHelper.getAddressFromSharedPref()!.longitude!),
-          ),
-          icon: myLocationMarkerIcon,
-        ));
-      });
+    if(!widget.fromDineInOrder) {
+      if(address == null) {
+        setState(() {
+          _markers.add(Marker(
+            markerId: const MarkerId('id--1'),
+            visible: true,
+            draggable: false,
+            zIndex: 2,
+            flat: true,
+            anchor: const Offset(0.5, 0.5),
+            position: LatLng(
+              double.parse(AddressHelper.getAddressFromSharedPref()!.latitude!),
+              double.parse(AddressHelper.getAddressFromSharedPref()!.longitude!),
+            ),
+            icon: myLocationMarkerIcon,
+          ));
+        });
+      }
     }
 
     // Animate to coordinate

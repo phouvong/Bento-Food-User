@@ -1,3 +1,4 @@
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/features/cart/domain/models/cart_model.dart';
 import 'package:stackfood_multivendor/features/product/domain/repositories/product_repository_interface.dart';
@@ -12,8 +13,8 @@ class ProductService implements ProductServiceInterface {
   ProductService({required this.productRepositoryInterface});
 
   @override
-  Future<List<Product>?> getPopularProductList({required String type}) async {
-    return await productRepositoryInterface.getList(type: type);
+  Future<List<Product>?> getPopularProductList({required String type, DataSourceEnum? source}) async {
+    return await productRepositoryInterface.getList(type: type, source: source);
   }
 
   @override
@@ -123,7 +124,7 @@ class ProductService implements ProductServiceInterface {
     int qty = addOnQty;
     if (isIncrement) {
       if(stockType != 'unlimited' && addonStock != null && qty >= addonStock) {
-        showCustomSnackBar('${'maximum_addon_limit'.tr} $addonStock', showToaster: true);
+        showCustomSnackBar('${'maximum_addon_limit'.tr} $addonStock');
       } else {
         qty = qty + 1;
       }
@@ -152,11 +153,11 @@ class ProductService implements ProductServiceInterface {
     }
 
     if(stockType != 'unlimited' && itemStock != null && qty >= itemStock && !isCampaign) {
-      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock', showToaster: true, forVariation: true);
+      showCustomSnackBar('${'maximum_food_quantity_limit'.tr} $itemStock');
     } else if(minimumStock != null && qty >= minimumStock) {
-      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock', showToaster: true, forVariation: true);
+      showCustomSnackBar('${'maximum_variation_quantity_limit'.tr} $minimumStock');
     } else if(cartQuantityLimit != null && qty >= cartQuantityLimit && cartQuantityLimit != 0) {
-      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit', showToaster: true, forVariation: true);
+      showCustomSnackBar('${'maximum_cart_quantity_limit'.tr} $cartQuantityLimit');
     } else {
       qty = qty + 1;
     }
@@ -234,7 +235,7 @@ class ProductService implements ProductServiceInterface {
       }
     } else {
       if(!resultVariations[index][i]! && selectedVariationLength(resultVariations, index) >= variations![index].max!) {
-        showCustomSnackBar('${'maximum_variation_for'.tr} ${variations[index].name} ${'is'.tr} ${variations[index].max}', showToaster: true);
+        showCustomSnackBar('${'maximum_variation_for'.tr} ${variations[index].name} ${'is'.tr} ${variations[index].max}');
       }else {
         if(variations![index].variationValues![i].stockType != null) {
           if(variations[index].variationValues![i].stockType == 'unlimited') {

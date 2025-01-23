@@ -20,14 +20,14 @@ class MessageCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomInkWellWidget(
       onTap: onTap!,
-      highlightColor: Theme.of(context).colorScheme.surface.withOpacity(0.1),
+      highlightColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
       radius: Dimensions.radiusSmall + 3,
       child: Container(
         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
-          color: isUnread ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
+          color: isUnread ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(Dimensions.radiusSmall + 3),
-          boxShadow: [BoxShadow(color: isUnread ? Theme.of(context).hintColor.withOpacity(0.05) : Colors.black12, blurRadius: 5, spreadRadius: 0)],
+          boxShadow: [BoxShadow(color: isUnread ? Theme.of(context).hintColor.withValues(alpha: 0.05) : Colors.black12, blurRadius: 5, spreadRadius: 0)],
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -53,7 +53,7 @@ class MessageCardWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                   ),
                   child: Text(

@@ -41,7 +41,6 @@ class WebChatViewWidget extends StatefulWidget {
 
 class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProviderStateMixin{
   final TextEditingController _inputMessageController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   final ScrollController _scrollControllerChat = ScrollController();
   final ScrollController _scrollController1 = ScrollController();
   late TabController _tabController;
@@ -78,12 +77,12 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                     decoration: ShapeDecoration(
                       color: Theme.of(context).cardColor,
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.04)),
+                        side: BorderSide(width: 1, color: Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: .04)),
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       ),
                       shadows: [
                         BoxShadow(
-                          color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.05),
+                          color: Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: 0.05),
                           blurRadius: 5,
                           offset: const Offset(0, 5),
                           spreadRadius: 0,
@@ -126,140 +125,138 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                         ))) : const SizedBox(),
 
                         Expanded(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            physics: const BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                /// admin conversationList
+                          child: Column(
+                            children: [
+                              /// admin conversationList
 
-                                InkWell(
-                                  onTap: () {
-                                    Get.find<ChatController>().getMessages(1, NotificationBodyModel(
+                              InkWell(
+                                onTap: () {
+                                  Get.find<ChatController>().getMessages(1, NotificationBodyModel(
+                                    type: 'admin',
+                                    notificationType: NotificationType.message,
+                                    adminId: 0,
+                                    restaurantId: null,
+                                    deliverymanId: null,
+                                  ), user, 0, firstLoad: true);
+                                  if(Get.find<ProfileController>().userInfoModel == null || Get.find<ProfileController>().userInfoModel!.userInfo == null) {
+                                    Get.find<ProfileController>().getUserInfo();
+                                  }
+                                  widget.chatController.setNotificationBody(
+                                    NotificationBodyModel(
                                       type: 'admin',
                                       notificationType: NotificationType.message,
                                       adminId: 0,
                                       restaurantId: null,
                                       deliverymanId: null,
-                                    ), user, 0, firstLoad: true);
-                                    if(Get.find<ProfileController>().userInfoModel == null || Get.find<ProfileController>().userInfoModel!.userInfo == null) {
-                                      Get.find<ProfileController>().getUserInfo();
-                                    }
-                                    widget.chatController.setNotificationBody(
-                                      NotificationBodyModel(
-                                        type: 'admin',
-                                        notificationType: NotificationType.message,
-                                        adminId: 0,
-                                        restaurantId: null,
-                                        deliverymanId: null,
-                                        conversationId: 0,
-                                        image: '${Get.find<SplashController>().configModel!.logoFullUrl}',
-                                        name: '${Get.find<SplashController>().configModel!.businessName}',
-                                        receiverType: 'admin',
-                                      ),
-                                    );
+                                      conversationId: 0,
+                                      image: '${Get.find<SplashController>().configModel!.logoFullUrl}',
+                                      name: '${Get.find<SplashController>().configModel!.businessName}',
+                                      receiverType: 'admin',
+                                    ),
+                                  );
 
-                                    widget.chatController.setSelectedIndex(-1);
-                                  },
-                                  child: Builder(
-                                      builder: (context) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                            color: widget.chatController.selectedIndex == -1 ? Theme.of(context).primaryColor.withOpacity(0.10) : Theme.of(context).disabledColor.withOpacity(0.2),
-                                          ),
-                                          margin: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
-                                          child: Column(children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                                              child: Row(children: [
+                                  widget.chatController.setSelectedIndex(-1);
+                                },
+                                child: Builder(
+                                    builder: (context) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                                          color: widget.chatController.selectedIndex == -1 ? Theme.of(context).primaryColor.withValues(alpha: 0.10) : Theme.of(context).disabledColor.withValues(alpha: 0.2),
+                                        ),
+                                        margin: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
+                                        child: Column(children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                                            child: Row(children: [
+
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Theme.of(context).cardColor,
+                                                ),
+                                                child: ClipOval(child: CustomImageWidget(
+                                                  height: 50, width: 50,
+                                                  image: '${Get.find<SplashController>().configModel!.logoFullUrl}',
+                                                )),
+                                              ),
+                                              const SizedBox(width: Dimensions.paddingSizeSmall),
+
+                                              Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                                                Text(
+                                                  '${Get.find<SplashController>().configModel!.businessName}', style: robotoMedium,
+                                                ),
+                                                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+
+                                                Text(
+                                                  widget.chatController.adminConversationModel.lastMessage?.message ?? 'start_conversation'.tr,
+                                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                                ),
+
+                                              ])),
+                                              const SizedBox(width: Dimensions.paddingSizeSmall),
+
+                                              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
 
                                                 Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: 3),
                                                   decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Theme.of(context).cardColor,
+                                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                                                   ),
-                                                  child: ClipOval(child: CustomImageWidget(
-                                                    height: 50, width: 50,
-                                                    image: '${Get.find<SplashController>().configModel!.logoFullUrl}',
-                                                  )),
+                                                  child: Text(
+                                                    'admin'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
+                                                  ),
                                                 ),
-                                                const SizedBox(width: Dimensions.paddingSizeSmall),
+                                                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                                                Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                                                  Text(
-                                                    '${Get.find<SplashController>().configModel!.businessName}', style: robotoMedium,
-                                                  ),
-                                                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                                                  Text(
-                                                    widget.chatController.adminConversationModel.lastMessage?.message ?? 'start_conversation'.tr,
-                                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                                                  ),
-
-                                                ])),
-                                                const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                                                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-
-                                                  Container(
-                                                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: 3),
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                                                      borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-                                                    ),
-                                                    child: Text(
-                                                      'admin'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-                                                  /*Text(
-                                                    DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(widget.chatController.conversationModel!.conversations![0]!.lastMessageTime!)),
-                                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                                                  ),*/
-
-                                                ]),
+                                                /*Text(
+                                                  DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(widget.chatController.conversationModel!.conversations![0]!.lastMessageTime!)),
+                                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                                ),*/
 
                                               ]),
-                                            ),
-                                          ]),
-                                        );
-                                      }
-                                  ),
-                                ),
-                                Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
 
-                                /// TabBar
-                                TabBar(
-                                  tabAlignment: TabAlignment.start,
-                                  controller: _tabController,
-                                  isScrollable: true,
-                                  indicatorColor: Theme.of(context).primaryColor,
-                                  labelColor: Theme.of(context).primaryColor,
-                                  unselectedLabelColor: Theme.of(context).disabledColor,
-                                  indicatorSize: TabBarIndicatorSize.label,
-                                  labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
-                                  unselectedLabelStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
-                                  tabs: [
-                                    Tab(text: 'vendor'.tr),
-                                    Tab(text: 'delivery_man'.tr),
-                                  ],
-                                  onTap: (int index){
-                                    if(index == 0){
-                                      widget.chatController.setType('vendor');
-                                      widget.chatController.setTabSelect();
-                                    } else {
-                                      widget.chatController.setType('delivery_man');
-                                      widget.chatController.setTabSelect();
+                                            ]),
+                                          ),
+                                        ]),
+                                      );
                                     }
-                                  },
                                 ),
+                              ),
+                              Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
+
+                              /// TabBar
+                              TabBar(
+                                tabAlignment: TabAlignment.start,
+                                controller: _tabController,
+                                isScrollable: true,
+                                indicatorColor: Theme.of(context).primaryColor,
+                                labelColor: Theme.of(context).primaryColor,
+                                unselectedLabelColor: Theme.of(context).disabledColor,
+                                indicatorSize: TabBarIndicatorSize.label,
+                                labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
+                                unselectedLabelStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                                tabs: [
+                                  Tab(text: 'vendor'.tr),
+                                  Tab(text: 'delivery_man'.tr),
+                                ],
+                                onTap: (int index){
+                                  if(index == 0){
+                                    widget.chatController.setType('vendor');
+                                    widget.chatController.setTabSelect();
+                                  } else {
+                                    widget.chatController.setType('delivery_man');
+                                    widget.chatController.setTabSelect();
+                                  }
+                                },
+                              ),
 
 
-                                /// TabBarView
-                                SizedBox(
+                              /// TabBarView
+                              Expanded(
+                                child: SizedBox(
                                   height: MediaQuery.of(context).size.height * 0.5,
                                   child: TabBarView(
                                     controller: _tabController,
@@ -285,9 +282,9 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                                     ],
                                   ),
                                 ),
-                              ],
+                              ),
+                            ],
 
-                            ),
                           ),
                         ),
 
@@ -305,12 +302,12 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                       decoration: ShapeDecoration(
                         color: Theme.of(context).cardColor,
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 1, color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.04)),
+                          side: BorderSide(width: 1, color: Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: .04)),
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         ),
                         shadows: [
                           BoxShadow(
-                            color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.05),
+                            color: Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: 0.05),
                             blurRadius: 5,
                             offset: const Offset(0, 5),
                             spreadRadius: 0,
@@ -357,7 +354,7 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                               ]),
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                              Divider(color: Theme.of(context).disabledColor.withOpacity(.5)),
+                              Divider(color: Theme.of(context).disabledColor.withValues(alpha: .5)),
 
                             ],
                           ),
@@ -417,7 +414,7 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-                            border: Border.all(color: Theme.of(context).primaryColor.withOpacity(.2)),
+                            border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: .2)),
                           ),
 
                           child: Column(children: [

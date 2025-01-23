@@ -24,9 +24,9 @@ class BaseCardWidget extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            color: restaurantRegistrationController.businessIndex == index ? Theme.of(context).primaryColor.withOpacity(0.05) : Theme.of(context).cardColor,
+            color: restaurantRegistrationController.businessIndex == index ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Theme.of(context).cardColor,
             border: restaurantRegistrationController.businessIndex == index && isDesktop ? Border.all(color: Theme.of(context).primaryColor) : !isDesktop ? Border.all(color: restaurantRegistrationController.businessIndex == index ? Theme.of(context).primaryColor
-                : Theme.of(context).disabledColor.withOpacity(0.5), width: 0.5) : null,
+                : Theme.of(context).disabledColor.withValues(alpha: 0.5), width: 0.5) : null,
             boxShadow: restaurantRegistrationController.businessIndex == index ? null : [BoxShadow(color: Colors.grey[200]!, offset: const Offset(5, 5), blurRadius: 10)],
           ),
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeLarge),
@@ -34,7 +34,7 @@ class BaseCardWidget extends StatelessWidget {
 
             Align(
               alignment: isDesktop ? Alignment.centerLeft : Alignment.center,
-              child: Text(title, style: robotoMedium.copyWith(color: restaurantRegistrationController.businessIndex == index ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7), fontSize: Dimensions.fontSizeDefault,
+              child: Text(title, style: robotoMedium.copyWith(color: restaurantRegistrationController.businessIndex == index ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7), fontSize: Dimensions.fontSizeDefault,
                 fontWeight: restaurantRegistrationController.businessIndex == index ? FontWeight.w600 : isDesktop ? FontWeight.w600 : FontWeight.w400,
               )),
             ),
@@ -43,7 +43,7 @@ class BaseCardWidget extends StatelessWidget {
 
             isDesktop ? Text(
               description ?? '', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall,
-                color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
+                color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
             ) : const SizedBox(),
 
           ]),

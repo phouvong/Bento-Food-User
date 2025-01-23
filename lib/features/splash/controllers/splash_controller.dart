@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:stackfood_multivendor/api/api_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_loader_widget.dart';
 import 'package:stackfood_multivendor/common/widgets/custom_snackbar_widget.dart';
 import 'package:stackfood_multivendor/features/address/controllers/address_controller.dart';
@@ -8,13 +9,18 @@ import 'package:stackfood_multivendor/features/address/domain/models/address_mod
 import 'package:stackfood_multivendor/features/auth/controllers/auth_controller.dart';
 import 'package:stackfood_multivendor/features/location/controllers/location_controller.dart';
 import 'package:stackfood_multivendor/features/location/widgets/pick_map_dialog.dart';
+import 'package:stackfood_multivendor/features/notification/domain/models/notification_body_model.dart';
 import 'package:stackfood_multivendor/features/splash/domain/models/config_model.dart';
+import 'package:stackfood_multivendor/features/splash/domain/models/deep_link_body.dart';
 import 'package:stackfood_multivendor/features/splash/domain/services/splash_service_interface.dart';
 import 'package:stackfood_multivendor/helper/address_helper.dart';
+import 'package:stackfood_multivendor/helper/maintance_helper.dart';
 import 'package:stackfood_multivendor/helper/responsive_helper.dart';
 import 'package:stackfood_multivendor/helper/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stackfood_multivendor/helper/splash_route_helper.dart';
+import 'package:universal_html/html.dart' as html;
 
 class SplashController extends GetxController implements GetxService {
   final SplashServiceInterface splashServiceInterface;
@@ -44,24 +50,114 @@ class SplashController extends GetxController implements GetxService {
 
   DateTime get currentTime => DateTime.now();
 
-  Future<bool> getConfigData() async {
+  // Future<bool> getConfigData({bool handleMaintenanceMode = false, DataSourceEnum source = DataSourceEnum.local}) async {
+  //   bool isSuccess = false;
+  //
+  //   // Fetch from local cache
+  //   isSuccess = await _fetchAndSetConfigData(source: DataSourceEnum.local, handleMaintenanceMode: handleMaintenanceMode);
+  //
+  //   // Fetch from API in the background
+  //   _fetchAndSetConfigData(source: DataSourceEnum.client, handleMaintenanceMode: handleMaintenanceMode);
+  //
+  //   return isSuccess;
+  // }
+  //
+  // Future<bool> _fetchAndSetConfigData({required DataSourceEnum source, bool? handleMaintenanceMode}) async {
+  //   Response response = await splashServiceInterface.getConfigData(source: source);
+  //   bool isSuccess = false;
+  //
+  //   if(response.statusCode == 200) {
+  //     ConfigModel? fetchedConfig = splashServiceInterface.prepareConfigData(response);
+  //     if(fetchedConfig != null) {
+  //       _configModel = fetchedConfig;
+  //       _handleMaintenanceMode(handleMaintenanceMode: handleMaintenanceMode);
+  //       isSuccess = true;
+  //       update();
+  //     }
+  //   } else {
+  //     if(response.statusText == ApiClient.noInternetMessage) {
+  //       _hasConnection = false;
+  //     }
+  //   }
+  //
+  //   return isSuccess;
+  // }
+  //
+  // void _handleMaintenanceMode({bool? handleMaintenanceMode}) {
+  //   if(!GetPlatform.isWeb){
+  //     bool isMaintenanceMode = _configModel?.maintenanceMode ?? false;
+  //     bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
+  //
+  //     if (isInMaintenance) {
+  //       Get.offNamed(RouteHelper.getUpdateRoute(false));
+  //     } else if ((Get.currentRoute.contains(RouteHelper.update) && !isMaintenanceMode) || !isInMaintenance) {
+  //       Get.offNamed(RouteHelper.getInitialRoute());
+  //     }
+  //   }
+  // }
+
+  Future<void> getConfigData({bool handleMaintenanceMode = false, DataSourceEnum source = DataSourceEnum.local, NotificationBodyModel? notificationBody, bool fromMainFunction = false, bool fromDemoReset = false}) async {
     _hasConnection = true;
     _savedCookiesData = getCookiesData();
-    Response response = await splashServiceInterface.getConfigData();
-    bool isSuccess = false;
+    Response response;
+    if(source == DataSourceEnum.local) {
+      response = await splashServiceInterface.getConfigData(source: DataSourceEnum.local);
+      _handleConfigResponse(response, handleMaintenanceMode, fromMainFunction, fromDemoReset, notificationBody: notificationBody, linkBody: null);
+      getConfigData(handleMaintenanceMode: handleMaintenanceMode, source: DataSourceEnum.client);
+    } else {
+      response = await splashServiceInterface.getConfigData(source: DataSourceEnum.client);
+      _handleConfigResponse(response, handleMaintenanceMode, fromMainFunction, fromDemoReset, notificationBody: notificationBody, linkBody: null);
+    }
+
+  }
+
+  void _handleConfigResponse(Response response, bool handleMaintenanceMode, bool fromMainFunction, bool fromDemoReset, {required NotificationBodyModel? notificationBody, required DeepLinkBody? linkBody}) {
     if(response.statusCode == 200) {
       _configModel = splashServiceInterface.prepareConfigData(response);
       if(_configModel != null) {
-        isSuccess = true;
+        if(!GetPlatform.isWeb){
+          bool isMaintenanceMode = _configModel!.maintenanceMode!;
+          bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
+
+          if (isInMaintenance && handleMaintenanceMode) {
+            Get.offNamed(RouteHelper.getUpdateRoute(false));
+          } else if (handleMaintenanceMode && ((Get.currentRoute.contains(RouteHelper.update) && !isMaintenanceMode) || !isInMaintenance)) {
+            Get.offNamed(RouteHelper.getInitialRoute());
+          }
+        }
+        if(fromMainFunction) {
+          _mainConfigRouting();
+        } else if (fromDemoReset) {
+          Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: true));
+        } else {
+          route(notificationBody: notificationBody, linkBody: linkBody);
+        }
+        _onRemoveLoader();
       }
-    }else {
+    } else {
       if(response.statusText == ApiClient.noInternetMessage) {
         _hasConnection = false;
       }
-      isSuccess = false;
     }
+
     update();
-    return isSuccess;
+  }
+
+  void _onRemoveLoader() {
+    final preloader = html.document.querySelector('.preloader');
+    if (preloader != null) {
+      preloader.remove();
+    }
+  }
+
+  _mainConfigRouting() async {
+    if(GetPlatform.isWeb) {
+      bool isInMaintenance = MaintenanceHelper.isMaintenanceEnable();
+
+      if (isInMaintenance) {
+        Get.offNamed(RouteHelper.getUpdateRoute(false));
+      }
+    }
   }
 
   Future<bool> initSharedData() {

@@ -54,7 +54,7 @@ class DiscountTagWidget extends StatelessWidget {
           ),
           gradient: LinearGradient(colors: [
             Colors.black,
-            Colors.black.withOpacity(0.0),
+            Colors.black.withValues(alpha: 0.0),
           ], begin: Alignment.centerLeft, end: Alignment.centerRight),
         ),
         child: Text(
@@ -83,7 +83,7 @@ class LabelPaint extends CustomPainter {
     path_0.close();
 
     Paint paint0Fill = Paint()..style=PaintingStyle.fill;
-    paint0Fill.color = const Color(0xffC1555D).withOpacity(1.0);
+    paint0Fill.color = const Color(0xffC1555D).withValues(alpha: 1.0);
     canvas.drawPath(path_0,paint0Fill);
 
     Path path_1 = Path();

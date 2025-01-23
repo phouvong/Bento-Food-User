@@ -32,7 +32,7 @@ class _SearchFieldWidgetState extends State<SearchFieldWidget> {
       ],
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+        hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(ResponsiveHelper.isDesktop(context) ? Dimensions.radiusSmall : 60),
           borderSide: BorderSide.none,
@@ -40,6 +40,7 @@ class _SearchFieldWidgetState extends State<SearchFieldWidget> {
         filled: true,
         fillColor: Theme.of(context).cardColor,
         contentPadding: EdgeInsets.zero,
+        hoverColor: Colors.transparent,
       ),
       onSubmitted: widget.onSubmit as void Function(String)?,
       onChanged: widget.onChanged as void Function(String)?,

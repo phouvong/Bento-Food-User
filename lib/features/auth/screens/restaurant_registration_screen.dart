@@ -275,7 +275,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                                                     width: 150, height: 120,
                                                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                                                      Icon(CupertinoIcons.photo_camera_solid, size: 38, color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                                                      Icon(CupertinoIcons.photo_camera_solid, size: 38, color: Theme.of(context).disabledColor.withValues(alpha: 0.6)),
                                                       const SizedBox(height: Dimensions.paddingSizeSmall),
 
                                                       Text(
@@ -286,7 +286,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
 
                                                       Text(
                                                         '(${'1_1_ratio'.tr})',
-                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: Dimensions.fontSizeSmall - 2), textAlign: TextAlign.center,
+                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: Dimensions.fontSizeSmall - 2), textAlign: TextAlign.center,
                                                       ),
 
                                                     ]),
@@ -347,7 +347,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                                                     width: context.width, height: 120,
                                                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                                                      Icon(CupertinoIcons.photo_camera_solid, size: 38, color: Theme.of(context).disabledColor.withOpacity(0.6)),
+                                                      Icon(CupertinoIcons.photo_camera_solid, size: 38, color: Theme.of(context).disabledColor.withValues(alpha: 0.6)),
 
                                                       Text(
                                                         'upload_store_cover'.tr,
@@ -356,14 +356,14 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
 
                                                       Text(
                                                         'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: Dimensions.fontSizeSmall - 2),
+                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: Dimensions.fontSizeSmall - 2),
                                                         textAlign: TextAlign.center,
                                                       ),
                                                       const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                                                       Text(
                                                         '(${'1_2_ratio'.tr})',
-                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: Dimensions.fontSizeSmall - 2), textAlign: TextAlign.center,
+                                                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: Dimensions.fontSizeSmall - 2), textAlign: TextAlign.center,
                                                       ),
 
                                                     ]),
@@ -425,7 +425,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                    boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                    boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                                   child: Column(children: [
@@ -518,7 +518,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                                    boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                                    boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -681,14 +681,14 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                                 padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                                 child: Text(
                                   "${'restaurant_will_pay'.tr} ${Get.find<SplashController>().configModel!.adminCommission}% ${'commission_to'.tr} ${Get.find<SplashController>().configModel!.businessName} ${'from_each_order_You_will_get_access_of_all'.tr}",
-                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
+                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
                                 ),
                               ) : Column(children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                                   child: Text(
                                     'run_restaurant_by_purchasing_subscription_packages'.tr,
-                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7)), textAlign: TextAlign.justify, textScaler: const TextScaler.linear(1.1),
                                   ),
                                 ),
                                 const SizedBox(height: Dimensions.paddingSizeLarge),
@@ -753,7 +753,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
@@ -838,7 +838,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
@@ -919,7 +919,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                           ) : SizedBox(
                             width: 150, height: 120,
                             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                              Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withOpacity(0.8), size: 38),
+                              Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withValues(alpha: 0.8), size: 38),
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Text('upload_store_logo'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeExtraSmall)),
@@ -927,7 +927,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
 
                               Text(
                                 'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: 10),
+                                style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: 10),
                                 textAlign: TextAlign.center,
                               ),
                             ]),
@@ -975,7 +975,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                             width: context.width, height: 120,
                             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                              Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withOpacity(0.8), size: 38),
+                              Icon(CupertinoIcons.camera_fill, color: Theme.of(context).disabledColor.withValues(alpha: 0.8), size: 38),
                               const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Text('upload_store_cover'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeExtraSmall)),
@@ -983,7 +983,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
 
                               Text(
                                 'upload_jpg_png_gif_maximum_2_mb'.tr,
-                                style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withOpacity(0.6), fontSize: 10),
+                                style: robotoRegular.copyWith(color: Theme.of(context).disabledColor.withValues(alpha: 0.6), fontSize: 10),
                                 textAlign: TextAlign.center,
                               ),
                             ]),
@@ -1028,7 +1028,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
@@ -1099,7 +1099,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
@@ -1186,7 +1186,7 @@ class _RestaurantRegistrationScreenState extends State<RestaurantRegistrationScr
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
+                  boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(0, 1))],
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),

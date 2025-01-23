@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:stackfood_multivendor/api/local_client.dart';
+import 'package:stackfood_multivendor/common/enums/data_source_enum.dart';
 import 'package:stackfood_multivendor/common/models/product_model.dart';
 import 'package:stackfood_multivendor/common/models/response_model.dart';
 import 'package:stackfood_multivendor/common/models/review_model.dart';
@@ -21,12 +25,26 @@ class ReviewRepository implements ReviewRepositoryInterface {
   }
 
   @override
-  Future<List<Product>?> getList({int? offset, String? type}) async {
+  Future<List<Product>?> getList({int? offset, String? type, DataSourceEnum? source}) async {
     List<Product>? reviewedProductList;
-    Response response = await apiClient.getData('${AppConstants.reviewedProductUri}?type=$type');
-    if (response.statusCode == 200) {
-      reviewedProductList = [];
-      reviewedProductList.addAll(ProductModel.fromJson(response.body).products!);
+    String cacheId = AppConstants.reviewedProductUri;
+
+    switch(source!){
+      case DataSourceEnum.client:
+        Response response = await apiClient.getData('${AppConstants.reviewedProductUri}?type=$type');
+
+        if(response.statusCode == 200){
+          reviewedProductList = [];
+          reviewedProductList.addAll(ProductModel.fromJson(response.body).products!);
+          LocalClient.organize(DataSourceEnum.client, cacheId, jsonEncode(response.body), apiClient.getHeader());
+        }
+
+      case DataSourceEnum.local:
+        String? cacheResponseData = await LocalClient.organize(DataSourceEnum.local, cacheId, null, null);
+        if(cacheResponseData != null) {
+          reviewedProductList = [];
+          reviewedProductList.addAll(ProductModel.fromJson(jsonDecode(cacheResponseData)).products!);
+        }
     }
     return reviewedProductList;
   }

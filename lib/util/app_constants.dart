@@ -3,15 +3,15 @@ import 'package:stackfood_multivendor/util/images.dart';
 import 'package:get/get.dart';
 
 class AppConstants {
-  static const String appName = 'Bentofood';
-  static const double appVersion = 7.9;
+  static const String appName = 'bentofood';
+  static const double appVersion = 8.0;
 
   static const String fontFamily = 'Lao';
   static const bool payInWevView = false;
-  static const String webHostedUrl = 'https://food.bentolao.com';
-  static const bool useReactWebsite = false;
+  static const String webHostedUrl = 'https://bentodelivery.net';
+  static const bool useReactWebsite = true;
 
-  static const String baseUrl = 'https://am.bentolao.com';
+  static const String baseUrl = 'https://food.bentolao.com';
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
   static const String restaurantProductUri = '/api/v1/products/latest';
@@ -123,6 +123,7 @@ class AppConstants {
   static const String personalInformationUri = '/api/v1/auth/update-info';
   static const String firebaseAuthVerify = '/api/v1/auth/firebase-verify-token';
   static const String firebaseResetPassword = '/api/v1/auth/firebase-reset-password';
+  static const String dineInRestaurantListUri = '/api/v1/restaurants/dine-in';
 
   ///Subscription
   static const String businessPlanUri = '/api/v1/vendor/business_plan';
@@ -171,6 +172,7 @@ class AppConstants {
   static const String referBottomSheet = 'stackfood_reffer_bottomsheet_show';
   static const String maintenanceModeTopic = 'maintenance_mode_user_app';
   static const String demoResetTopic = 'stackfood_demo_reset';
+  static const String configCacheKey = 'stackfood_config_cache';
 
 
   ///Refer & Earn work flow list..

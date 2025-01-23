@@ -51,15 +51,16 @@ class OrderInfoSection extends StatelessWidget {
     bool delivered = order.orderStatus == AppConstants.delivered;
     bool cancelled = order.orderStatus == AppConstants.cancelled;
     bool takeAway = order.orderType == 'take_away';
+    bool isDineIn = order.orderType == 'dine_in';
     bool cod = order.paymentMethod == 'cash_on_delivery';
     bool isDesktop = ResponsiveHelper.isDesktop(context);
     bool isGuestLoggedIn = Get.find<AuthController>().isGuestLoggedIn();
 
-    bool ongoing = (order.orderStatus != 'delivered' && order.orderStatus != 'failed'
+    bool ongoing = ((isDineIn ? true : order.orderStatus != 'delivered') && order.orderStatus != 'failed'
         && order.orderStatus != 'refund_requested' && order.orderStatus != 'refunded'
         && order.orderStatus != 'refund_request_canceled' && order.orderStatus != 'canceled');
 
-    bool pastOrder = (order.orderStatus == 'delivered' || order.orderStatus == 'failed'
+    bool pastOrder = ((isDineIn ? false : order.orderStatus == 'delivered') || order.orderStatus == 'failed'
         || order.orderStatus == 'refund_requested' || order.orderStatus == 'refunded'
         || order.orderStatus == 'refund_request_canceled' ||order.orderStatus == 'canceled');
 
@@ -74,10 +75,122 @@ class OrderInfoSection extends StatelessWidget {
         decoration: isDesktop ? BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-          boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withOpacity(0.05) : Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withValues(alpha: 0.05) : Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
         ) : null,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          DateConverter.isBeforeTime(order.scheduleAt) ? (!cancelled && ongoing && !subscription) ? Column(children: [
+          DateConverter.isBeforeTime(order.scheduleAt) || isDineIn ? (!cancelled && ongoing && !subscription) ?
+          isDineIn ? Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
+
+            isDesktop ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+
+              SizedBox(height: Dimensions.paddingSizeSmall),
+              Text('${'order'.tr} # ${order.id.toString()}', style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+
+              Text(
+                (order.orderStatus == 'pending' || order.orderStatus == 'confirmed') ? '${'your_order_is'.tr} ${order.orderStatus?.tr}'
+                    : order.orderStatus == 'processing' ? 'your_food_is_cooking'.tr
+                    : order.orderStatus == 'handover' ? 'your_food_is_ready'.tr
+                    : order.orderStatus == 'canceled' ? 'your_order_is_canceled'.tr
+                    : 'your_food_is_served'.tr,
+                style: robotoRegular.copyWith(color: Theme.of(context).primaryColor),
+              ),
+
+            ]) : const SizedBox(),
+
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+              ),
+              child: Column(
+                children: [
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        order.orderStatus == 'pending' ? Images.pendingDineIn
+                            : (order.orderStatus == 'confirmed') ? Images.confirmDineIn
+                            : order.orderStatus == 'processing' ? Images.cookingDineIn
+                            : order.orderStatus == 'handover' ? Images.preparingFoodOrderDetails
+                            : Images.servedDineIn,
+                        height: 200,),
+                    ),
+                  ),
+
+                  Center(child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.paddingSizeLarge),
+                    child: order.orderStatus == 'pending' ? Text(
+                      'your_order_is_pending_please_wait_for_restaurant_confirmation'.tr,
+                      textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                    ) : order.orderStatus == 'processing' ? Column(children: [
+                      Text(
+                        'your_food_is_almost_ready'.tr,
+                        textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                      ),
+
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+
+                        Text(
+                          DateConverter.differenceInMinute(order.restaurant!.deliveryTime, order.createdAt, order.processingTime, order.scheduleAt, fromDineIn: true, processing: order.processing) < 5 ? '1 - 5'
+                              : '${DateConverter.differenceInMinute(order.restaurant!.deliveryTime, order.createdAt, order.processingTime, order.scheduleAt, fromDineIn: true, processing: order.processing)-5} '
+                              '- ${DateConverter.differenceInMinute(order.restaurant!.deliveryTime, order.createdAt, order.processingTime, order.scheduleAt, fromDineIn: true, processing: order.processing)}',
+                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge), textDirection: TextDirection.ltr,
+                        ),
+                        const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                        Text('min'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyMedium!.color)),
+                      ]),
+
+                    ]) : order.orderStatus == 'confirmed' ? RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(children: [
+                        TextSpan(text: 'your_dine_in_order_is_confirmed_please_make_sure_to_arrive_on_time'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyMedium!.color)),
+                        TextSpan(text: ' - ', style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyMedium!.color)),
+                        TextSpan(
+                          text: DateConverter.dateTimeStringToDateTime(order.scheduleAt!),
+                          style: robotoMedium.copyWith(fontSize:Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyMedium!.color),
+                        ),
+                      ]),
+                    ) : order.orderStatus == 'handover' ? DateConverter.differenceInMinute(null, order.createdAt, null, order.scheduleAt) > 0 ? Column(children: [
+                      Text(
+                        'your_food_is_ready_to_serve_you_are'.tr,
+                        textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                      ),
+
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+
+                        Text(
+                          DateConverter.differenceInMinute(null, order.createdAt, null, order.scheduleAt) < 5 ? '1 - 5 ${'min'.tr}'
+                              : DateConverter.convertMinutesToDayHourMinute(DateConverter.differenceInMinute(null, order.createdAt, null, order.scheduleAt)),
+                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge), textDirection: TextDirection.ltr,
+                        ),
+                        // const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                        // Text('min'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyMedium!.color)),
+                      ]),
+
+                      Text(
+                        'away_from_restaurant_hurry_up'.tr,
+                        textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                      ),
+
+                    ]) : Text(
+                      'your_food_is_ready_to_serve_hurry_up'.tr,
+                      textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                    ) : Text(
+                      'enjoy_your_meal'.tr,
+                      textAlign: TextAlign.center, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge/*, color: Theme.of(context).disabledColor*/),
+                    ),
+                  )),
+
+                  SizedBox(height: Dimensions.paddingSizeDefault),
+
+                ],
+              ),
+            ),
+            SizedBox(height: Dimensions.paddingSizeDefault),
+
+          ]) : Column(children: [
 
             ClipRRect(borderRadius: BorderRadius.circular(10), child: Image.asset(order.orderStatus == 'pending' ? Images.pendingOrderDetails : (order.orderStatus == 'confirmed' || order.orderStatus == 'processing' || order.orderStatus == 'handover')
                 ? Images.preparingFoodOrderDetails : Images.animateDeliveryMan, fit: BoxFit.contain, height: 180)),
@@ -114,7 +227,7 @@ class OrderInfoSection extends StatelessWidget {
             decoration: !isDesktop ? BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-              boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
             ) : null,
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -135,12 +248,14 @@ class OrderInfoSection extends StatelessWidget {
                 Text(order.id.toString(), style: robotoMedium),
                 const Expanded(child: SizedBox()),
 
-                const Icon(Icons.watch_later, size: 17),
-                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                Text(
-                  DateConverter.dateTimeStringToDateTime(order.createdAt!),
-                  style: robotoRegular,
-                ),
+                !isDineIn ? Row(children: [
+                  const Icon(Icons.watch_later, size: 17),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(
+                    DateConverter.dateTimeStringToDateTime(order.createdAt!),
+                    style: robotoRegular,
+                  ),
+                ]) : const SizedBox(),
               ]),
               const Divider(height: Dimensions.paddingSizeLarge),
 
@@ -153,7 +268,7 @@ class OrderInfoSection extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: 3),
                   decoration: BoxDecoration(
                     color: (subscription ? order.subscription!.status == 'canceled' || order.subscription!.status == 'expired' : (order.orderStatus == 'failed' || cancelled || order.orderStatus == 'refund_request_canceled'))
-                      ? Colors.red.withOpacity(0.1) : order.orderStatus == 'refund_requested' ? Colors.yellow.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                      ? Colors.red.withValues(alpha: 0.1) : order.orderStatus == 'refund_requested' ? Colors.yellow.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   ),
                   child: Text(
@@ -168,6 +283,23 @@ class OrderInfoSection extends StatelessWidget {
                 ),
 
               ]) : const SizedBox(),
+
+              isDineIn ? Row(children: [
+                Text('${'order_date'.tr}:', style: robotoRegular),
+                Spacer(),
+                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                Text(DateConverter.dateTimeStringToDateTime(order.createdAt!), style: robotoMedium),
+              ]) : const SizedBox(),
+              isDineIn ? const Divider(height: Dimensions.paddingSizeExtraLarge) : const SizedBox(),
+
+              isDineIn ? Row(children: [
+                Text('${'dine_in_date'.tr}:', style: robotoRegular),
+                Spacer(),
+                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                Text(DateConverter.dateTimeStringToDateTime(order.scheduleAt!), style: robotoMedium),
+              ]) : const SizedBox(),
+              isDineIn ? const Divider(height: Dimensions.paddingSizeExtraLarge) : const SizedBox(),
+
               subscription ? const Divider(height: Dimensions.paddingSizeExtraLarge) : const SizedBox(),
 
               order.scheduled == 1 ? Row(children: [
@@ -178,7 +310,7 @@ class OrderInfoSection extends StatelessWidget {
               order.scheduled == 1 ? const Divider(height: Dimensions.paddingSizeLarge) : const SizedBox(),
 
               Get.find<SplashController>().configModel!.orderDeliveryVerification! ? Row(children: [
-                Text('${'delivery_verification_code'.tr}:', style: robotoRegular),
+                Text('${order.orderType == 'delivery' ? 'delivery_verification_code'.tr : 'order_verification_code'.tr}:', style: robotoRegular),
                 const Expanded(child: SizedBox()),
                 Text(order.otp!, style: robotoMedium),
               ]) : const SizedBox(),
@@ -190,7 +322,7 @@ class OrderInfoSection extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.05), borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   ),
                   child: Text(
                     cod ? 'cash_on_delivery'.tr
@@ -222,7 +354,7 @@ class OrderInfoSection extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).disabledColor.withOpacity(0.1),
+                    color: Theme.of(context).disabledColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                   ),
                   child: Column(children: [
@@ -391,14 +523,20 @@ class OrderInfoSection extends StatelessWidget {
                   )),
                   const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                   Text(
-                    delivered ? '${'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(order.delivered!)}'
-                        : subscription ? order.subscription!.status!.tr : order.orderStatus!.tr,
+                    delivered ? '${isDineIn ? 'served_at'.tr : 'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(order.delivered!)}'
+                        : subscription ? order.subscription!.status!.tr
+                        : isDineIn ? order.orderStatus == 'processing' ? 'cooking'.tr
+                        : order.orderStatus == 'handover' ? 'ready_to_serve'.tr
+                        : order.orderStatus == 'pending' ? 'pending'.tr
+                        : order.orderStatus == 'canceled' ? 'canceled'.tr
+                        : order.orderStatus == 'confirmed' ? 'confirmed'.tr
+                        : 'served'.tr : order.orderStatus!.tr,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                   ),
                 ]),
               ),
 
-              Column(children: [
+              order.orderType != 'dine_in' ? Column(children: [
                 subscription ? const SizedBox() : const Divider(height: Dimensions.paddingSizeLarge),
 
                 Row(children: [
@@ -410,9 +548,9 @@ class OrderInfoSection extends StatelessWidget {
                     style: robotoRegular,
                   ),
                 ]),
-              ]),
+              ]) : const SizedBox(),
 
-              order.unavailableItemNote != null ? Column(
+              order.unavailableItemNote != null && order.orderType == 'delivery' ? Column(
                 children: [
                   const Divider(height: Dimensions.paddingSizeLarge),
                   Row(children: [
@@ -426,7 +564,7 @@ class OrderInfoSection extends StatelessWidget {
                 ],
               ) : const SizedBox(),
 
-              order.deliveryInstruction != null ? Column(children: [
+              order.deliveryInstruction != null && order.orderType == 'delivery' ? Column(children: [
                 const Divider(height: Dimensions.paddingSizeLarge),
 
                 Row(children: [
@@ -438,7 +576,7 @@ class OrderInfoSection extends StatelessWidget {
                   ),
                 ]),
               ]) : const SizedBox(),
-              SizedBox(height: order.deliveryInstruction != null ? Dimensions.paddingSizeSmall : 0),
+              SizedBox(height: order.deliveryInstruction != null && order.orderType == 'delivery' ? Dimensions.paddingSizeSmall : 0),
 
               cancelled ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Divider(height: Dimensions.paddingSizeLarge),
@@ -537,11 +675,40 @@ class OrderInfoSection extends StatelessWidget {
                 ),
                 const SizedBox(height: Dimensions.paddingSizeLarge),
               ]) : const SizedBox(),
+              
+              (order.orderReference != null && order.orderReference!.tableNumber != null && !isDesktop) ? Container(
+                width: Dimensions.webMaxWidth,
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
+                margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                  border: Border.all(width: 0.5, color: Theme.of(context).primaryColor),
+                  boxShadow: [BoxShadow(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), blurRadius: 10)]
+                ),
+                child: Wrap(runAlignment: WrapAlignment.spaceBetween, children: [
+
+                  (order.orderReference!.tokenNumber != null && order.orderReference!.tokenNumber!.isNotEmpty) ? Row(mainAxisSize: MainAxisSize.min, children: [
+                    Image.asset(Images.couponIcon, height: 20, width: 20, color: Theme.of(context).primaryColor),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                    Text(order.orderReference!.tokenNumber??'', style: robotoBold),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                    Text('(${'token_no'.tr})', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
+                  ]) : const SizedBox(),
+
+                  Text('${'table_no'.tr} - ${order.orderReference!.tableNumber}',
+                    style: robotoRegular.copyWith(color: Colors.blue),
+                  ),
+
+                ]),
+              ) : const SizedBox(),
 
               (order.orderStatus == 'delivered' && order.orderProofFullUrl != null && order.orderProofFullUrl!.isNotEmpty) ? Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+                  boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
                 ),
                 margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -583,6 +750,45 @@ class OrderInfoSection extends StatelessWidget {
         ]),
       ),
 
+      (order.orderReference != null && order.orderReference!.tableNumber != null && isDesktop) ? Container(
+        // width: Dimensions.webMaxWidth,
+        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
+        margin: const EdgeInsets.only(top: Dimensions.paddingSizeLarge, ),
+        decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+            // border: Border.all(width: 0.5, color: Theme.of(context).primaryColor),
+            boxShadow: [BoxShadow(color: Theme.of(context).disabledColor.withValues(alpha: 0.3), blurRadius: 10)]
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+
+          Expanded(
+            child: Center(
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Image.asset(Images.couponIcon, height: 20, width: 20, color: Theme.of(context).primaryColor),
+                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                Text(order.orderReference!.tokenNumber??'', style: robotoBold),
+                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+
+                Text('(${'token_no'.tr})', style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
+              ]),
+            ),
+          ),
+
+          Container(height: 40, width: 1, color: Colors.grey),
+
+          Expanded(
+            child: Center(
+              child: Text('${'table_no'.tr} - ${order.orderReference!.tableNumber}',
+                style: robotoRegular.copyWith(color: Colors.blue),
+              ),
+            ),
+          ),
+
+        ]),
+      ) : const SizedBox(),
+
 
       !ResponsiveHelper.isDesktop(context) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -602,12 +808,12 @@ class OrderInfoSection extends StatelessWidget {
       ]) : const SizedBox(),
       const SizedBox(height: Dimensions.paddingSizeSmall),
 
-      isDesktop ? Padding(
+      isDesktop && !isDineIn ? Padding(
         padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
         child: Text('delivery_details'.tr, style: robotoMedium),
       ) : const SizedBox(),
 
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      !isDineIn ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
         !isDesktop ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
@@ -618,7 +824,7 @@ class OrderInfoSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-            boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withOpacity(0.05) : Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+            boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withValues(alpha: 0.05) : Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
           ),
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -658,7 +864,7 @@ class OrderInfoSection extends StatelessWidget {
           ]),
         ),
 
-      ]),
+      ]) : const SizedBox(),
       const SizedBox(height: Dimensions.paddingSizeSmall),
 
       isDesktop ? Padding(
@@ -679,7 +885,7 @@ class OrderInfoSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-              boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withOpacity(0.05) : Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withValues(alpha: 0.05) : Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
             ),
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -706,7 +912,7 @@ class OrderInfoSection extends StatelessWidget {
 
                 ])),
 
-                (takeAway && (pending || accepted || confirmed || processing || order.orderStatus == 'handover'
+                (takeAway && !isDineIn && (pending || accepted || confirmed || processing || order.orderStatus == 'handover'
                 || pickedUp)) ? TextButton.icon(
                   onPressed: () async {
                     String url ='https://www.google.com/maps/dir/?api=1&destination=${order.restaurant!.latitude}'
@@ -718,6 +924,20 @@ class OrderInfoSection extends StatelessWidget {
                     }
                   },
                   icon: const Icon(Icons.directions), label: Text('direction'.tr),
+                ) : const SizedBox(),
+
+                isDineIn ? InkWell(
+                  onTap: ()=> Get.toNamed(RouteHelper.getMapRoute(
+                    AddressModel(
+                      id: order.restaurant!.id, address: order.restaurant!.address, latitude: order.restaurant!.latitude,
+                      longitude: order.restaurant!.longitude, contactPersonNumber: '', contactPersonName: '', addressType: '',
+                    ), 'order',
+                    restaurantName: order.restaurant!.name, restaurant: order.restaurant, isDineOrder: isDineIn,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(Images.restaurantIconMarker, height: 25, width: 25, fit: BoxFit.cover),
+                  ),
                 ) : const SizedBox(),
 
                 (showChatPermission && !delivered && order.orderStatus != 'failed' && !cancelled && order.orderStatus != 'refunded' && !isGuestLoggedIn) ? InkWell(
@@ -791,7 +1011,7 @@ class OrderInfoSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-              boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withOpacity(0.05) : Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withValues(alpha: 0.05) : Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
             ),
             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -806,7 +1026,7 @@ class OrderInfoSection extends StatelessWidget {
                   Text(
                       '${order.deliveryMan!.fName} ${order.deliveryMan!.lName}',
                       maxLines: 1, overflow: TextOverflow.ellipsis,
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault)
                   ),
                   RatingBarWidget(
                     rating: order.deliveryMan!.avgRating, size: 10,
@@ -840,6 +1060,20 @@ class OrderInfoSection extends StatelessWidget {
                 ),
 
               ]),
+
+              order.deliveryMan!.restaurantId != null ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                  color: Theme.of(context).disabledColor.withValues(alpha: 0.2),
+                ),
+                padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                margin: EdgeInsets.only(top: Dimensions.paddingSizeSmall),
+                child: Text(
+                    'this_delivery_man_is_restaurant_delivery_man'.tr,
+                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                ),
+              ) : const SizedBox(),
+
             ]),
           ),
         ]),
@@ -862,7 +1096,7 @@ class OrderInfoSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(isDesktop ? Dimensions.radiusDefault : 0),
-            boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withOpacity(0.05) : Theme.of(context).primaryColor.withOpacity(0.05), blurRadius: 10)],
+            boxShadow: [BoxShadow(color: isDesktop ? Colors.black.withValues(alpha: 0.05) : Theme.of(context).primaryColor.withValues(alpha: 0.05), blurRadius: 10)],
           ),
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
